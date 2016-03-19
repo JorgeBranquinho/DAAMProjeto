@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Nome Evento"
-        android:id="@+id/textView3"
+        android:id="@+id/nomeEvento"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -19,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="not going"
-        android:id="@+id/checkBox"
-        android:layout_alignTop="@+id/textView3"
+        android:id="@+id/goingOpt"
+        android:layout_alignTop="@+id/nomeEvento"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:checked="false"
@@ -31,10 +32,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/checkBox"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"
+        android:id="@+id/diaSemana"
+        android:layout_below="@+id/goingOpt"
+        android:layout_alignLeft="@+id/nomeEvento"
+        android:layout_alignStart="@+id/nomeEvento"
         android:layout_marginLeft="30dp" />
 
     <TextView
@@ -42,18 +43,18 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/textView5"
-        android:layout_below="@+id/textView4"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_alignStart="@+id/textView4" />
+        android:id="@+id/diaEvento"
+        android:layout_below="@+id/diaSemana"
+        android:layout_alignLeft="@+id/diaSemana"
+        android:layout_alignStart="@+id/diaSemana" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/textView6"
-        android:layout_above="@+id/textView5"
+        android:id="@+id/preço"
+        android:layout_above="@+id/diaEvento"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -61,26 +62,26 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/textView7"
-        android:layout_alignTop="@+id/textView5"
-        android:layout_alignLeft="@+id/textView6"
-        android:layout_alignStart="@+id/textView6" />
+        android:id="@+id/horas"
+        android:layout_alignTop="@+id/diaEvento"
+        android:layout_alignLeft="@+id/preço"
+        android:layout_alignStart="@+id/preço" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/textView8"
-        android:layout_below="@+id/textView6"
-        android:layout_alignLeft="@+id/checkBox"
-        android:layout_alignStart="@+id/checkBox" />
+        android:id="@+id/local"
+        android:layout_below="@+id/preço"
+        android:layout_alignLeft="@+id/goingOpt"
+        android:layout_alignStart="@+id/goingOpt" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_below="@+id/textView5"
+        android:layout_below="@+id/diaEvento"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp" />

@@ -13,10 +13,10 @@ import almapenada.daam.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FrirndsListFragment extends Fragment {
+public class FriendsListFragment extends Fragment {
 
 
-    public FrirndsListFragment() {
+    public FriendsListFragment() {
     }
 
 
