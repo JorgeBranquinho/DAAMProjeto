@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
 
@@ -114,7 +115,12 @@ public class DrawerActivity extends AppCompatActivity
             transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_events) {
-
+            transaction.remove(currentFragment);
+            transaction = fragManager.beginTransaction();
+            currentFragment = new EventsFragment();
+            transaction.replace(R.id.frame, currentFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         } else if (id == R.id.nav_friends) {
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();

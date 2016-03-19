@@ -23,4 +23,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!--strings do menu eventos-->
+    <string name="view_by_prompt">View by</string>
+    <string-array name="view_by">
+        <item>View by: Most recent</item>
+        <item>View by: Nearest</item>
+    </string-array>
 </resources>
