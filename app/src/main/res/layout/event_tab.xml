@@ -14,7 +14,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="10dp"
+        android:maxLines="1"
+        android:maxLength="20"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -53,7 +55,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/preço"
+        android:id="@+id/preco"
         android:layout_above="@+id/diaEvento"
         android:layout_centerHorizontal="true" />
 
@@ -64,8 +66,8 @@
         android:text="Small Text"
         android:id="@+id/horas"
         android:layout_alignTop="@+id/diaEvento"
-        android:layout_alignLeft="@+id/preço"
-        android:layout_alignStart="@+id/preço" />
+        android:layout_alignLeft="@+id/preco"
+        android:layout_alignStart="@+id/preco" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,7 +75,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
         android:id="@+id/local"
-        android:layout_below="@+id/preço"
+        android:layout_below="@+id/preco"
         android:layout_alignLeft="@+id/goingOpt"
         android:layout_alignStart="@+id/goingOpt" />
 
