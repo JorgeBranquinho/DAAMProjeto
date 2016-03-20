@@ -44,5 +44,13 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
         return rowView;
     }
 
+    @Override
+    public int getCount() {
+        return super.getCount();
+    }
 
+    @Override
+    public String getItem(int position) {
+        return super.getItem(position);
+    }
 }
