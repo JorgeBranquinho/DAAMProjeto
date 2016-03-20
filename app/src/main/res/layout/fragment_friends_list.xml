@@ -4,11 +4,16 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FriendsListFragment">
 
+    <EditText android:id="@+id/inputSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search people.."
+        android:inputType="textVisiblePassword"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/friends_listview"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/inputSearch" />
 </RelativeLayout>
