@@ -1,7 +1,6 @@
 package almapenada.daam.utility;
 
         import java.util.ArrayList;
-        import java.util.HashMap;
 
         import android.app.Activity;
         import android.content.Context;
@@ -10,8 +9,8 @@ package almapenada.daam.utility;
         import android.view.ViewGroup;
         import android.widget.BaseAdapter;
         import android.widget.CheckBox;
-        import android.widget.ImageView;
         import android.widget.TextView;
+        import android.widget.Toast;
 
         import almapenada.daam.R;
 
@@ -45,6 +44,12 @@ public class EventAdapter extends BaseAdapter {
         if(convertView==null)
             vi = inflater.inflate(R.layout.event_tab, null);
 
+        vi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Toast.makeText(activity.getBaseContext(), "ola", Toast.LENGTH_SHORT).show();
+            }
+        });
         TextView title = (TextView)vi.findViewById(R.id.nomeEvento);
         CheckBox going = (CheckBox)vi.findViewById(R.id.goingOpt);
         TextView diaSemana = (TextView)vi.findViewById(R.id.diaSemana);
