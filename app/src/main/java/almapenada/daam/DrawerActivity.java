@@ -113,6 +113,7 @@ public class DrawerActivity extends AppCompatActivity
             currentFragment = new HomeFragment();
             transaction.replace(R.id.frame, currentFragment);
             transaction.addToBackStack(null);
+            setTitle(getResources().getString(R.string.title_home));
             transaction.commit();
         } else if (id == R.id.nav_events) {
             transaction.remove(currentFragment);
@@ -120,6 +121,7 @@ public class DrawerActivity extends AppCompatActivity
             currentFragment = new EventsFragment();
             transaction.replace(R.id.frame, currentFragment);
             transaction.addToBackStack(null);
+            setTitle(getResources().getString(R.string.title_events));
             transaction.commit();
         } else if (id == R.id.nav_friends) {
             transaction.remove(currentFragment);
@@ -127,6 +129,7 @@ public class DrawerActivity extends AppCompatActivity
             currentFragment = new FriendsFragment();
             transaction.replace(R.id.frame, currentFragment);
             transaction.addToBackStack(null);
+            setTitle(getResources().getString(R.string.title_friends));
             transaction.commit();
         } else if (id == R.id.nav_settings) {
 

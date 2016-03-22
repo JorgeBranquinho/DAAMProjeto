@@ -28,6 +28,9 @@
     <!--strings do menu eventos-->
     <string name="view_by_prompt">View by</string>
     <string name="action_search">Search</string>
+    <string name="title_home">Home</string>
+    <string name="title_events">Events</string>
+    <string name="title_friends">Friends and Groups</string>
     <string-array name="view_by">
         <item>View by: Most recent</item>
         <item>View by: Nearest</item>
