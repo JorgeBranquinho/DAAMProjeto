@@ -23,27 +23,17 @@ import almapenada.daam.R;
 public class EventsFragment extends Fragment {
 
     private ViewPager viewpager;
-    private EventAdapter adapter;
-    private  ListView event_list;
-
-    private ArrayList<Event> dummy=new ArrayList<Event>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = (ViewGroup) inflater.inflate(R.layout.fragment_events, container, false);
 
-                    dummy.add(new Event("Snoop Dogg & vinho verde", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
-        adapter=new EventAdapter(getActivity(), dummy);
-
-        event_list = (ListView) rootView.findViewById(R.id.lista_de_eventos);
         viewpager = (ViewPager) rootView.findViewById(R.id.viewpager);
         if (viewpager != null) {
             setupViewPager(viewpager);
         }
         final TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.rectangulo1);
         tabLayout.setupWithViewPager(viewpager);
-
-        event_list.setAdapter(adapter);
 
         return rootView;
     }
