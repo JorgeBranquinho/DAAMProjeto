@@ -41,7 +41,7 @@ public class FriendsFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         Adapter ad = new Adapter(getFragmentManager());
         ad.addFragment(new FriendsListFragment(),"Friends");
-        ad.addFragment(new GroupsFragment(),"Groups");
+        ad.addFragment(new GroupsListFragment(),"Groups");
         viewPager.setAdapter(ad);
     }
 
