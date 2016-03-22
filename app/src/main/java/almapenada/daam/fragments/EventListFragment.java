@@ -17,6 +17,7 @@ public class EventListFragment extends Fragment {
     private EventAdapter adapter;
 
     @Override
+    
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
