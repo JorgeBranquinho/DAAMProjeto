@@ -77,7 +77,8 @@
         android:id="@+id/local"
         android:layout_below="@+id/preco"
         android:layout_alignLeft="@+id/goingOpt"
-        android:layout_alignStart="@+id/goingOpt" />
+        android:layout_alignStart="@+id/goingOpt"
+        android:autoLink="web|map" />
 
     <View
         android:layout_width="match_parent"

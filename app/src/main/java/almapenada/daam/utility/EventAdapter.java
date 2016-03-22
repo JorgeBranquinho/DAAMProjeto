@@ -57,7 +57,7 @@ public class EventAdapter extends BaseAdapter {
         going.setSelected(data.get(position).isGoing());
         diaSemana.setText(data.get(position).getWeekDay());
         diaEvento.setText(data.get(position).getDate());
-        preco.setText(data.get(position).getPrice());
+        preco.setText("Price: " + data.get(position).getPrice());
         horas.setText(data.get(position).getHours());
         local.setText(data.get(position).getLocation());
 
