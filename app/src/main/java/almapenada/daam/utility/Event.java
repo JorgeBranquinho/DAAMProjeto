@@ -15,6 +15,7 @@ public class Event {
     private URI location_URI;
     private boolean going=false;
     private boolean newEvent=false;
+    private int id=-1;
 
     public Event(String eventName, String weekDay, String date, String price, String hours, String location, URI location_URI, boolean going, boolean newEvent){
         this.eventName=eventName;
@@ -98,5 +99,13 @@ public class Event {
 
     public void setNewEvent(boolean newEvent) {
         this.newEvent = newEvent;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
