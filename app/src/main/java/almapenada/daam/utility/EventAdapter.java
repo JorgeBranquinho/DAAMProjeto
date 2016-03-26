@@ -3,7 +3,9 @@ package almapenada.daam.utility;
         import java.util.ArrayList;
 
         import android.app.Activity;
+        import android.app.AlertDialog;
         import android.content.Context;
+        import android.content.DialogInterface;
         import android.view.LayoutInflater;
         import android.view.MotionEvent;
         import android.view.View;
@@ -50,38 +52,50 @@ public class EventAdapter extends BaseAdapter {
         vi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Toast.makeText(activity.getBaseContext(), "ola", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getBaseContext(), "imagina que mudavas de pagina", Toast.LENGTH_SHORT).show();
             }
         });
 
         final int temp_position=position;
+        final String titulo_evento=data.get(position).getEventName();
         vi.setOnTouchListener(new View.OnTouchListener() {
             private int event_position=temp_position;
             private float x1,x2;
             static final int MIN_DISTANCE = 50;
+            private boolean avoid_double_click=false;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     x1 = event.getX();
-                }else{
+                }else {
                     x2 = event.getX();
                     float deltaX = x2 - x1;
-                    if (Math.abs(deltaX) > MIN_DISTANCE) {
-                        if (x2 > x1) {
-                            Toast.makeText(activity, "Removido evento", Toast.LENGTH_SHORT).show ();
-                            Event item = data.get(event_position);
-                            data.remove(event_position);
-                            self.notifyDataSetChanged();
-                        }
-                        else {
-                            Toast.makeText(activity, "Removido evento", Toast.LENGTH_SHORT).show ();
-                            Event item = data.get(event_position);
-                            data.remove(event_position);
-                            self.notifyDataSetChanged();
-                        }
+                    if (Math.abs(deltaX) > MIN_DISTANCE && !avoid_double_click) {
+                        avoid_double_click=true;
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage(activity.getString(R.string.msg_apagar_evento) + " " + titulo_evento + "?")
+                                .setPositiveButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        avoid_double_click=false;
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
+                                        Event item = data.get(event_position);
+                                        data.remove(event_position);
+                                        self.notifyDataSetChanged();
+                                        avoid_double_click=false;
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builder.show();
+                        /*if (x2 > x1) {//saber se é esq ou direita
+                        }*/
                     }
                     else {
-                        // fez tap no ecra
+                        //Toast.makeText(activity.getBaseContext(), "imagina que mudavas de pagina", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
