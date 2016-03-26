@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
@@ -40,8 +41,12 @@ public class DrawerActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(currentFragment instanceof EventsFragment){
+                    Toast.makeText(getBaseContext(), "Tens msm que clicar em tudo....", Toast.LENGTH_SHORT).show();
+                }else{
+                    Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
@@ -116,6 +121,7 @@ public class DrawerActivity extends AppCompatActivity
             setTitle(getResources().getString(R.string.title_home));
             transaction.commit();
         } else if (id == R.id.nav_events) {
+            setFabIcon(R.drawable.plus);
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
             currentFragment = new EventsFragment();
@@ -140,5 +146,15 @@ public class DrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setFabIcon(final int resId) {
+        ((FloatingActionButton) findViewById(R.id.fab)).hide(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onHidden(FloatingActionButton fab) {
+                fab.setImageResource(resId);
+                fab.show();
+            }
+        });
     }
 }

@@ -3,39 +3,44 @@
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_email" translatable="false">Email</string>
+    <string name="prompt_password" translatable="false">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
+    <string name="error_invalid_email" translatable="false">This email address is invalid</string>
+    <string name="error_invalid_password" translatable="false">This password is too short</string>
+    <string name="error_incorrect_password" translatable="false">This password is incorrect</string>
+    <string name="error_field_required" translatable="false">This field is required</string>
+    <string name="permission_rationale" translatable="false">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="title_activity_drawer">Home</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
 
     <!--strings do menu eventos-->
-    <string name="aceitar">Aceitar</string>
-    <string name="cancelar">Cancelar</string>
+    <string name="aceitar">OK</string>
+    <string name="cancelar">Cancel</string>
     <string name="view_by_prompt">View by</string>
     <string name="action_search">Search</string>
     <string name="title_home">Home</string>
     <string name="title_events">Events</string>
     <string name="title_friends">Friends and Groups</string>
-    <string name="msg_apagar_evento">Tem a certeza que quer apagar o evento </string>
+    <string name="msg_apagar_evento">Do you wish to remove </string>
+    <string name="going_event">Going</string>
+    <string name="not_going_event">Not going</string>
     <string-array name="view_by">
         <item>View by: Most recent</item>
         <item>View by: Nearest</item>
+        <item>View by: Cheaper</item>
+        <item>View by: Going</item>
+        <item>View by: Not going</item>
     </string-array>
 </resources>

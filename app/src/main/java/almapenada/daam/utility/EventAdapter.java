@@ -91,8 +91,7 @@ public class EventAdapter extends BaseAdapter {
                                     }
                                 });
                         builder.show();
-                        /*if (x2 > x1) {//saber se é esq ou direita
-                        }*/
+                        /*if (x2 > x1) {}//saber se é esq ou direita*/
                     }
                     else {
                         //Toast.makeText(activity.getBaseContext(), "imagina que mudavas de pagina", Toast.LENGTH_SHORT).show();
@@ -103,7 +102,7 @@ public class EventAdapter extends BaseAdapter {
         });
 
         TextView title = (TextView)vi.findViewById(R.id.nomeEvento);
-        CheckBox going = (CheckBox)vi.findViewById(R.id.goingOpt);
+        final CheckBox going = (CheckBox)vi.findViewById(R.id.goingOpt);
         TextView diaSemana = (TextView)vi.findViewById(R.id.diaSemana);
         TextView diaEvento = (TextView)vi.findViewById(R.id.diaEvento);
         TextView preco = (TextView)vi.findViewById(R.id.preco);
@@ -112,6 +111,16 @@ public class EventAdapter extends BaseAdapter {
 
         title.setText(data.get(position).getEventName());
         going.setSelected(data.get(position).isGoing());
+        going.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(going.isChecked()) {
+                    going.setText(activity.getString(R.string.going_event));
+                }else {
+                    going.setText(activity.getString(R.string.not_going_event));
+                }
+            }
+        });
         diaSemana.setText(data.get(position).getWeekDay());
         diaEvento.setText(data.get(position).getDate());
         preco.setText("Price: " + data.get(position).getPrice());
