@@ -33,6 +33,10 @@
     <string name="title_home">Home</string>
     <string name="title_events">Events</string>
     <string name="title_friends">Friends and Groups</string>
+    <string name="tab_title_feed">Feed</string>
+    <string name="tab_title_notifications">Notifications</string>
+    <string name="tab_title_friends">Friends</string>
+    <string name="tab_title_groups">Groups</string>
     <string name="msg_apagar_evento">Do you wish to remove </string>
     <string name="going_event">Going</string>
     <string name="not_going_event">Not going</string>

@@ -60,7 +60,7 @@ public class FriendsListFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Hello " + friends_list_names[position], Toast.LENGTH_LONG);
+                Toast.makeText(getContext(), "Hello " + friends_list_names[position], Toast.LENGTH_LONG).show();
             }
         });
 
