@@ -111,6 +111,7 @@ public class EventAdapter extends BaseAdapter {
 
         title.setText(data.get(position).getEventName());
         going.setSelected(data.get(position).isGoing());
+        if(data.get(position).isGoing())going.setText(activity.getString(R.string.going_event));else going.setText(activity.getString(R.string.not_going_event));
         going.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -43,4 +43,5 @@
         <item>View by: Going</item>
         <item>View by: Not going</item>
     </string-array>
+    <string name="title_activity_map">Map</string>
 </resources>
