@@ -15,6 +15,7 @@ package almapenada.daam.utility;
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import almapenada.daam.DrawerActivity;
         import almapenada.daam.R;
 
 public class EventAdapter extends BaseAdapter {
@@ -49,14 +50,16 @@ public class EventAdapter extends BaseAdapter {
         if(convertView==null)
             vi = inflater.inflate(R.layout.event_tab, null);
 
+        final int temp_position=position;
+
         vi.setOnClickListener(new View.OnClickListener() {
+            private Event e=data.get(temp_position);
             @Override
             public void onClick(View arg0) {
-                Toast.makeText(activity.getBaseContext(), "imagina que mudavas de pagina", Toast.LENGTH_SHORT).show();
+                ((DrawerActivity)activity).viewEventDetails(e);
             }
         });
 
-        final int temp_position=position;
         final String titulo_evento=data.get(position).getEventName();
         vi.setOnTouchListener(new View.OnTouchListener() {
             private int event_position=temp_position;
@@ -94,7 +97,7 @@ public class EventAdapter extends BaseAdapter {
                         /*if (x2 > x1) {}//saber se é esq ou direita*/
                     }
                     else {
-                        //Toast.makeText(activity.getBaseContext(), "imagina que mudavas de pagina", Toast.LENGTH_SHORT).show();
+                        //user fez tap
                     }
                 }
                 return false;
@@ -116,16 +119,22 @@ public class EventAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if(going.isChecked()) {
-                    going.setText(activity.getString(R.string.going_event));
+                    going.setText(activity.getString(R.string.going_event));//TODO: atualizar DB
                 }else {
-                    going.setText(activity.getString(R.string.not_going_event));
+                    going.setText(activity.getString(R.string.not_going_event));//TODO: atualizar DB
                 }
             }
         });
         diaSemana.setText(data.get(position).getWeekDay());
         diaEvento.setText(data.get(position).getDate());
-        preco.setText("Price: " + data.get(position).getPrice());
-        horas.setText(data.get(position).getHours());
+        if(!data.get(position).getPrice().equals(""))
+            preco.setText("Price: " + data.get(position).getPrice());
+        else
+            preco.setText("");
+        if(!data.get(position).getHours().equals(""))
+            horas.setText(data.get(position).getHours());
+        else
+            horas.setText("");
         local.setText(data.get(position).getLocation());
         data.get(position).setId(position);
 

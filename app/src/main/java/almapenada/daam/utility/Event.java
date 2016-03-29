@@ -1,11 +1,12 @@
 package almapenada.daam.utility;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * Created by Asus on 20/03/2016.
  */
-public class Event {
+public class Event implements Serializable {
     private String eventName="";
     private String weekDay="";
     private String date="";

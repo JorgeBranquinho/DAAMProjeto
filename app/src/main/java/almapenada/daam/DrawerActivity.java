@@ -1,6 +1,7 @@
 package almapenada.daam;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,9 +19,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
+import almapenada.daam.utility.Event;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,7 +45,7 @@ public class DrawerActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if(currentFragment instanceof EventsFragment){
-                    Toast.makeText(getBaseContext(), "Tens msm que clicar em tudo....", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Aqui tipo add novo evento....", Toast.LENGTH_SHORT).show();
                 }else{
                     Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -113,6 +116,7 @@ public class DrawerActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the camera action
         } else if (id == R.id.nav_home) {
+            showFabIcon();
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
             currentFragment = new HomeFragment();
@@ -121,6 +125,7 @@ public class DrawerActivity extends AppCompatActivity
             setTitle(getResources().getString(R.string.title_home));
             transaction.commit();
         } else if (id == R.id.nav_events) {
+            showFabIcon();
             setFabIcon(R.drawable.plus);
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
@@ -130,6 +135,7 @@ public class DrawerActivity extends AppCompatActivity
             setTitle(getResources().getString(R.string.title_events));
             transaction.commit();
         } else if (id == R.id.nav_friends) {
+            showFabIcon();
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
             currentFragment = new FriendsFragment();
@@ -148,6 +154,14 @@ public class DrawerActivity extends AppCompatActivity
         return true;
     }
 
+    public void showFabIcon(){
+        ((FloatingActionButton) findViewById(R.id.fab)).show();
+    }
+
+    public void HideFabIcon(){
+        ((FloatingActionButton) findViewById(R.id.fab)).hide();
+    }
+
     private void setFabIcon(final int resId) {
         ((FloatingActionButton) findViewById(R.id.fab)).hide(new FloatingActionButton.OnVisibilityChangedListener() {
             @Override
@@ -156,5 +170,20 @@ public class DrawerActivity extends AppCompatActivity
                 fab.show();
             }
         });
+    }
+
+    public void viewEventDetails(Event e){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("evento", e);
+        transaction.remove(currentFragment);
+        transaction = fragManager.beginTransaction();
+        currentFragment = new EventDetailsFragment();
+        currentFragment.setArguments(bundle);
+        transaction.replace(R.id.frame, currentFragment);
+        transaction.addToBackStack(null);
+        setTitle(getResources().getString(R.string.title_friends));
+        transaction.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 }

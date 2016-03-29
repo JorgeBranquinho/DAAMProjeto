@@ -9,7 +9,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,8 @@ import almapenada.daam.R;
 public class EventsFragment extends Fragment {
 
     private ViewPager viewpager;
+    private Spinner spinner;
+    private EventListFragment eventlistfrag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,12 +40,43 @@ public class EventsFragment extends Fragment {
         final TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.rectangulo1);
         tabLayout.setupWithViewPager(viewpager);
 
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (eventlistfrag==null) return;
+                String[] vistas = getResources().getStringArray(R.array.view_by);
+                switch (position){
+                    case 0: eventlistfrag.orderByRecent();
+                        break;
+                    case 1: eventlistfrag.orderByNear();
+                        break;
+                    case 2: eventlistfrag.orderByCheaper();
+                        break;
+                    case 3: eventlistfrag.orderByGoing();
+                        break;
+                    case 4: eventlistfrag.orderByNotGoing();
+                        break;
+                    default:
+                        Toast.makeText(getContext(), "No such option on spinner", Toast.LENGTH_SHORT);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         return rootView;
     }
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter ad = new Adapter(getFragmentManager());
-        ad.addFragment(new EventListFragment(), "List");
+        eventlistfrag = new EventListFragment();
+        ad.addFragment(eventlistfrag, "List");
         ad.addFragment(new MapFragment(), "Map");
         viewPager.setAdapter(ad);
     }
