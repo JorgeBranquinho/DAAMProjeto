@@ -1,13 +1,15 @@
 package almapenada.daam;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -89,6 +91,24 @@ public class DrawerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextSubmit(String text) {
+                    Toast.makeText(getBaseContext(), "procuraste por " + text, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String text) {
+                    Toast.makeText(getBaseContext(), "mudaste para " + text, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         return true;
     }
 
@@ -125,7 +145,8 @@ public class DrawerActivity extends AppCompatActivity
             setTitle(getResources().getString(R.string.title_home));
             transaction.commit();
         } else if (id == R.id.nav_events) {
-            showFabIcon();
+            viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
+            /*showFabIcon();
             setFabIcon(R.drawable.plus);
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
@@ -133,7 +154,7 @@ public class DrawerActivity extends AppCompatActivity
             transaction.replace(R.id.frame, currentFragment);
             transaction.addToBackStack(null);
             setTitle(getResources().getString(R.string.title_events));
-            transaction.commit();
+            transaction.commit();*/
         } else if (id == R.id.nav_friends) {
             showFabIcon();
             transaction.remove(currentFragment);
@@ -172,6 +193,17 @@ public class DrawerActivity extends AppCompatActivity
         });
     }
 
+    public void viewFragment(Fragment frag, String title, Boolean showFabIcon, int fabIcon){
+        if(showFabIcon) showFabIcon();else HideFabIcon();
+        if(fabIcon!=-1)setFabIcon(fabIcon);
+        transaction.remove(currentFragment);
+        transaction = fragManager.beginTransaction();
+        transaction.replace(R.id.frame, frag);
+        transaction.addToBackStack(null);
+        setTitle(title);
+        transaction.commit();
+    }
+
     public void viewEventDetails(Event e){
         Bundle bundle = new Bundle();
         bundle.putSerializable("evento", e);
@@ -181,9 +213,10 @@ public class DrawerActivity extends AppCompatActivity
         currentFragment.setArguments(bundle);
         transaction.replace(R.id.frame, currentFragment);
         transaction.addToBackStack(null);
-        setTitle(getResources().getString(R.string.title_friends));
+        setTitle(e.getEventName());
         transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
+
 }

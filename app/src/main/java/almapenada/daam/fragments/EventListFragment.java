@@ -33,6 +33,7 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
+                    full_event_list.add(new Event("festa do Seixo Paulo", "monday", "1/2/2012", "15€", "15h", "ISCTE", null, false, false));//teste
                     full_event_list.add(new Event("frango assado", "monday", "3/2/2012", "1€", "15h", "ISCTE", null, false, false));//teste
                     full_event_list.add(new Event("Snoop Dogg & vinho verde", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
                     full_event_list.add(new Event("festa de azeite", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
@@ -56,11 +57,11 @@ public class EventListFragment extends Fragment {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                System.out.println("erro a ordernar por recente");
+                System.out.println("[error] erro a ordernar por recente");
                 return -1;
             }
         });
-        adapter=new EventAdapter(getActivity(), events_to_display);
+        if(adapter==null)adapter=new EventAdapter(getActivity(), events_to_display);
         event_list.setAdapter(adapter);
     }
 

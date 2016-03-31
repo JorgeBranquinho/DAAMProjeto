@@ -41,6 +41,7 @@ public class EventsFragment extends Fragment {
         tabLayout.setupWithViewPager(viewpager);
 
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
