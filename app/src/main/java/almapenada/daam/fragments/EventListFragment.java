@@ -49,6 +49,7 @@ public class EventListFragment extends Fragment {
 
     public void orderByRecent(){
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        if(events_to_display.size()==0)return;
         Collections.sort(events_to_display, new Comparator<Event>() {
             @Override
             public int compare(Event event2, Event event1) {
@@ -71,6 +72,7 @@ public class EventListFragment extends Fragment {
 
     public void orderByCheaper() {
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        if(events_to_display.size()==0)return;
         Collections.sort(events_to_display, new Comparator<Event>() {
             @Override
             public int compare(Event event2, Event event1) {
@@ -85,6 +87,7 @@ public class EventListFragment extends Fragment {
 
     public void orderByGoing() {
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        if(events_to_display.size()==0)return;
         ListIterator<Event> iter = events_to_display.listIterator();
         while(iter.hasNext()){
             if(!iter.next().isGoing()){
@@ -97,6 +100,7 @@ public class EventListFragment extends Fragment {
 
     public void orderByNotGoing() {
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        if(events_to_display.size()==0)return;
         ListIterator<Event> iter = events_to_display.listIterator();
         while(iter.hasNext()){
             if(iter.next().isGoing()){
