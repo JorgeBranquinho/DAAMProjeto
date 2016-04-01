@@ -24,7 +24,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
-
+    <!--facebook-->
+    <string name="facebook_app_id" translatable="false">248490082167538</string>
     <!--strings do menu eventos-->
     <string name="aceitar">OK</string>
     <string name="cancelar">Cancel</string>

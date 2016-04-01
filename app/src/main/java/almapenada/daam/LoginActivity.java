@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +32,30 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import almapenada.daam.utility.User;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -63,11 +86,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private AccessToken accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());//facebook
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setText("teste@daam.com");
@@ -96,6 +125,83 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+        callbackManager = CallbackManager.Factory.create();
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken,
+                    AccessToken currentAccessToken) {
+            }
+        };
+        accessToken = AccessToken.getCurrentAccessToken();
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Bundle params = new Bundle();
+                params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
+                new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (response != null) {
+                            try {
+                                JSONObject data = response.getJSONObject();
+                                User user = null;
+                                //if (data.has("picture")) {
+                                try {
+                                    user = new User();
+                                    user.facebookID = data.getString("id").toString();
+                                    user.name = data.getString("name").toString();
+                                    user.gender = data.getString("gender").toString();
+                                    user.picture = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getBaseContext(), "welcome " + user.name, Toast.LENGTH_LONG).show();
+                                String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                new DownloadImageTask().execute(new URL(profilePicUrl));
+                                //}
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    private class DownloadImageTask extends AsyncTask<URL, Void, Bitmap> {
+        Bitmap bitmap = null;
+
+        protected Bitmap doInBackground(URL... url) {
+            try {
+                bitmap = BitmapFactory.decodeStream(url[0].openConnection().getInputStream());
+            } catch (Exception e) {
+                Log.e("Error", "image download error");
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            //img.setImageBitmap(result);
+        }
     }
 
     private void populateAutoComplete() {
@@ -349,5 +455,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+
 }
 
