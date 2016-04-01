@@ -2,6 +2,12 @@ package almapenada.daam;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,13 +26,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.net.URL;
 
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.utility.Event;
+import almapenada.daam.utility.User;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,13 +45,32 @@ public class DrawerActivity extends AppCompatActivity
     private FragmentManager fragManager;
     private FragmentTransaction transaction;
     private Fragment currentFragment;
+    private User user=null;
+    private ImageView nav_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        Bundle b = getIntent().getExtras();
+        user = (User) b.getSerializable("User");
+        if(user!=null) {
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            View hView = navigationView.getHeaderView(0);
+            TextView nav_user = (TextView) hView.findViewById(R.id.nomegrande);
+            nav_user.setText(user.getFirstName());
+            TextView nav_user2 = (TextView) hView.findViewById(R.id.nomepqueno);
+            nav_user2.setText("");
+            nav_img = (ImageView) hView.findViewById(R.id.imageView);
+            new DownloadImageTask().execute(user.getPictureURL());
+            //nav_img.setImageBitmap(user.getPicture());
+        }else
+            Toast.makeText(this.getApplicationContext(), "nao vieste do face", Toast.LENGTH_SHORT).show();
 
         // Botao que flutoa na actividade
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -226,4 +257,37 @@ public class DrawerActivity extends AppCompatActivity
 
 
 
+
+
+
+    //img do face
+    private class DownloadImageTask extends AsyncTask<URL, Void, Bitmap> {
+        Bitmap bitmap = null;
+
+        protected Bitmap doInBackground(URL... url) {
+            try {
+                bitmap = BitmapFactory.decodeStream(url[0].openConnection().getInputStream());
+                bitmap = scaleBitmap(bitmap, 200, 200);
+            } catch (Exception e) {
+                Log.e("Error", "image download error");
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        private Bitmap scaleBitmap(Bitmap bitmap, int wantedWidth, int wantedHeight) {
+            Bitmap output = Bitmap.createBitmap(wantedWidth, wantedHeight, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(output);
+            Matrix m = new Matrix();
+            m.setScale((float) wantedWidth / bitmap.getWidth(), (float) wantedHeight / bitmap.getHeight());
+            canvas.drawBitmap(bitmap, m, new Paint());
+            return output;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            user.setPicture(result);
+            nav_img.setImageBitmap(result);
+        }
+    }
 }

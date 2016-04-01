@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -64,6 +65,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    /*usado para o login no facebook*/
+    User user = null;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -150,21 +153,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         if (response != null) {
                             try {
                                 JSONObject data = response.getJSONObject();
-                                User user = null;
-                                //if (data.has("picture")) {
                                 try {
                                     user = new User();
-                                    user.facebookID = data.getString("id").toString();
-                                    user.name = data.getString("name").toString();
-                                    user.gender = data.getString("gender").toString();
-                                    user.picture = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                    user.setFacebookID(data.getString("id").toString());
+                                    user.setFirstName(data.getString("name").toString());
+                                    user.setGender(data.getString("gender").toString());
+                                    user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                Toast.makeText(getBaseContext(), "welcome " + user.name, Toast.LENGTH_LONG).show();
-                                String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                new DownloadImageTask().execute(new URL(profilePicUrl));
-                                //}
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -185,24 +182,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
     }
 
-    private class DownloadImageTask extends AsyncTask<URL, Void, Bitmap> {
-        Bitmap bitmap = null;
-
-        protected Bitmap doInBackground(URL... url) {
-            try {
-                bitmap = BitmapFactory.decodeStream(url[0].openConnection().getInputStream());
-            } catch (Exception e) {
-                Log.e("Error", "image download error");
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            //img.setImageBitmap(result);
-        }
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        accessTokenTracker.stopTracking();
+    }
+//fim das cenas do facebook
+
+
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -442,7 +437,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                startActivity(new Intent(LoginActivity.this,DrawerActivity.class));
+                Intent intent =new Intent(LoginActivity.this,DrawerActivity.class);
+                Bundle b = new Bundle();
+                b.putSerializable("User", user);
+                intent.putExtras(b);
+                startActivity(intent);
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -455,7 +455,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-
 
 }
 
