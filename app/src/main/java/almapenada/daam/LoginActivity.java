@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.PermissionChecker;
@@ -44,6 +46,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -51,6 +54,9 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,6 +100,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private AccessTokenTracker accessTokenTracker;
     private AccessToken accessToken;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,57 +138,67 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
         callbackManager = CallbackManager.Factory.create();
 
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken,
-                    AccessToken currentAccessToken) {
+        if (AccessToken.getCurrentAccessToken() != null) {
+            Profile p = Profile.getCurrentProfile();
+            user=new User();
+            user.setFirstName(p.getFirstName());
+            user.setLastName(p.getLastName());
+            try {
+                Uri uriImage = Uri.parse(p.getProfilePictureUri(200,200).toString());
+                user.setPictureURL(new URL(String.valueOf(uriImage)));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
-        };
-        accessToken = AccessToken.getCurrentAccessToken();
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Bundle params = new Bundle();
-                params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
-                new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        if (response != null) {
-                            try {
-                                JSONObject data = response.getJSONObject();
+            callDrawerActivity();
+        }else
+
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Bundle params = new Bundle();
+                    params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
+                    new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
+                        @Override
+                        public void onCompleted(GraphResponse response) {
+                            if (response != null) {
                                 try {
-                                    user = new User();
-                                    user.setFacebookID(data.getString("id").toString());
-                                    user.setFirstName(data.getString("name").toString());
-                                    user.setGender(data.getString("gender").toString());
-                                    user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
+                                    JSONObject data = response.getJSONObject();
+                                    try {
+                                        user = new User();
+                                        user.setFacebookID(data.getString("id").toString());
+                                        String fullname = data.getString("name").toString();
+                                        user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
+                                        user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
+                                        user.setGender(data.getString("gender").toString());
+                                        user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    callDrawerActivity();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
-                    }
-                }).executeAsync();
-            }
+                    }).executeAsync();
+                }
 
-            @Override
-            public void onCancel() {
-                Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT);
-            }
+                @Override
+                public void onCancel() {
+                    Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT);
+                }
 
-            @Override
-            public void onError(FacebookException exception) {
-                Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT);
-            }
-        });
+                @Override
+                public void onError(FacebookException exception) {
+                    Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT);
+                }
+            });
     }
 
     @Override
@@ -191,13 +210,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onDestroy() {
         super.onDestroy();
-        accessTokenTracker.stopTracking();
+        //accessTokenTracker.stopTracking();
     }
 //fim das cenas do facebook
-
-
-
-
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -437,12 +452,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                Intent intent =new Intent(LoginActivity.this,DrawerActivity.class);
-                Bundle b = new Bundle();
-                b.putSerializable("User", user);
-                intent.putExtras(b);
-                startActivity(intent);
-                finish();
+                callDrawerActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -454,6 +464,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private void callDrawerActivity(){
+        Intent intent =new Intent(LoginActivity.this,DrawerActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("User", user);
+        intent.putExtras(b);
+        startActivity(intent);
+        finish();
     }
 
 }

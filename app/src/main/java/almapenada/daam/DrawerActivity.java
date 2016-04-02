@@ -63,12 +63,11 @@ public class DrawerActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             View hView = navigationView.getHeaderView(0);
             TextView nav_user = (TextView) hView.findViewById(R.id.nomegrande);
-            nav_user.setText(user.getFirstName());
+            nav_user.setText(user.getFirstName() + " " + user.getLastName());
             TextView nav_user2 = (TextView) hView.findViewById(R.id.nomepqueno);
             nav_user2.setText("");
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
-            new DownloadImageTask().execute(user.getPictureURL());
-            //nav_img.setImageBitmap(user.getPicture());
+            if(user.getPictureURL()!=null)new DownloadImageTask().execute(user.getPictureURL());
         }else
             Toast.makeText(this.getApplicationContext(), "nao vieste do face", Toast.LENGTH_SHORT).show();
 
