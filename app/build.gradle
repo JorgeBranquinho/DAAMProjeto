@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
@@ -34,5 +34,4 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
     compile 'com.google.android.gms:play-services:8.4.0'
-    compile 'com.android.support:appcompat-v7:23.1.1'
 }

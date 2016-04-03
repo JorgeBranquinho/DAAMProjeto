@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="123"
+    android:hint="456"
+    android:includeInGlobalSearch="true"
+    android:queryAfterZeroResults="true"
+    android:searchMode="queryRewriteFromText"
+    android:searchSettingsDescription="789"
+    android:searchSuggestAuthority="com.android.contacts"
+    android:searchSuggestIntentAction="android.provider.Contacts.SEARCH_SUGGESTION_CLICKED"
+    android:searchSuggestIntentData="content://com.android.contacts/contacts/lookup" >
 
-</PreferenceScreen>
+    <!-- allow green action key for search-bar and per-suggestion clicks -->
+    <actionkey
+        android:keycode="KEYCODE_CALL"
+        android:queryActionMsg="call"
+        android:suggestActionMsg="call" />
+
+</searchable>

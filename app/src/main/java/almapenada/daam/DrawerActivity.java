@@ -2,6 +2,7 @@ package almapenada.daam;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
@@ -26,17 +28,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+//import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import almapenada.daam.fragments.CreateEventFragment;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.utility.Event;
+import almapenada.daam.utility.SuggestionSimpleCursorAdapter;
+import almapenada.daam.utility.SuggestionsDatabase;
 import almapenada.daam.utility.User;
 
 public class DrawerActivity extends AppCompatActivity
@@ -47,6 +55,7 @@ public class DrawerActivity extends AppCompatActivity
     private Fragment currentFragment;
     private User user=null;
     private ImageView nav_img;
+    private int id_menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +85,8 @@ public class DrawerActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentFragment instanceof EventsFragment){
-                    Toast.makeText(getBaseContext(), "Aqui tipo add novo evento....", Toast.LENGTH_SHORT).show();
+                if(id_menuItem == R.id.nav_events){
+                    viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
                 }else{
                     Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -126,23 +135,43 @@ public class DrawerActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        final SuggestionsDatabase database = new SuggestionsDatabase(this);
+        if(database.isEmpty()) database.insertSuggestion("ola");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-                @Override
-                public boolean onQueryTextSubmit(String text) {
-                    Toast.makeText(getBaseContext(), "procuraste por " + text, Toast.LENGTH_SHORT).show();
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                Toast.makeText(getBaseContext(), "procuraste por " + text, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                Cursor cursor = database.getSuggestions(text);
+                if(cursor.getCount() != 0)
+                {
+                    String[] columns = new String[] {SuggestionsDatabase.FIELD_SUGGESTION };
+                    int[] columnTextId = new int[] { android.R.id.text1};
+
+                    SuggestionSimpleCursorAdapter simple = new SuggestionSimpleCursorAdapter(getBaseContext(),
+                            android.R.layout.simple_list_item_1, cursor,
+                            columns , columnTextId
+                            , 0);
+
+                    searchView.setSuggestionsAdapter(simple);
+                    return true;
+                }
+                else
+                {
                     return false;
                 }
-
-                @Override
-                public boolean onQueryTextChange(String text) {
-                    Toast.makeText(getBaseContext(), "mudaste para " + text, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            });
+                //Toast.makeText(getBaseContext(), "mudaste para " + text, Toast.LENGTH_SHORT).show();
+                //return false;
+            }
+        });
         return true;
     }
 
@@ -165,42 +194,35 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        id_menuItem = item.getItemId();
 
-        if (id == R.id.nav_profile) {
+        if (id_menuItem == R.id.nav_profile) {
             // Handle the camera action
-        } else if (id == R.id.nav_home) {
-            showFabIcon();
+        } else if (id_menuItem == R.id.nav_home) {
+            viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
+            /*showFabIcon();
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
             currentFragment = new HomeFragment();
             transaction.replace(R.id.frame, currentFragment);
             transaction.addToBackStack(null);
             setTitle(getResources().getString(R.string.title_home));
-            transaction.commit();
-        } else if (id == R.id.nav_events) {
-            viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
-            /*showFabIcon();
-            setFabIcon(R.drawable.plus);
-            transaction.remove(currentFragment);
-            transaction = fragManager.beginTransaction();
-            currentFragment = new EventsFragment();
-            transaction.replace(R.id.frame, currentFragment);
-            transaction.addToBackStack(null);
-            setTitle(getResources().getString(R.string.title_events));
             transaction.commit();*/
-        } else if (id == R.id.nav_friends) {
-            showFabIcon();
+        } else if (id_menuItem == R.id.nav_events) {
+            viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
+        } else if (id_menuItem == R.id.nav_friends) {
+            viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
+            /*showFabIcon();
             transaction.remove(currentFragment);
             transaction = fragManager.beginTransaction();
             currentFragment = new FriendsFragment();
             transaction.replace(R.id.frame, currentFragment);
             transaction.addToBackStack(null);
             setTitle(getResources().getString(R.string.title_friends));
-            transaction.commit();
-        } else if (id == R.id.nav_settings) {
+            transaction.commit();*/
+        } else if (id_menuItem == R.id.nav_settings) {
 
-        }  else if (id == R.id.nav_about) {
+        }  else if (id_menuItem == R.id.nav_about) {
 
         }
 
@@ -241,14 +263,9 @@ public class DrawerActivity extends AppCompatActivity
     public void viewEventDetails(Event e){
         Bundle bundle = new Bundle();
         bundle.putSerializable("evento", e);
-        transaction.remove(currentFragment);
-        transaction = fragManager.beginTransaction();
-        currentFragment = new EventDetailsFragment();
-        currentFragment.setArguments(bundle);
-        transaction.replace(R.id.frame, currentFragment);
-        transaction.addToBackStack(null);
-        setTitle(e.getEventName());
-        transaction.commit();
+        EventDetailsFragment frag = new EventDetailsFragment();
+        frag.setArguments(bundle);
+        viewFragment(frag, e.getEventName(), false, -1);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
