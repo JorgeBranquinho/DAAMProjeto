@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +58,14 @@ public class DrawerActivity extends AppCompatActivity
     private FragmentManager fragManager;
     private FragmentTransaction transaction;
     private Fragment currentFragment;
-    private User user=null;
+    private User user = null;
     private ImageView nav_img;
     private int id_menuItem;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +78,7 @@ public class DrawerActivity extends AppCompatActivity
 
         Bundle b = getIntent().getExtras();
         user = (User) b.getSerializable("User");
-        if(user!=null) {
+        if (user != null) {
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             View hView = navigationView.getHeaderView(0);
             TextView nav_user = (TextView) hView.findViewById(R.id.nomegrande);
@@ -76,8 +86,8 @@ public class DrawerActivity extends AppCompatActivity
             TextView nav_user2 = (TextView) hView.findViewById(R.id.nomepqueno);
             nav_user2.setText("");
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
-            if(user.getPictureURL()!=null)new DownloadImageTask().execute(user.getPictureURL());
-        }else
+            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
+        } else
             Toast.makeText(this.getApplicationContext(), "nao vieste do face", Toast.LENGTH_SHORT).show();
 
         // Botao que flutoa na actividade
@@ -85,9 +95,9 @@ public class DrawerActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(id_menuItem == R.id.nav_events){
+                if (id_menuItem == R.id.nav_events) {
                     viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
-                }else{
+                } else {
                     Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
@@ -113,7 +123,9 @@ public class DrawerActivity extends AppCompatActivity
         transaction.commit();
 
 
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -125,7 +137,7 @@ public class DrawerActivity extends AppCompatActivity
             } else {
                 super.onBackPressed();
             }
-        }catch(IllegalStateException e){
+        } catch (IllegalStateException e) {
             //nao fazer nada, ja esta no home
         }
     }
@@ -139,7 +151,7 @@ public class DrawerActivity extends AppCompatActivity
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
-        if(database.isEmpty()) database.insertSuggestion("ola");
+        if (database.isEmpty()) database.insertSuggestion("ola");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -151,25 +163,29 @@ public class DrawerActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextChange(String text) {
                 Cursor cursor = database.getSuggestions(text);
-                if(cursor.getCount() != 0)
-                {
-                    String[] columns = new String[] {SuggestionsDatabase.FIELD_SUGGESTION };
-                    int[] columnTextId = new int[] { android.R.id.text1};
+                if (cursor.getCount() != 0) {
+                    String[] columns = new String[]{SuggestionsDatabase.FIELD_SUGGESTION};
+                    int[] columnTextId = new int[]{android.R.id.text1};
 
-                    SuggestionSimpleCursorAdapter simple = new SuggestionSimpleCursorAdapter(getBaseContext(),
-                            android.R.layout.simple_list_item_1, cursor,
-                            columns , columnTextId
-                            , 0);
-
+                    final SuggestionSimpleCursorAdapter simple = new SuggestionSimpleCursorAdapter(getBaseContext(), R.layout.li_query_suggestion, cursor, columns, columnTextId, 0);
                     searchView.setSuggestionsAdapter(simple);
+                    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                        @Override
+                        public boolean onSuggestionSelect(int position) {
+                            //Toast.makeText(getApplicationContext(),simple.getItem(position).toString(), Toast.LENGTH_SHORT).show();//nao interessa
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onSuggestionClick(int position) {
+                            Toast.makeText(getApplicationContext(),simple.getItem(position).toString(), Toast.LENGTH_SHORT).show();//tem q se ir a db
+                            return false;
+                        }
+                    });
                     return true;
-                }
-                else
-                {
+                } else {
                     return false;
                 }
-                //Toast.makeText(getBaseContext(), "mudaste para " + text, Toast.LENGTH_SHORT).show();
-                //return false;
             }
         });
         return true;
@@ -222,7 +238,7 @@ public class DrawerActivity extends AppCompatActivity
             transaction.commit();*/
         } else if (id_menuItem == R.id.nav_settings) {
 
-        }  else if (id_menuItem == R.id.nav_about) {
+        } else if (id_menuItem == R.id.nav_about) {
 
         }
 
@@ -231,11 +247,11 @@ public class DrawerActivity extends AppCompatActivity
         return true;
     }
 
-    public void showFabIcon(){
+    public void showFabIcon() {
         ((FloatingActionButton) findViewById(R.id.fab)).show();
     }
 
-    public void HideFabIcon(){
+    public void HideFabIcon() {
         ((FloatingActionButton) findViewById(R.id.fab)).hide();
     }
 
@@ -249,9 +265,10 @@ public class DrawerActivity extends AppCompatActivity
         });
     }
 
-    public void viewFragment(Fragment frag, String title, Boolean showFabIcon, int fabIcon){
-        if(showFabIcon) showFabIcon();else HideFabIcon();
-        if(fabIcon!=-1)setFabIcon(fabIcon);
+    public void viewFragment(Fragment frag, String title, Boolean showFabIcon, int fabIcon) {
+        if (showFabIcon) showFabIcon();
+        else HideFabIcon();
+        if (fabIcon != -1) setFabIcon(fabIcon);
         transaction.remove(currentFragment);
         transaction = fragManager.beginTransaction();
         transaction.replace(R.id.frame, frag);
@@ -260,7 +277,7 @@ public class DrawerActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    public void viewEventDetails(Event e){
+    public void viewEventDetails(Event e) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("evento", e);
         EventDetailsFragment frag = new EventDetailsFragment();
@@ -270,10 +287,45 @@ public class DrawerActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Drawer Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://almapenada.daam/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
 
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Drawer Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://almapenada.daam/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 
 
     //img do face
