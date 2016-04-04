@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -240,6 +241,9 @@ public class DrawerActivity extends AppCompatActivity
 
         } else if (id_menuItem == R.id.nav_about) {
 
+        } else if (id_menuItem == R.id.log_out) {
+            LoginManager.getInstance().logOut();
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
