@@ -7,10 +7,10 @@
     <string name="prompt_password" translatable="false">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email" translatable="false">This email address is invalid</string>
-    <string name="error_invalid_password" translatable="false">This password is too short</string>
-    <string name="error_incorrect_password" translatable="false">This password is incorrect</string>
-    <string name="error_field_required" translatable="false">This field is required</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
     <string name="permission_rationale" translatable="false">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -29,7 +29,7 @@
     <!--strings do menu eventos-->
     <string name="aceitar">OK</string>
     <string name="cancelar">Cancel</string>
-    <string name="view_by_prompt">View by</string>
+    <string name="view_by_prompt">View by:</string>
     <string name="action_search">Search</string>
     <string name="title_home">Home</string>
     <string name="title_events">Events</string>
@@ -38,7 +38,7 @@
     <string name="tab_title_notifications">Notifications</string>
     <string name="tab_title_friends">Friends</string>
     <string name="tab_title_groups">Groups</string>
-    <string name="msg_apagar_evento">Do you wish to remove </string>
+    <string name="msg_apagar_evento">Do you wish to remove?</string>
     <string name="going_event">Going</string>
     <string name="not_going_event">Not going</string>
     <string-array name="view_by">

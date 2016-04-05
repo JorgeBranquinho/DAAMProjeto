@@ -7,16 +7,16 @@
     <string name="action_sign_in_short">Entrar</string>
     <string name="action_sign_in">Entrar ou registar</string>
     <string name="cancelar">Cancelar</string>
-    <string name="error_field_required"></string>
-    <string name="title_activity_drawer">Inicio</string>
+    <string name="msg_apagar_evento">Tem a certeza que quer remover?</string>
+    <string name="error_field_required">Necessita preencher este campo</string>
+    <string name="title_activity_drawer">Início</string>
     <string name="title_activity_login">Entrar</string>
     <string name="title_events">Eventos</string>
     <string name="title_friends">Amigos e Grupos</string>
-    <string name="msg_apagar_evento">Tem a certeza que quer remover </string>
     <string name="going_event">Vou</string>
     <string name="not_going_event">Não vou</string>
     <string name="title_home">Inicio</string>
-    <string name="view_by_prompt">Ver por</string>
+    <string name="view_by_prompt">Ver por:</string>
     <string-array name="view_by">
         <item>Ver por: Mais recentes</item>
         <item>Ver por: Proximos</item>
@@ -24,4 +24,13 @@
         <item>Ver por: Vou</item>
         <item>Ver por: Não vou</item>
     </string-array>
+    <string name="title_activity_map">Mapa</string>
+    <string name="tab_title_notifications">Notificações</string>
+    <string name="msg_apagar_evento">Tem a certeza </string>
+    <string name="tab_title_friends">Amigos</string>
+    <string name="tab_title_feed">Feed</string>
+    <string name="tab_title_groups">Grupos</string>
+    <string name="error_incorrect_password">Password incorrecta</string>
+    <string name="error_invalid_email" translatable="false">Email inválido</string>
+    <string name="error_invalid_password" translatable="false">Password demasiado curta</string>
 </resources>
