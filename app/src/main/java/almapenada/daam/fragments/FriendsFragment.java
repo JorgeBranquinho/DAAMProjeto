@@ -21,6 +21,7 @@ import almapenada.daam.utility.FragmentsAdapter;
 public class FriendsFragment extends Fragment {
 
     private ViewPager viewPager;
+    
     private TabLayout tabLayout;
 
     @Nullable

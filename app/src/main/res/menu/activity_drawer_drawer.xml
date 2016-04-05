@@ -6,6 +6,7 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/logo"
             android:title="@values/title_home" />
+
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_menu_camera"
