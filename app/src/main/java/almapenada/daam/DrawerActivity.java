@@ -49,6 +49,7 @@ import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.utility.Event;
+import almapenada.daam.utility.EventsDatabase;
 import almapenada.daam.utility.SuggestionSimpleCursorAdapter;
 import almapenada.daam.utility.SuggestionsDatabase;
 import almapenada.daam.utility.User;
@@ -151,6 +152,7 @@ public class DrawerActivity extends AppCompatActivity
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
         if (database.isEmpty()) database.insertSuggestion("ola");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

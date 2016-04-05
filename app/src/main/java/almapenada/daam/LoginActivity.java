@@ -157,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
             callDrawerActivity();
         }else
-
+            System.out.println("ueueueu");
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
@@ -191,12 +191,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onCancel() {
-                    Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT);
+                    Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(FacebookException exception) {
-                    Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT);
+                    Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT).show();
                 }
             });
     }
