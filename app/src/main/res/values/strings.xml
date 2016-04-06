@@ -49,4 +49,7 @@
         <item>View by: Not going</item>
     </string-array>
     <string name="title_activity_map">Map</string>
+    <string name="NOME">NOME</string>
+    <string name="LOCALIZAÇÃO">LOCALIZAÇÃO</string>
+    <string name="site">www.site.org</string>
 </resources>

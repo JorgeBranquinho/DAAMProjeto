@@ -48,6 +48,7 @@ import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
+import almapenada.daam.fragments.ProfileFragment;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
 import almapenada.daam.utility.SuggestionSimpleCursorAdapter;
@@ -217,6 +218,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id_menuItem == R.id.nav_profile) {
             // Handle the camera action
+            viewFragment(new ProfileFragment(), "My Profile",false,0);
         } else if (id_menuItem == R.id.nav_home) {
             viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
             /*showFabIcon();
