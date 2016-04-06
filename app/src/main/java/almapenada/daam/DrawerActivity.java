@@ -218,7 +218,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id_menuItem == R.id.nav_profile) {
             // Handle the camera action
-            viewFragment(new ProfileFragment(), "My Profile",false,0);
+            viewFragment(new ProfileFragment(), "My Profile",false,-1);
         } else if (id_menuItem == R.id.nav_home) {
             viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
             /*showFabIcon();
