@@ -1,98 +1,103 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="almapenada.daam.fragments.EventsFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout
-        android:orientation="vertical"
+    android:weightSum="1"
+    android:background="@drawable/custom_row_selector">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/rectangulo1"
+        android:background="#dc8ccdef"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </android.support.design.widget.TabLayout>
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="383dp"
-        android:layout_gravity="bottom|center"
-        android:id="@+id/lista_de_eventos"
-        android:background="#cacaca"
-        android:layout_above="@+id/rectangulo1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/rectangulo2"></LinearLayout>
+        android:layout_height="65dp">
 
-    <View android:id="@+id/rectangulo1"
-        android:background="#dc8ccdef"
+        <View android:id="@+id/rectangulo2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </View>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:entries="@array/view_by"
+            android:prompt="@string/view_by_prompt"
+            android:spinnerMode="dropdown"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="0dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_alignBottom="@+id/spinner"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="307dp"
+        android:layout_weight="0.96">
+
+        <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-    </View>
+        android:layout_height="fill_parent"
+        android:layout_alignBottom="@+id/spinner"
+        android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
-    <View android:id="@+id/rectangulo2"
-        android:background="#dc8ccdef"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-    </View>
+    <!--RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp">
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:entries="@array/view_by"
-        android:prompt="@string/view_by_prompt"
-        android:spinnerMode="dropdown" />
+        <View android:id="@+id/rectangulo3"
+            android:background="#dc8ccdef"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rectangulo2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+        </View>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight=".33"
-        android:text="New Button"
-        android:id="@+id/button3"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:text="New Button"
+            android:id="@+id/button3"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight=".33"
-        android:text="New Button"
-        android:id="@+id/button4"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:text="New Button"
+            android:id="@+id/button4"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight=".33"
-        android:text="New Button"
-        android:id="@+id/button5"
-        android:layout_below="@+id/lista_de_eventos"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:text="New Button"
+            android:id="@+id/button5"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="New Button"
-        android:id="@+id/button6"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/button5"
-        android:layout_alignEnd="@+id/button5" />
+    </RelativeLayout-->
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="New Button"
-        android:id="@+id/button7"
-        android:layout_above="@+id/lista_de_eventos"
-        android:layout_toLeftOf="@+id/button6"
-        android:layout_toStartOf="@+id/button6" />
-</RelativeLayout>
+</LinearLayout>

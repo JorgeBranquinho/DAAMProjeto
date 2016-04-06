@@ -9,22 +9,18 @@ import android.view.ViewGroup;
 
 import almapenada.daam.R;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class FrirndsListFragment extends Fragment {
+public class NotificationsFragment extends Fragment {
 
 
-    public FrirndsListFragment() {
+    public NotificationsFragment() {
+        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_frinds_list, container, false);
-
+        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         return rootView;
     }

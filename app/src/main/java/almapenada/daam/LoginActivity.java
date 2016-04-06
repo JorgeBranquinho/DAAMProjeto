@@ -4,9 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -30,9 +35,34 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import almapenada.daam.utility.User;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -41,6 +71,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    /*usado para o login no facebook*/
+    User user = null;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -63,11 +95,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private AccessToken accessToken;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());//facebook
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setText("teste@daam.com");
@@ -96,7 +137,82 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+        callbackManager = CallbackManager.Factory.create();
+
+        if (AccessToken.getCurrentAccessToken() != null) {
+            Profile p = Profile.getCurrentProfile();
+            user=new User();
+            user.setFirstName(p.getFirstName());
+            user.setLastName(p.getLastName());
+            try {
+                Uri uriImage = Uri.parse(p.getProfilePictureUri(200,200).toString());
+                user.setPictureURL(new URL(String.valueOf(uriImage)));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            callDrawerActivity();
+        }else
+            System.out.println("ueueueu");
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Bundle params = new Bundle();
+                    params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
+                    new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
+                        @Override
+                        public void onCompleted(GraphResponse response) {
+                            if (response != null) {
+                                try {
+                                    JSONObject data = response.getJSONObject();
+                                    try {
+                                        user = new User();
+                                        user.setFacebookID(data.getString("id").toString());
+                                        String fullname = data.getString("name").toString();
+                                        user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
+                                        user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
+                                        user.setGender(data.getString("gender").toString());
+                                        user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    callDrawerActivity();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }).executeAsync();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //accessTokenTracker.stopTracking();
+    }
+//fim das cenas do facebook
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -336,7 +452,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                startActivity(new Intent(LoginActivity.this,DrawerActivity.class));
+                callDrawerActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -349,5 +465,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+    private void callDrawerActivity(){
+        Intent intent =new Intent(LoginActivity.this,DrawerActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("User", user);
+        intent.putExtras(b);
+        startActivity(intent);
+        finish();
+    }
+
 }
 

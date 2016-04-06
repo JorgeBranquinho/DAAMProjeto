@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import almapenada.daam.R;
+import almapenada.daam.utility.FragmentsAdapter;
 
 
 public class FriendsFragment extends Fragment {
 
     private ViewPager viewPager;
+    
     private TabLayout tabLayout;
 
     @Nullable
@@ -39,39 +41,12 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter ad = new Adapter(getFragmentManager());
-        ad.addFragment(new FrirndsListFragment(),"Friends");
-        ad.addFragment(new GroupsFragment(),"Groups");
+        FragmentsAdapter ad = new FragmentsAdapter(getFragmentManager());
+        ad.addFragment(new FriendsListFragment(),getResources().getString(R.string.tab_title_friends));
+        ad.addFragment(new GroupsListFragment(),getResources().getString(R.string.tab_title_groups));
         viewPager.setAdapter(ad);
     }
 
-    static class Adapter extends FragmentStatePagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public Adapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
-    }
 
 }
