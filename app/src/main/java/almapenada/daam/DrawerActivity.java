@@ -155,7 +155,7 @@ public class DrawerActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
-        if (database.isEmpty()) database.insertSuggestion("ola");
+        if (database.isEmpty()) database.insertSuggestion("ola");//teste
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override

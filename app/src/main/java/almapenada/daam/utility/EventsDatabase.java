@@ -8,59 +8,69 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class EventsDatabase {
-    public static final String DB_EVENT = "EVENT_DB";
-    public final static String TABLE_EVENT= "EVENT_TB";
-    public final static String FIELD_ID = "_id";
-    public final static String FIELD_NAME = "event_name";
-    public final static String FIELD_WEEKDAY = "event_weekday";
-    public final static String FIELD_DATE = "event_date";
-    public final static String FIELD_PRICE = "event_price";
-    public final static String FIELD_HOURS = "event_hours";
-    public final static String FIELD_LOCATION = "event_location";
-    public final static String FIELD_LOCATION_URI = "event_locationURI";
-    public final static String FIELD_GOING = "event_going";
-    public final static String FIELD_NEW = "event_new";
-
-    private SQLiteDatabase db;
+        private SQLiteDatabase db;
     private Helper helper;
 
     public EventsDatabase(Context context) {
 
-        helper = new Helper(context, DB_EVENT, null, 1);
+        helper = new Helper(context, EnumEventsDatabase.DB_EVENT, null, 1);
         db = helper.getWritableDatabase();
+    }
+
+    public void populateWithExample(){
+        insertEvent(new Event(0,"festa do Seixo Paulo", "monday", "1/2/2012", "15€", "15h", "ISCTE", null, false, false));//teste
+        insertEvent(new Event(1,"frango assado", "monday", "3/2/2012", "1€", "15h", "ISCTE", null, false, false));//teste
+        insertEvent(new Event(2,"Snoop Dogg & vinho verde", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
+        insertEvent(new Event(3,"festa de azeite", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
+        insertEvent(new Event(4,"makumba", "monday", "4/2/2012", "", "15h", "ISCTE", null, false, false));//teste
     }
 
     public long insertEvent(Event e)
     {
         ContentValues values = new ContentValues();
-        values.put(FIELD_NAME, e.getEventName());
-        values.put(FIELD_WEEKDAY, e.getWeekDay());
-        values.put(FIELD_DATE, e.getDate());
-        values.put(FIELD_PRICE, e.getPrice());
-        values.put(FIELD_HOURS, e.getHours());
-        values.put(FIELD_LOCATION, e.getLocation());
+        values.put(EnumEventsDatabase.FIELD_ID, e.getId());
+        values.put(EnumEventsDatabase.FIELD_NAME, e.getEventName());
+        values.put(EnumEventsDatabase.FIELD_WEEKDAY, e.getWeekDay());
+        values.put(EnumEventsDatabase.FIELD_DATE, e.getDate());
+        values.put(EnumEventsDatabase.FIELD_PRICE, e.getPrice());
+        values.put(EnumEventsDatabase.FIELD_HOURS, e.getHours());
+        values.put(EnumEventsDatabase.FIELD_LOCATION, e.getLocation());
         if(e.getLocation_URI()!=null)
-            values.put(FIELD_LOCATION_URI, e.getLocation_URI().toString());
+            values.put(EnumEventsDatabase.FIELD_LOCATION_URI, e.getLocation_URI().toString());
         else
-            values.put(FIELD_LOCATION_URI,"");
-        values.put(FIELD_GOING, e.isGoing());
-        values.put(FIELD_NEW, e.isNewEvent());
-        return db.insert(TABLE_EVENT, null, values);
+            values.put(EnumEventsDatabase.FIELD_LOCATION_URI,"");
+        values.put(EnumEventsDatabase.FIELD_GOING, e.isGoing());
+        values.put(EnumEventsDatabase.FIELD_NEW, e.isNewEvent());
+        return db.insert(EnumEventsDatabase.TABLE_EVENT, null, values);
+    }
+
+    public boolean update(int id, ContentValues values ){
+        long i = db.update(EnumEventsDatabase.TABLE_EVENT, values, EnumEventsDatabase.FIELD_ID + "=" + id, null );
+        return i>0;
+    }
+
+    public boolean deleteById(int id){
+        return db.delete(EnumEventsDatabase.TABLE_EVENT, EnumEventsDatabase.FIELD_ID + "=" + id, null) > 0;
     }
 
     public Cursor getEventByName(String text)
     {
-        return db.query(TABLE_EVENT, new String[]{FIELD_ID, FIELD_NAME, FIELD_WEEKDAY, FIELD_DATE, FIELD_PRICE, FIELD_HOURS, FIELD_LOCATION, FIELD_LOCATION_URI, FIELD_GOING, FIELD_NEW},
-                FIELD_NAME + "=" + text, null, null, null, null);
+        return db.query(EnumEventsDatabase.TABLE_EVENT, new String[]{EnumEventsDatabase.FIELD_ID, EnumEventsDatabase.FIELD_NAME, EnumEventsDatabase.FIELD_WEEKDAY, EnumEventsDatabase.FIELD_DATE, EnumEventsDatabase.FIELD_PRICE, EnumEventsDatabase.FIELD_HOURS, EnumEventsDatabase.FIELD_LOCATION, EnumEventsDatabase.FIELD_LOCATION_URI, EnumEventsDatabase.FIELD_GOING, EnumEventsDatabase.FIELD_NEW},
+                EnumEventsDatabase.FIELD_NAME + "=" + text, null, null, null, null);
     }
 
     public Cursor getEventById(int id){
-        return db.query(TABLE_EVENT, new String[]{FIELD_ID, FIELD_NAME, FIELD_WEEKDAY, FIELD_DATE, FIELD_PRICE, FIELD_HOURS, FIELD_LOCATION, FIELD_LOCATION_URI, FIELD_GOING, FIELD_NEW},
-                FIELD_ID + "=" + id, null, null, null, null);
+        return db.query(EnumEventsDatabase.TABLE_EVENT, new String[]{EnumEventsDatabase.FIELD_ID, EnumEventsDatabase.FIELD_NAME, EnumEventsDatabase.FIELD_WEEKDAY, EnumEventsDatabase.FIELD_DATE, EnumEventsDatabase.FIELD_PRICE, EnumEventsDatabase.FIELD_HOURS, EnumEventsDatabase.FIELD_LOCATION, EnumEventsDatabase.FIELD_LOCATION_URI, EnumEventsDatabase.FIELD_GOING, EnumEventsDatabase.FIELD_NEW},
+                EnumEventsDatabase.FIELD_ID + "=" + id, null, null, null, null);
+    }
+
+    public Cursor getAllEvents(){
+        return db.query(EnumEventsDatabase.TABLE_EVENT, new String[]{EnumEventsDatabase.FIELD_ID, EnumEventsDatabase.FIELD_NAME, EnumEventsDatabase.FIELD_WEEKDAY, EnumEventsDatabase.FIELD_DATE, EnumEventsDatabase.FIELD_PRICE, EnumEventsDatabase.FIELD_HOURS, EnumEventsDatabase.FIELD_LOCATION, EnumEventsDatabase.FIELD_LOCATION_URI, EnumEventsDatabase.FIELD_GOING, EnumEventsDatabase.FIELD_NEW},
+                null, null, null, null, null);
     }
 
     public boolean isEmpty(){
-        String count = "SELECT count(*) FROM " + TABLE_EVENT;
+        String count = "SELECT count(*) FROM " + EnumEventsDatabase.TABLE_EVENT;
         Cursor mcursor = db.rawQuery(count, null);
         mcursor.moveToFirst();
         if(mcursor.getInt(0)>0) return false;
@@ -77,11 +87,11 @@ public class EventsDatabase {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE "+TABLE_EVENT+" ("+
-                    FIELD_ID+" integer primary key autoincrement, "+ FIELD_NAME +" text, " +
-                    FIELD_WEEKDAY + " text, " + FIELD_DATE+ " date, " + FIELD_PRICE + " text, " +
-                    FIELD_HOURS + " text, " + FIELD_LOCATION + " text, " + FIELD_LOCATION_URI + " text, " +
-                    FIELD_GOING + " boolean, " + FIELD_NEW + " boolean);");
+            db.execSQL("CREATE TABLE "+EnumEventsDatabase.TABLE_EVENT+" ("+
+                    EnumEventsDatabase.FIELD_ID+" integer primary key autoincrement, "+ EnumEventsDatabase.FIELD_NAME +" text, " +
+                    EnumEventsDatabase.FIELD_WEEKDAY + " text, " + EnumEventsDatabase.FIELD_DATE+ " date, " + EnumEventsDatabase.FIELD_PRICE + " text, " +
+                    EnumEventsDatabase.FIELD_HOURS + " text, " + EnumEventsDatabase.FIELD_LOCATION + " text, " + EnumEventsDatabase.FIELD_LOCATION_URI + " text, " +
+                    EnumEventsDatabase.FIELD_GOING + " boolean, " + EnumEventsDatabase.FIELD_NEW + " boolean);");
         }
 
         @Override

@@ -18,7 +18,8 @@ public class Event implements Serializable {
     private boolean newEvent=false;
     private int id=-1;
 
-    public Event(String eventName, String weekDay, String date, String price, String hours, String location, URI location_URI, boolean going, boolean newEvent){
+    public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, URI location_URI, boolean going, boolean newEvent){
+        this.setId(id);
         this.eventName=eventName;
         this.weekDay=weekDay;
         this.date=date;
@@ -29,6 +30,18 @@ public class Event implements Serializable {
         this.going=going;
         this.newEvent=newEvent;
     }
+
+    /*public Event(String eventName, String weekDay, String date, String price, String hours, String location, URI location_URI, boolean going, boolean newEvent){
+        this.eventName=eventName;
+        this.weekDay=weekDay;
+        this.date=date;
+        this.price=price;
+        this.hours=hours;
+        this.location=location;
+        if(location_URI!=null) this.location_URI=location_URI;
+        this.going=going;
+        this.newEvent=newEvent;
+    }*/
 
     public String getEventName() {
         return eventName;

@@ -196,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onError(FacebookException exception) {
-                    Toast.makeText(getBaseContext(), "Login attempt failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Login attempt failed - check network connection", Toast.LENGTH_SHORT).show();
                 }
             });
     }

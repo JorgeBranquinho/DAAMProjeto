@@ -4,6 +4,7 @@ package almapenada.daam.utility;
 
         import android.app.Activity;
         import android.app.AlertDialog;
+        import android.content.ContentValues;
         import android.content.Context;
         import android.content.DialogInterface;
         import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ package almapenada.daam.utility;
 
 public class EventAdapter extends BaseAdapter {
 
+    private final EventsDatabase database;
     private EventAdapter self;
     private Activity activity;
     private ArrayList<Event> data;
@@ -30,6 +32,7 @@ public class EventAdapter extends BaseAdapter {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        database = new EventsDatabase(activity);
     }
 
     public int getCount() {
@@ -66,6 +69,7 @@ public class EventAdapter extends BaseAdapter {
             private float x1,x2;
             static final int MIN_DISTANCE = 50;
             private boolean avoid_double_click=false;
+            private Event e=data.get(temp_position);
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -74,27 +78,28 @@ public class EventAdapter extends BaseAdapter {
                     x2 = event.getX();
                     float deltaX = x2 - x1;
                     if (Math.abs(deltaX) > MIN_DISTANCE && !avoid_double_click) {
-                        avoid_double_click=true;
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage(activity.getString(R.string.msg_apagar_evento) + " " + titulo_evento + "?")
-                                .setPositiveButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        avoid_double_click=false;
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
-                                        Event item = data.get(event_position);
-                                        data.remove(event_position);
-                                        self.notifyDataSetChanged();
-                                        avoid_double_click=false;
-                                        dialog.dismiss();
-                                    }
-                                });
-                        builder.show();
-                        /*if (x2 > x1) {}//saber se é esq ou direita*/
+                        if (x2 > x1) {//saber se é esq ou direita*/
+                            avoid_double_click = true;
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setMessage(activity.getString(R.string.msg_apagar_evento) + " " + titulo_evento + "?")
+                                    .setPositiveButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            avoid_double_click = false;
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
+                                            database.deleteById(e.getId());
+                                            data.remove(event_position);
+                                            self.notifyDataSetChanged();
+                                            avoid_double_click = false;
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.show();
+                        }
                     }
                     else {
                         //user fez tap
@@ -113,16 +118,34 @@ public class EventAdapter extends BaseAdapter {
         TextView local = (TextView)vi.findViewById(R.id.local);
 
         title.setText(data.get(position).getEventName());
-        going.setSelected(data.get(position).isGoing());
+        going.setChecked(data.get(position).isGoing());
         if(data.get(position).isGoing())going.setText(activity.getString(R.string.going_event));else going.setText(activity.getString(R.string.not_going_event));
         going.setOnClickListener(new View.OnClickListener() {
+            private Event e=data.get(temp_position);
             @Override
             public void onClick(View v) {
+
                 if(going.isChecked()) {
-                    going.setText(activity.getString(R.string.going_event));//TODO: atualizar DB
+                    going.setText(activity.getString(R.string.going_event));
                 }else {
                     going.setText(activity.getString(R.string.not_going_event));//TODO: atualizar DB
                 }
+
+                ContentValues values = new ContentValues();
+                values.put(EnumEventsDatabase.FIELD_NAME, e.getEventName());
+                values.put(EnumEventsDatabase.FIELD_WEEKDAY, e.getWeekDay());
+                values.put(EnumEventsDatabase.FIELD_DATE, e.getDate());
+                values.put(EnumEventsDatabase.FIELD_PRICE, e.getPrice());
+                values.put(EnumEventsDatabase.FIELD_HOURS, e.getHours());
+                values.put(EnumEventsDatabase.FIELD_LOCATION, e.getLocation());
+                if(e.getLocation_URI()!=null)
+                    values.put(EnumEventsDatabase.FIELD_LOCATION_URI, e.getLocation_URI().toString());
+                else
+                    values.put(EnumEventsDatabase.FIELD_LOCATION_URI,"");
+                values.put(EnumEventsDatabase.FIELD_GOING, going.isChecked());
+                values.put(EnumEventsDatabase.FIELD_NEW, e.isNewEvent());
+                boolean res=database.update(e.getId(), values);
+                System.out.println(e.getEventName() + e.getId() + "ueue cheguei aqui?" + res);
             }
         });
         diaSemana.setText(data.get(position).getWeekDay());

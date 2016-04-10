@@ -31,7 +31,7 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        events_to_display_on_feed.add(new Event("Snoop Dogg & vinho verde", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
+        events_to_display_on_feed.add(new Event(0,"Snoop Dogg & vinho verde", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, false, false));//teste
 
         adapter = new EventFeedAdapter(getActivity(), events_to_display_on_feed);
 
