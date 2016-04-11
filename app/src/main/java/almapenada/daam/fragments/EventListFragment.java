@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
 
+import almapenada.daam.utility.EnumEventsDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventAdapter;
 import almapenada.daam.R;
@@ -56,14 +57,14 @@ public class EventListFragment extends Fragment {
     private void populateEventList(Cursor cursor) {
         if (cursor .moveToFirst()) {
             while (cursor.isAfterLast() == false) {
-                Event e = cursorToEvent(cursor);
+                Event e = (new EnumEventsDatabase()).cursorToEvent(cursor);
                 full_event_list.add(e);
                 cursor.moveToNext();
             }
         }
     }
 
-    private Event cursorToEvent(Cursor cursor){
+    /*private Event cursorToEvent(Cursor cursor){
         int id = cursor.getInt(cursor.getColumnIndex("_id"));
         String name = cursor.getString(cursor.getColumnIndex("event_name"));
         String weekday = cursor.getString(cursor.getColumnIndex("event_weekday"));
@@ -88,7 +89,7 @@ public class EventListFragment extends Fragment {
         else
             new_event = true;
         return new Event(id, name, weekday, date, price, hours, location, locationURI, going, new_event);
-    }
+    }*/
 
     public void orderByRecent(){
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB

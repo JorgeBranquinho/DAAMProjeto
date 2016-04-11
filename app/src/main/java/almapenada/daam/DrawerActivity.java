@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
@@ -33,16 +32,11 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.login.LoginManager;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import almapenada.daam.fragments.CreateEventFragment;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
@@ -64,10 +58,6 @@ public class DrawerActivity extends AppCompatActivity
     private User user = null;
     private ImageView nav_img;
     private int id_menuItem;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -90,8 +80,9 @@ public class DrawerActivity extends AppCompatActivity
             nav_user2.setText("");
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
             if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
-        } else
-            Toast.makeText(this.getApplicationContext(), "nao vieste do face", Toast.LENGTH_SHORT).show();
+        } else {
+            //TODO:ir buscar perfil sem ser do facebook
+        }
 
         // Botao que flutoa na actividade
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -125,9 +116,6 @@ public class DrawerActivity extends AppCompatActivity
         transaction.add(R.id.frame, currentFragment);
         transaction.commit();
 
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -147,7 +135,6 @@ public class DrawerActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -155,7 +142,17 @@ public class DrawerActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
-        if (database.isEmpty()) database.insertSuggestion("ola");//teste
+        if (database.isEmpty()){
+            //TODO:add amigos
+            EventsDatabase database2 = new EventsDatabase(this.getBaseContext());
+            Cursor cursor = database2.getAllEvents();
+            if (cursor .moveToFirst()) {
+                while (cursor.isAfterLast() == false) {
+                    database.insertSuggestion(cursor.getString(cursor.getColumnIndex("event_name")));
+                    cursor.moveToNext();
+                }
+            }
+        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override

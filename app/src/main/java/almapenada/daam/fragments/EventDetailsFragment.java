@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import almapenada.daam.DrawerActivity;
@@ -32,6 +33,7 @@ public class EventDetailsFragment extends Fragment {
         TextView event_guests= (TextView) v.findViewById(R.id.event_guests);
         TextView event_description= (TextView) v.findViewById(R.id.event_description);
         Button event_comments= (Button) v.findViewById(R.id.event_comments);
+        ImageView mapa= (ImageView) v.findViewById(R.id.map);
 
         event_name.setText(e.getEventName());
         event_date.setText(e.getWeekDay() + ", " + e.getDate());

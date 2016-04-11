@@ -1,5 +1,10 @@
 package almapenada.daam.utility;
 
+import android.database.Cursor;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * Created by Asus on 10/04/2016.
  */
@@ -18,4 +23,31 @@ public class EnumEventsDatabase {
     public final static String FIELD_LOCATION_URI = "event_locationURI";
     public final static String FIELD_GOING = "event_going";
     public final static String FIELD_NEW = "event_new";
+
+    public Event cursorToEvent(Cursor cursor){
+        int id = cursor.getInt(cursor.getColumnIndex("_id"));
+        String name = cursor.getString(cursor.getColumnIndex("event_name"));
+        String weekday = cursor.getString(cursor.getColumnIndex("event_weekday"));
+        String date = cursor.getString(cursor.getColumnIndex("event_date"));
+        String price = cursor.getString(cursor.getColumnIndex("event_price"));
+        String hours = cursor.getString(cursor.getColumnIndex("event_hours"));
+        String location = cursor.getString(cursor.getColumnIndex("event_location"));
+        URI locationURI = null;
+        try {
+            locationURI = new URI(cursor.getString(cursor.getColumnIndex("event_locationURI")));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        boolean going;
+        if(cursor.getInt(cursor.getColumnIndex("event_going"))==0)
+            going=false;
+        else
+            going=true;
+        boolean new_event;
+        if(cursor.getInt(cursor.getColumnIndex("event_new"))==0)
+            new_event = false;
+        else
+            new_event = true;
+        return new Event(id, name, weekday, date, price, hours, location, locationURI, going, new_event);
+    }
 }
