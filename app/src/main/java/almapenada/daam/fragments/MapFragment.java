@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import almapenada.daam.R;
@@ -29,14 +30,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private GoogleMap mMap;
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
+    private Marker mMarker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        //falta ver se GPS ta ativo
+        //TODO:falta ver se GPS ta ativo
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addConnectionCallbacks(this)
@@ -53,7 +54,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        final LocationManager manager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+        if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            System.out.println("ueue ja sei onde andas");
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+                    if (mMap != null) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                    }
+                }
+            });
+        }else {
+            System.out.println("ueue nao sei onde andas :(");
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        }
     }
 
     @Override

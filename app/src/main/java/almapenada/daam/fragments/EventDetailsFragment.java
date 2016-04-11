@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class EventDetailsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_event_details, container, false);
         Event e = (Event) this.getArguments().getSerializable("evento");
 
-        ((DrawerActivity) getActivity()).HideFabIcon();// Para anular:((DrawerActivity) getActivity()).showFabIcon();
+        ((DrawerActivity) getActivity()).HideFabIcon();
 
         TextView event_name = (TextView) v.findViewById(R.id.event_name);
         TextView event_date= (TextView) v.findViewById(R.id.event_date);
@@ -41,6 +42,16 @@ public class EventDetailsFragment extends Fragment {
         event_time.setText(e.getHours());
         event_location.setText(e.getLocation());
 
+        /*this.getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    ((DrawerActivity)getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
+                    return true;
+                }
+                return false;
+            }
+        });*/
 
         return v;
     }

@@ -221,26 +221,10 @@ public class DrawerActivity extends AppCompatActivity
             viewFragment(new ProfileFragment(), "My Profile",false,-1);
         } else if (id_menuItem == R.id.nav_home) {
             viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
-            /*showFabIcon();
-            transaction.remove(currentFragment);
-            transaction = fragManager.beginTransaction();
-            currentFragment = new HomeFragment();
-            transaction.replace(R.id.frame, currentFragment);
-            transaction.addToBackStack(null);
-            setTitle(getResources().getString(R.string.title_home));
-            transaction.commit();*/
         } else if (id_menuItem == R.id.nav_events) {
             viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
         } else if (id_menuItem == R.id.nav_friends) {
             viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
-            /*showFabIcon();
-            transaction.remove(currentFragment);
-            transaction = fragManager.beginTransaction();
-            currentFragment = new FriendsFragment();
-            transaction.replace(R.id.frame, currentFragment);
-            transaction.addToBackStack(null);
-            setTitle(getResources().getString(R.string.title_friends));
-            transaction.commit();*/
         } else if (id_menuItem == R.id.nav_settings) {
 
         } else if (id_menuItem == R.id.nav_about) {

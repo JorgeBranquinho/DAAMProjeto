@@ -3,11 +3,14 @@ package almapenada.daam;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -142,22 +145,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
-        callbackManager = CallbackManager.Factory.create();
+        if(isNetworkAvailable()) {
+            callbackManager = CallbackManager.Factory.create();
 
-        if (AccessToken.getCurrentAccessToken() != null) {
-            Profile p = Profile.getCurrentProfile();
-            user=new User();
-            user.setFirstName(p.getFirstName());
-            user.setLastName(p.getLastName());
-            try {
-                Uri uriImage = Uri.parse(p.getProfilePictureUri(200,200).toString());
-                user.setPictureURL(new URL(String.valueOf(uriImage)));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            callDrawerActivity();
-        }else
-            System.out.println("ueueueu");
+            if (AccessToken.getCurrentAccessToken() != null) {
+                Profile p = Profile.getCurrentProfile();
+                user = new User();
+                user.setFirstName(p.getFirstName());
+                user.setLastName(p.getLastName());
+                try {
+                    Uri uriImage = Uri.parse(p.getProfilePictureUri(200, 200).toString());
+                    user.setPictureURL(new URL(String.valueOf(uriImage)));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                callDrawerActivity();
+            } else
+                System.out.println("ueueueu");
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
@@ -199,11 +203,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Toast.makeText(getBaseContext(), "Login attempt failed - check network connection", Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(!isNetworkAvailable()) return;
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
