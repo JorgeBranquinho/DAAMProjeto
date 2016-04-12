@@ -132,18 +132,18 @@ public class EventAdapter extends BaseAdapter {
                 }
 
                 ContentValues values = new ContentValues();
-                values.put(EnumEventsDatabase.FIELD_NAME, e.getEventName());
-                values.put(EnumEventsDatabase.FIELD_WEEKDAY, e.getWeekDay());
-                values.put(EnumEventsDatabase.FIELD_DATE, e.getDate());
-                values.put(EnumEventsDatabase.FIELD_PRICE, e.getPrice());
-                values.put(EnumEventsDatabase.FIELD_HOURS, e.getHours());
-                values.put(EnumEventsDatabase.FIELD_LOCATION, e.getLocation());
+                values.put(EnumDatabase.FIELD_NAME, e.getEventName());
+                values.put(EnumDatabase.FIELD_WEEKDAY, e.getWeekDay());
+                values.put(EnumDatabase.FIELD_DATE, e.getDate());
+                values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
+                values.put(EnumDatabase.FIELD_HOURS, e.getHours());
+                values.put(EnumDatabase.FIELD_LOCATION, e.getLocation());
                 if(e.getLocation_URI()!=null)
-                    values.put(EnumEventsDatabase.FIELD_LOCATION_URI, e.getLocation_URI().toString());
+                    values.put(EnumDatabase.FIELD_LOCATION_URI, e.getLocation_URI().toString());
                 else
-                    values.put(EnumEventsDatabase.FIELD_LOCATION_URI,"");
-                values.put(EnumEventsDatabase.FIELD_GOING, going.isChecked());
-                values.put(EnumEventsDatabase.FIELD_NEW, e.isNewEvent());
+                    values.put(EnumDatabase.FIELD_LOCATION_URI,"");
+                values.put(EnumDatabase.FIELD_GOING, going.isChecked());
+                values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
                 boolean res=database.update(e.getId(), values);
                 System.out.println(e.getEventName() + e.getId() + "ueue cheguei aqui?" + res);
             }

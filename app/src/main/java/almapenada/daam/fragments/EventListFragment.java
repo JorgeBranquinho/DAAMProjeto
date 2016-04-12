@@ -1,17 +1,13 @@
 package almapenada.daam.fragments;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
 
-import almapenada.daam.utility.EnumEventsDatabase;
+import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventAdapter;
 import almapenada.daam.R;
@@ -57,7 +53,7 @@ public class EventListFragment extends Fragment {
     private void populateEventList(Cursor cursor) {
         if (cursor .moveToFirst()) {
             while (cursor.isAfterLast() == false) {
-                Event e = (new EnumEventsDatabase()).cursorToEvent(cursor);
+                Event e = (new EnumDatabase()).cursorToEvent(cursor);
                 full_event_list.add(e);
                 cursor.moveToNext();
             }

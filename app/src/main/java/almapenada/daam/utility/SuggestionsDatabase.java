@@ -37,6 +37,12 @@ public class SuggestionsDatabase {
                 FIELD_SUGGESTION + " LIKE '" + text + "%'", null, null, null, null);
     }
 
+    public Cursor getSuggestionsById(int id)
+    {
+        return db.query(TABLE_SUGGESTION, new String[]{FIELD_ID, FIELD_SUGGESTION},
+                FIELD_ID + "=" + id, null, null, null, null);
+    }
+
     public boolean isEmpty(){
         String count = "SELECT count(*) FROM " + TABLE_SUGGESTION;
         Cursor mcursor = db.rawQuery(count, null);

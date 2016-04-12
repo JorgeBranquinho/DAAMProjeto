@@ -1,5 +1,6 @@
 package almapenada.daam;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.database.Cursor;
@@ -43,6 +44,7 @@ import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.fragments.ProfileFragment;
+import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
 import almapenada.daam.utility.SuggestionSimpleCursorAdapter;
@@ -59,6 +61,7 @@ public class DrawerActivity extends AppCompatActivity
     private ImageView nav_img;
     private int id_menuItem;
     private GoogleApiClient client;
+    private Activity activity=this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +183,15 @@ public class DrawerActivity extends AppCompatActivity
                         @Override
                         public boolean onSuggestionClick(int position) {
                             Toast.makeText(getApplicationContext(),simple.getItem(position).toString(), Toast.LENGTH_SHORT).show();//tem q se ir a db
+                            Cursor c = database.getSuggestionsById(position);
+                            if(c.moveToFirst()) {
+                                String name = c.getString(c.getColumnIndex(SuggestionsDatabase.FIELD_SUGGESTION));
+                                EventsDatabase database2 = new EventsDatabase(getBaseContext());
+                                Cursor c2 = database2.getEventByName(name);
+                                if(c2.moveToFirst()){
+                                    viewEventDetails(EnumDatabase.cursorToEvent(c2));
+                                }
+                            }
                             return false;
                         }
                     });
@@ -324,7 +336,17 @@ public class DrawerActivity extends AppCompatActivity
         protected Bitmap doInBackground(URL... url) {
             try {
                 bitmap = BitmapFactory.decodeStream(url[0].openConnection().getInputStream());
-                bitmap = scaleBitmap(bitmap, 200, 200);
+                int sizevar=new EnumDatabase().getScreenDensity(activity);
+                int size;
+                switch (sizevar){
+                    case 1:size=150;break;
+                    case 2:size=100;break;
+                    case 3:size=200;break;
+                    case 4:size=238;break;
+                    case 5:size=400;break;
+                    default: size=400;break;
+                }
+                bitmap = scaleBitmap(bitmap, size, size);
             } catch (Exception e) {
                 Log.e("Error", "image download error");
                 Log.e("Error", e.getMessage());
