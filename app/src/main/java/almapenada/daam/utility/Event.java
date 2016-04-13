@@ -1,5 +1,7 @@
 package almapenada.daam.utility;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.net.URI;
 
@@ -13,12 +15,13 @@ public class Event implements Serializable {
     private String price="";
     private String hours="";
     private String location="";
+    private LatLng location_latlng;
     private URI location_URI;
     private boolean going=false;
     private boolean newEvent=false;
     private int id=-1;
 
-    public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, URI location_URI, boolean going, boolean newEvent){
+    public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, LatLng location_latlng, URI location_URI, boolean going, boolean newEvent){
         this.setId(id);
         this.eventName=eventName;
         this.weekDay=weekDay;
@@ -26,6 +29,7 @@ public class Event implements Serializable {
         this.price=price;
         this.hours=hours;
         this.location=location;
+        if(location_latlng!=null) this.location_latlng=location_latlng;
         if(location_URI!=null) this.location_URI=location_URI;
         this.going=going;
         this.newEvent=newEvent;
@@ -121,5 +125,13 @@ public class Event implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LatLng getLocation_latlng() {
+        return location_latlng;
+    }
+
+    public void setLocation_latlng(LatLng location_latlng) {
+        this.location_latlng = location_latlng;
     }
 }

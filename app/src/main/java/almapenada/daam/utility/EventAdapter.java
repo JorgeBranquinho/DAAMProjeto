@@ -138,6 +138,8 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
                 values.put(EnumDatabase.FIELD_HOURS, e.getHours());
                 values.put(EnumDatabase.FIELD_LOCATION, e.getLocation());
+                values.put(EnumDatabase.FIELD_LOCATION_lat, e.getLocation_latlng().latitude);
+                values.put(EnumDatabase.FIELD_LOCATION_lat, e.getLocation_latlng().longitude);
                 if(e.getLocation_URI()!=null)
                     values.put(EnumDatabase.FIELD_LOCATION_URI, e.getLocation_URI().toString());
                 else

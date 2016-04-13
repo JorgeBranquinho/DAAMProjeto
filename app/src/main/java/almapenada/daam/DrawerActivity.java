@@ -3,6 +3,7 @@ package almapenada.daam;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +39,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import java.net.URL;
+import java.util.Stack;
+
 import almapenada.daam.fragments.CreateEventFragment;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
@@ -62,6 +65,9 @@ public class DrawerActivity extends AppCompatActivity
     private int id_menuItem;
     private GoogleApiClient client;
     private Activity activity=this;
+    private Stack<Fragment> fragmentStack = new Stack<Fragment>();//stack dos fragments
+    private int numberOfStackedFrags=0;
+    private int MaxStackedFrags=4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,10 +132,36 @@ public class DrawerActivity extends AppCompatActivity
     public void onBackPressed() {
         try {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            System.out.println("ueueue carregaste back" + numberOfStackedFrags);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                super.onBackPressed();
+                //super.onBackPressed();
+                System.out.println("ueueue carregasteback e agora?");
+                if(fragmentStack.isEmpty() || numberOfStackedFrags==0){
+                    System.out.println("ueueue carregaste back ta vazio");
+                    viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
+                }else{
+                    numberOfStackedFrags--;
+                    Fragment fragmentToLoad=fragmentStack.pop();
+                    System.out.println("ueueue carregasteback nao ta vazio " + fragmentToLoad);
+                    if (fragmentToLoad instanceof ProfileFragment) {
+                        System.out.println("ueueue carregaste back perfil");
+                        viewFragment(new ProfileFragment(), "My Profile",false,-1);
+                    } else if (fragmentToLoad instanceof HomeFragment) {
+                        viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
+                    } else if (fragmentToLoad instanceof EventsFragment) {
+                        System.out.println("ueueue carregaste back evento");
+                        viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
+                    } else if (fragmentToLoad instanceof FriendsFragment) {
+                        viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
+                    } else if (fragmentToLoad.equals(null)) {//mudar isto, ta so para teste
+                        //TODO:falta fazer
+                        System.out.println("[erro] carregaste back e nao sabe para onde vai");
+                    }else{
+                        System.out.println("[erro] carregaste back e nao sabe para onde vai");
+                    }
+                }
             }
         } catch (IllegalStateException e) {
             //nao fazer nada, ja esta no home
@@ -236,9 +268,10 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id_menuItem == R.id.nav_friends) {
             viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
         } else if (id_menuItem == R.id.nav_settings) {
-
+            //TODO:falta fazer
         } else if (id_menuItem == R.id.nav_about) {
-
+            Intent intent = new Intent(this, HelpActivity.class);
+            startActivity(intent);
         } else if (id_menuItem == R.id.log_out) {
             LoginManager.getInstance().logOut();
             finish();
@@ -271,12 +304,33 @@ public class DrawerActivity extends AppCompatActivity
         if (showFabIcon) showFabIcon();
         else HideFabIcon();
         if (fabIcon != -1) setFabIcon(fabIcon);
+        if(numberOfStackedFrags==MaxStackedFrags)//novo nao funca direito pq ta a fazer push do atual qd devia ser do anterior
+            ManageStack();//novo
+        fragmentStack.push(currentFragment);//novo
+        numberOfStackedFrags++;
         transaction.remove(currentFragment);
         transaction = fragManager.beginTransaction();
         transaction.replace(R.id.frame, frag);
         transaction.addToBackStack(null);
         setTitle(title);
         transaction.commit();
+    }
+
+    private void ManageStack() {
+        Stack<Fragment> temp = new Stack<>();
+        numberOfStackedFrags--;
+        int n=numberOfStackedFrags;
+        while (n!=0){
+            Fragment i = fragmentStack.pop();
+            temp.push(i);
+            n--;
+        }
+        n=numberOfStackedFrags;
+        while (n!=0){
+            Fragment i = temp.pop();
+            fragmentStack.push(i);
+            n--;
+        }
     }
 
     public void viewEventDetails(Event e) {

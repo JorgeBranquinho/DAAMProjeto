@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.util.DisplayMetrics;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -24,6 +26,8 @@ public class EnumDatabase {
     public final static String FIELD_PRICE = "event_price";
     public final static String FIELD_HOURS = "event_hours";
     public final static String FIELD_LOCATION = "event_location";
+    public final static String FIELD_LOCATION_lat = "event_locationLat";
+    public final static String FIELD_LOCATION_lng = "event_locationLng";
     public final static String FIELD_LOCATION_URI = "event_locationURI";
     public final static String FIELD_GOING = "event_going";
     public final static String FIELD_NEW = "event_new";
@@ -45,6 +49,7 @@ public class EnumDatabase {
         String price = cursor.getString(cursor.getColumnIndex("event_price"));
         String hours = cursor.getString(cursor.getColumnIndex("event_hours"));
         String location = cursor.getString(cursor.getColumnIndex("event_location"));
+        LatLng locationLatLng = new LatLng(cursor.getDouble(cursor.getColumnIndex("event_locationLat")), cursor.getDouble(cursor.getColumnIndex("event_locationLat")));
         URI locationURI = null;
         try {
             locationURI = new URI(cursor.getString(cursor.getColumnIndex("event_locationURI")));
@@ -61,7 +66,7 @@ public class EnumDatabase {
             new_event = false;
         else
             new_event = true;
-        return new Event(id, name, weekday, date, price, hours, location, locationURI, going, new_event);
+        return new Event(id, name, weekday, date, price, hours, location, locationLatLng, locationURI, going, new_event);
     }
 
     public int getScreenDensity(Activity a){

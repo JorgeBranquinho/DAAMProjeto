@@ -1,11 +1,14 @@
 package almapenada.daam.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -24,6 +27,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import almapenada.daam.R;
+import almapenada.daam.utility.EnumDatabase;
+import almapenada.daam.utility.Event;
+import almapenada.daam.utility.EventsDatabase;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -51,26 +57,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        final LocationManager manager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
-        if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-            System.out.println("ueue ja sei onde andas");
-            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                @Override
-                public void onMyLocationChange(Location location) {
-                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMarker = mMap.addMarker(new MarkerOptions().position(loc));
-                    if (mMap != null) {
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+        final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+            EventsDatabase database = new EventsDatabase(getActivity());
+            Cursor cursor = database.getAllEvents();
+            if (cursor .moveToFirst()) {
+                while (cursor.isAfterLast() == false) {
+                    Event e = (new EnumDatabase()).cursorToEvent(cursor);
+                    if(!(e.getLocation_latlng().latitude==-1 && e.getLocation_latlng().longitude==-1)) {
+                        mMarker = mMap.addMarker(new MarkerOptions()
+                                .title(e.getEventName())
+                                .position(e.getLocation_latlng()));
                     }
+                    cursor.moveToNext();
                 }
-            });
-        }else {
-            System.out.println("ueue nao sei onde andas :(");
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            }
         }
     }
 
@@ -79,7 +83,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         if ( Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return  ;
+            return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
