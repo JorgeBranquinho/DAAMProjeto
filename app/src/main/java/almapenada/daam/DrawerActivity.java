@@ -145,8 +145,9 @@ public class DrawerActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
+        database.removeAll();
         if (database.isEmpty()){
-            //TODO:add amigos
+            //TODO:falta add amigos e outras cenas se quiserem
             EventsDatabase database2 = new EventsDatabase(this.getBaseContext());
             Cursor cursor = database2.getAllEvents();
             if (cursor .moveToFirst()) {

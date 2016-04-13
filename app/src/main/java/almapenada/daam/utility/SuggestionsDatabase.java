@@ -24,6 +24,11 @@ public class SuggestionsDatabase {
         db = helper.getWritableDatabase();
     }
 
+    public void removeAll()
+    {
+        db.delete(TABLE_SUGGESTION, null, null);
+    }
+
     public long insertSuggestion(String text)
     {
         ContentValues values = new ContentValues();

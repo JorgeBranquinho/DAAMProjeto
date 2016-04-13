@@ -145,13 +145,12 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
                 boolean res=database.update(e.getId(), values);
-                System.out.println(e.getEventName() + e.getId() + "ueue cheguei aqui?" + res);
             }
         });
         diaSemana.setText(data.get(position).getWeekDay());
         diaEvento.setText(data.get(position).getDate());
         if(!data.get(position).getPrice().equals(""))
-            preco.setText("Price: " + data.get(position).getPrice());
+            preco.setText("Price: " + data.get(position).getPrice() + "€");
         else
             preco.setText("");
         if(!data.get(position).getHours().equals(""))

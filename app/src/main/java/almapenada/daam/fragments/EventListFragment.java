@@ -118,7 +118,7 @@ public class EventListFragment extends Fragment {
             public int compare(Event event2, Event event1) {
                 if (event1.getPrice().equals("")) return 1;
                 if (event2.getPrice().equals("")) return -1;
-                return Integer.parseInt(String.valueOf(event2.getPrice().charAt(0)))<Integer.parseInt(String.valueOf(event1.getPrice().charAt(0)))?-1:1;
+                return Integer.parseInt(String.valueOf(event2.getPrice()))<Integer.parseInt(String.valueOf(event1.getPrice()))?-1:1;
             }
         });
         adapter=new EventAdapter(getActivity(), events_to_display);
