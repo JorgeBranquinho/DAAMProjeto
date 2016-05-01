@@ -4,13 +4,19 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 import android.widget.DatePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import almapenada.daam.fragments.CreateEventFragment;
+
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+    public DatePickerFragment(){
+
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
