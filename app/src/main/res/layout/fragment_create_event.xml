@@ -150,7 +150,7 @@
         android:layout_gravity="center"
         android:layout_weight=".08">
 
-        <TextView
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -164,20 +164,22 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="55dp"/>
 
-        <EditText
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/event_location_input"
             android:layout_marginRight="58dp"
             android:layout_marginEnd="58dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:maxLength="20"
+            android:enabled="false"
             android:layout_weight="1.0"
             android:text="Location"
             android:ems="4"
-            android:background="@drawable/edit_text_custom"/>
+            android:layout_alignTop="@+id/event_location"
+            android:textSize="11dp"
+            android:layout_alignBottom="@+id/event_location" />
 
     </RelativeLayout>
 

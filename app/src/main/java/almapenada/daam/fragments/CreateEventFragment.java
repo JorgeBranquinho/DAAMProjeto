@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -62,11 +63,12 @@ public class CreateEventFragment extends Fragment {
         final RadioButton eventPrivate = (RadioButton) v.findViewById(R.id.eventPrivate);
         final RadioButton eventPublic = (RadioButton) v.findViewById(R.id.eventPublic);
         final RadioButton event_price = (RadioButton) v.findViewById(R.id.event_price);
+        final RadioButton event_location = (RadioButton) v.findViewById(R.id.event_location);
         date_picker = (Button) v.findViewById(R.id.date_picker);
         final Switch switch1 = (Switch) v.findViewById(R.id.switch1);
         final TextView event_end = (TextView) v.findViewById(R.id.event_end);
         date_end_picker = (Button) v.findViewById(R.id.date_end_picker);
-        final EditText event_location_input = (EditText) v.findViewById(R.id.event_location_input);
+        final Button event_location_input = (Button) v.findViewById(R.id.event_location_input);
         final EditText event_price_input = (EditText) v.findViewById(R.id.event_price_input);
         final EditText event_description_input = (EditText) v.findViewById(R.id.event_description_input);
         Button event_people = (Button) v.findViewById(R.id.event_people);
@@ -117,17 +119,6 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        event_location_input.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    return true;
-                }
-                return false;
-            }
-        });
-
         event_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,15 +134,33 @@ public class CreateEventFragment extends Fragment {
         event_location_input.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_location_input.setText("");
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                final String regexStr = "^[0-9]*$";
+                final EditText lat = new EditText(getContext());
+                final EditText lng = new EditText(getContext());
+                lat.setText("latitude");
+                lng.setText("longitude");
+                LinearLayout layout = new LinearLayout(getContext());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                alert.setTitle("Insert latitude and longitude");
+                layout.addView(lat);
+                layout.addView(lng);
+                alert.setView(layout);
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(lat.getText().toString().trim().matches(regexStr) && lng.getText().toString().trim().matches(regexStr))
+                            event_location_input.setText(lat.getText().toString() + "|" + lng.getText().toString());
+                        else event_location_input.setText("invalid");
+                    }
+                });
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //nao fazer nada
+                    }
+                });
+                alert.show();
             }
         });
-        /*event_description_input.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                event_description_input.setText("");
-            }
-        });*/
 
         eventPrivate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +186,20 @@ public class CreateEventFragment extends Fragment {
                 }else {
                     event_price.setChecked(false);
                     event_price_input.setEnabled(false);
+                }
+                checked=!checked;
+            }
+        });
+        event_location.setOnClickListener(new View.OnClickListener() {
+            private boolean checked=false;
+            @Override
+            public void onClick(View v) {
+                if (!checked) {
+                    event_location.setChecked(true);
+                    event_location_input.setEnabled(true);
+                }else {
+                    event_location.setChecked(false);
+                    event_location_input.setEnabled(false);
                 }
                 checked=!checked;
             }

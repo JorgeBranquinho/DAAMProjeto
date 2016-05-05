@@ -14,42 +14,67 @@ public class Event implements Serializable {
     private String date="";
     private String price="";
     private String hours="";
-    private String location="";
+    private String location="";//nao usado
     private LatLng location_latlng;
-    private URI location_URI;
+    private URI location_URI;//nao usado
     private boolean going=false;
     private boolean newEvent=false;
     private int id=-1;
 
-    private String description;
-    private boolean isPublic;
-    
+    private boolean isPublic=false;
+    private boolean isEndDate=false;
+    private String enddate="";
+    private boolean isLocation=false;
+    private boolean isPrice=false;
+    private String description="";
+    //TODO:falta amigos
+    private boolean isFriendsInvitable=false;
 
+/**construtor "normal"**/
+    public Event(int id, boolean isPublic, String eventName, String weekDay, String date, boolean isEndDate, String enddate, boolean isPrice, String price, String hours, boolean isLocation, String location_latlng, boolean isFriendsInvitable, boolean going, boolean newEvent){
+        this.setId(id);
+        this.setIsPublic(isPublic);
+        this.eventName=eventName;
+        this.weekDay=weekDay;
+        this.date=date;
+        this.isEndDate=isEndDate;
+        this.enddate=enddate;
+        this.isPrice=isPrice;
+        this.price=price;
+        this.hours=hours;
+        this.isLocation=isLocation;
+        if(!location_latlng.equals("")) {
+            String[] latlng = location_latlng.split("|");
+            this.location_latlng = new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1]));//falta testar
+        }
+        this.isFriendsInvitable=isFriendsInvitable;
+        this.going=going;
+        this.newEvent=newEvent;
+    }
+
+/**construtor mais simples para testes (assume algumas coisas)**/
     public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, LatLng location_latlng, URI location_URI, boolean going, boolean newEvent){
         this.setId(id);
         this.eventName=eventName;
         this.weekDay=weekDay;
         this.date=date;
+        if(price.equals(""))
+            this.isPrice=false;
+        else
+            this.isPrice=true;
         this.price=price;
         this.hours=hours;
-        this.location=location;
-        if(location_latlng!=null) this.location_latlng=location_latlng;
-        if(location_URI!=null) this.location_URI=location_URI;
+        this.location=location;//nao usado
+        if(location_latlng!=null && location_URI!=null) {
+            this.isLocation=true;
+            this.location_latlng = location_latlng;
+            this.location_URI = location_URI;//nao usado
+        }
         this.going=going;
         this.newEvent=newEvent;
     }
 
-    /*public Event(String eventName, String weekDay, String date, String price, String hours, String location, URI location_URI, boolean going, boolean newEvent){
-        this.eventName=eventName;
-        this.weekDay=weekDay;
-        this.date=date;
-        this.price=price;
-        this.hours=hours;
-        this.location=location;
-        if(location_URI!=null) this.location_URI=location_URI;
-        this.going=going;
-        this.newEvent=newEvent;
-    }*/
+
 
     public String getEventName() {
         return eventName;
@@ -137,5 +162,45 @@ public class Event implements Serializable {
 
     public void setLocation_latlng(LatLng location_latlng) {
         this.location_latlng = location_latlng;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public boolean isEndDate() {
+        return isEndDate;
+    }
+
+    public void setIsEndDate(boolean isEndDate) {
+        this.isEndDate = isEndDate;
+    }
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
+
+    public boolean isFriendsInvitable() {
+        return isFriendsInvitable;
+    }
+
+    public void setIsFriendsInvitable(boolean isFriendsInvitable) {
+        this.isFriendsInvitable = isFriendsInvitable;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
