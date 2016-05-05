@@ -353,12 +353,12 @@ public class DrawerActivity extends AppCompatActivity
                 int sizevar=new EnumDatabase().getScreenDensity(activity);
                 int size;
                 switch (sizevar){
-                    case 1:size=150;break;
-                    case 2:size=100;break;
-                    case 3:size=200;break;
-                    case 4:size=238;break;
-                    case 5:size=400;break;
-                    default: size=400;break;
+                    case 1:size=150;break;//150
+                    case 2:size=100;break;//100
+                    case 3:size=200;break;//200
+                    case 4:size=200;break;//238
+                    case 5:size=400;break;//400
+                    default: size=400;break;//400
                 }
                 bitmap = scaleBitmap(bitmap, size, size);
             } catch (Exception e) {

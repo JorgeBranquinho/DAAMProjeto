@@ -3,20 +3,28 @@ package almapenada.daam.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -24,11 +32,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import almapenada.daam.R;
-//import almapenada.daam.utility.DatePickerFragment;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
 
@@ -37,16 +45,20 @@ public class CreateEventFragment extends Fragment {
     private CreateEventFragment self= this;
     public static Button date_picker;
     public static Button date_end_picker;
+    private static final int SELECT_IMAGE = 1;
+    private String filePath="";
+    private Button event_img;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_event, container, false);
-        ImageView event_img = (ImageView) v.findViewById(R.id.event_img);
+        event_img = (Button) v.findViewById(R.id.event_img);
         final TextView event_name = (TextView) v.findViewById(R.id.event_name);
         final RadioButton eventPrivate = (RadioButton) v.findViewById(R.id.eventPrivate);
         final RadioButton eventPublic = (RadioButton) v.findViewById(R.id.eventPublic);
+        final RadioButton event_price = (RadioButton) v.findViewById(R.id.event_price);
         date_picker = (Button) v.findViewById(R.id.date_picker);
         final Switch switch1 = (Switch) v.findViewById(R.id.switch1);
         final TextView event_end = (TextView) v.findViewById(R.id.event_end);
@@ -58,7 +70,49 @@ public class CreateEventFragment extends Fragment {
         CheckBox event_invitable_friends = (CheckBox) v.findViewById(R.id.event_invitable_friends);
         Button event_done = (Button) v.findViewById(R.id.event_done);
 
-        event_location_input.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+
+        event_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);//
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+            }
+        });
+
+        event_description_input.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        event_name.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        event_location_input.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         event_name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +151,20 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 if (eventPublic.isChecked())
                     eventPrivate.setChecked(false);
+            }
+        });
+        event_price.setOnClickListener(new View.OnClickListener() {
+            private boolean checked=false;
+            @Override
+            public void onClick(View v) {
+                if (!checked) {
+                    event_price.setChecked(true);
+                    event_price_input.setEnabled(true);
+                }else {
+                    event_price.setChecked(false);
+                    event_price_input.setEnabled(false);
+                }
+                checked=!checked;
             }
         });
         date_picker.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +206,6 @@ public class CreateEventFragment extends Fragment {
                 }
             }
         });
-
         return v;
     }
 
@@ -174,6 +241,32 @@ public class CreateEventFragment extends Fragment {
             if(type==1) date_end_picker.setText(formattedDate);
         }
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_IMAGE) {
+            if (resultCode == getActivity().RESULT_OK) {
+                if (data != null) {
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                    Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    filePath = cursor.getString(columnIndex);
+                    cursor.close();
+                    Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//se a API é 15+
+                        event_img.setBackground(new BitmapDrawable(getContext().getResources(),yourSelectedImage));
+                    }
+                } else if (resultCode == getActivity().RESULT_CANCELED) {
+                    Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }
 //TODO: botao para as horas
