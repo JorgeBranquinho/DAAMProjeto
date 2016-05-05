@@ -21,6 +21,10 @@ public class Event implements Serializable {
     private boolean newEvent=false;
     private int id=-1;
 
+    private String description;
+    private boolean isPublic;
+    
+
     public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, LatLng location_latlng, URI location_URI, boolean going, boolean newEvent){
         this.setId(id);
         this.eventName=eventName;

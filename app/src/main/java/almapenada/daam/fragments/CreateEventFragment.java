@@ -1,8 +1,10 @@
 package almapenada.daam.fragments;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,14 +84,25 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        event_description_input.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    return true;
-                }
-                return false;
+        event_description_input.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                final EditText edittext = new EditText(getContext());
+                alert.setTitle("Insert a description");
+                alert.setView(edittext);
+                edittext.setText(event_description_input.getText());
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        event_description_input.setText(edittext.getText().toString());
+                    }
+                });
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //nao fazer nada
+                    }
+                });
+                alert.show();
             }
         });
 
@@ -132,12 +146,12 @@ public class CreateEventFragment extends Fragment {
                 event_location_input.setText("");
             }
         });
-        event_description_input.setOnClickListener(new View.OnClickListener() {
+        /*event_description_input.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 event_description_input.setText("");
             }
-        });
+        });*/
 
         eventPrivate.setOnClickListener(new View.OnClickListener() {
             @Override
