@@ -144,7 +144,7 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
                 values.put(EnumDatabase.FIELD_HOURS, e.getHours());
                 values.put(EnumDatabase.FIELD_isLOCATION, e.isLocation());
-                values.put(EnumDatabase.FIELD_LOCATION_latlng, e.getLocation_latlng().latitude + "|" + e.getLocation_latlng().longitude);
+                values.put(EnumDatabase.FIELD_LOCATION_latlng, e.getLocation_latlng().latitude + " " + e.getLocation_latlng().longitude);
                 values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());

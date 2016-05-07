@@ -65,10 +65,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             if (cursor .moveToFirst()) {
                 while (cursor.isAfterLast() == false) {
                     Event e = (new EnumDatabase()).cursorToEvent(cursor);
-                    if(!(e.getLocation_latlng().latitude==-1 && e.getLocation_latlng().longitude==-1)) {
-                        mMarker = mMap.addMarker(new MarkerOptions()
-                                .title(e.getEventName())
-                                .position(e.getLocation_latlng()));
+                    if(e.getLocation_latlng()!=null) {
+                        if (!(e.getLocation_latlng().latitude == -1 && e.getLocation_latlng().longitude == -1)) {
+                            mMarker = mMap.addMarker(new MarkerOptions()
+                                    .title(e.getEventName())
+                                    .position(e.getLocation_latlng()));
+                        }
                     }
                     cursor.moveToNext();
                 }

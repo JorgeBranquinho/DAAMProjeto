@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -141,7 +142,7 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                final String regexStr = "^[0-9]*$";
+                //final String regexStr = "^[0-9]*$";
                 final EditText lat = new EditText(getContext());
                 final EditText lng = new EditText(getContext());
                 lat.setText("latitude");
@@ -154,9 +155,9 @@ public class CreateEventFragment extends Fragment {
                 alert.setView(layout);
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(lat.getText().toString().trim().matches(regexStr) && lng.getText().toString().trim().matches(regexStr))
-                            event_location_input.setText(lat.getText().toString() + "|" + lng.getText().toString());
-                        else event_location_input.setText("invalid");
+                        //if(lat.getText().toString().trim().matches(regexStr) && lng.getText().toString().trim().matches(regexStr))
+                            event_location_input.setText(lat.getText().toString() + " " + lng.getText().toString());
+                        //else event_location_input.setText("invalid");
                     }
                 });
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -244,12 +245,34 @@ public class CreateEventFragment extends Fragment {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
                     String[] datetime = date_picker.getText().toString().split(" ");
                     //TODO: possivel erro se o array tiver tamanho 0
+
+
+                    /*try {
+                        /*SimpleDateFormat sdf=new SimpleDateFormat("dd/MMM/yyyy");
+                        Date date=sdf.parse(sdf.format(new Date(datetime[0])));
+                        System.out.println("ueueu" + date);
+                        sdf=new SimpleDateFormat("MM/dd/yyyy");
+                        String dayOfWeek2 = new SimpleDateFormat("EEEE").format(new Date(sdf.format(date)));
+                        System.out.println("ueueu " + " ---- " + dayOfWeek2);
+
+
+                        SimpleDateFormat sdf=new SimpleDateFormat("dd-MMM-yyyy");
+
+                        Date date=sdf.parse(datetime[0]);
+
+                        sdf=new SimpleDateFormat("MM/dd/yyyy");
+                        System.out.println(sdf.format(date));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }*/
+
+
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                     Date d = new Date();
                     String dayOfTheWeek = sdf.format(d);
                     String dateEnd;
                     if(date_end_picker.getText().toString().equals("Pick Date"))
-                        dateEnd=" - ";//TODO: por data atual
+                        dateEnd=" - ";
                     else
                         dateEnd=date_end_picker.getText().toString();
                     String price;

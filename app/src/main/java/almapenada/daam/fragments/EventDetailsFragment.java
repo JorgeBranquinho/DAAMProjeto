@@ -21,20 +21,20 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.Event;
 
-public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
-
-    private GoogleMap map;
-    private SupportMapFragment googleMap;
+public class EventDetailsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_event_details, container, false);
-        Event e = (Event) this.getArguments().getSerializable("evento");
+        final Event e = (Event) this.getArguments().getSerializable("evento");
 
         ((DrawerActivity) getActivity()).HideFabIcon();
 
@@ -56,40 +56,25 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         event_time.setText(e.getHours());
         event_location.setText(e.getLocation());
 
-        /*this.getView().setOnKeyListener(new View.OnKeyListener() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_event);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    ((DrawerActivity)getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
-                    return true;
+            public void onMapReady(GoogleMap googleMap) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(true);
                 }
-                return false;
+                Marker mMarker = googleMap.addMarker(new MarkerOptions()
+                        .title(e.getEventName())
+                        .position(e.getLocation_latlng()));
+                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(e.getLocation_latlng().latitude, e.getLocation_latlng().longitude));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(11);
+                googleMap.moveCamera(center);
+                googleMap.animateCamera(zoom);
             }
-        });*/
+        });
 
-        //map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map_event)).getMap();
-        //map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map_event)).getMapAsync(this);
-        /*if (googleMap == null) {
-            //googleMap = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map_event)).getMap();
-            FragmentManager myFM = getActivity().getSupportFragmentManager();
 
-            googleMap = (SupportMapFragment) myFM
-                    .findFragmentById(R.id.map_event);
-            googleMap.getMapAsync(this)
-        }
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-        }
-        CameraUpdate center = CameraUpdateFactory.newLatLng(e.getLocation_latlng());
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(20);
-        googleMap.moveCamera(center);
-        googleMap.animateCamera(zoom);*/
         return v;
     }
 
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-    }
 }

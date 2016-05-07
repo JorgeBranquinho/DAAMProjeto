@@ -42,8 +42,8 @@ public class Event implements Serializable {
         this.isLocation=isLocation;
         if(isLocation) {
             try {
-                String[] latlng = location_latlng.split("|");
-                this.location_latlng = new LatLng(Double.parseDouble(latlng[1]), Double.parseDouble(latlng[3]));
+                String[] latlng = location_latlng.split(" ");
+                this.location_latlng = new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1]));
             }catch (java.lang.NumberFormatException e){
                 this.isLocation=false;
                 this.location_latlng=null;
