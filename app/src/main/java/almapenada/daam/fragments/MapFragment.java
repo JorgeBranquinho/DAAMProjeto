@@ -34,7 +34,6 @@ import almapenada.daam.utility.EventsDatabase;
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
-    private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
     private Marker mMarker;
 

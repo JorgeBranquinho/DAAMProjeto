@@ -21,7 +21,7 @@ package almapenada.daam.utility;
 
 public class EventAdapter extends BaseAdapter {
 
-    private final EventsDatabase database;
+    private EventsDatabase database;
     private EventAdapter self;
     private Activity activity;
     private ArrayList<Event> data;
@@ -91,7 +91,9 @@ public class EventAdapter extends BaseAdapter {
                                     .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
-                                            database.deleteById(e.getId());
+                                            database.deleteById(e.getId() + 1);
+                                            database.close();//para escrever as mudanças nas DB
+                                            database = new EventsDatabase(activity);//reabrir ligacao
                                             data.remove(event_position);
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
@@ -121,45 +123,45 @@ public class EventAdapter extends BaseAdapter {
         going.setChecked(data.get(position).isGoing());
         if(data.get(position).isGoing())going.setText(activity.getString(R.string.going_event));else going.setText(activity.getString(R.string.not_going_event));
         going.setOnClickListener(new View.OnClickListener() {
-            private Event e=data.get(temp_position);
+            private Event e = data.get(temp_position);
+
             @Override
             public void onClick(View v) {
 
-                if(going.isChecked()) {
+                if (going.isChecked()) {
                     going.setText(activity.getString(R.string.going_event));
-                }else {
-                    going.setText(activity.getString(R.string.not_going_event));//TODO: atualizar DB
+                } else {
+                    going.setText(activity.getString(R.string.not_going_event));
                 }
-
                 ContentValues values = new ContentValues();
                 values.put(EnumDatabase.FIELD_NAME, e.getEventName());
+                values.put(EnumDatabase.FIELD_isPUBLIC, e.isPublic());
                 values.put(EnumDatabase.FIELD_WEEKDAY, e.getWeekDay());
                 values.put(EnumDatabase.FIELD_DATE, e.getDate());
+                values.put(EnumDatabase.FIELD_isENDDATE, e.isEndDate());
+                values.put(EnumDatabase.FIELD_ENDDATE, e.getEnddate());
+                values.put(EnumDatabase.FIELD_isPRICE, e.isPrice());
                 values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
                 values.put(EnumDatabase.FIELD_HOURS, e.getHours());
-                values.put(EnumDatabase.FIELD_LOCATION, e.getLocation());
-                values.put(EnumDatabase.FIELD_LOCATION_lat, e.getLocation_latlng().latitude);
-                values.put(EnumDatabase.FIELD_LOCATION_lat, e.getLocation_latlng().longitude);
-                if(e.getLocation_URI()!=null)
-                    values.put(EnumDatabase.FIELD_LOCATION_URI, e.getLocation_URI().toString());
-                else
-                    values.put(EnumDatabase.FIELD_LOCATION_URI,"");
+                values.put(EnumDatabase.FIELD_isLOCATION, e.isLocation());
+                values.put(EnumDatabase.FIELD_LOCATION_latlng, e.getLocation_latlng().latitude + "|" + e.getLocation_latlng().longitude);
+                values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
-                boolean res=database.update(e.getId(), values);
+                boolean res = database.update(e.getId(), values);
             }
         });
         diaSemana.setText(data.get(position).getWeekDay());
         diaEvento.setText(data.get(position).getDate());
         if(!data.get(position).getPrice().equals(""))
-            preco.setText("Price: " + data.get(position).getPrice() + "€");
+            preco.setText("Price: " + data.get(position).getPrice());
         else
-            preco.setText("");
-        if(!data.get(position).getHours().equals(""))
+            preco.setText(" - ");
+        if(!data.get(position).getHours().equals("")) {
             horas.setText(data.get(position).getHours());
-        else
-            horas.setText("");
-        local.setText(data.get(position).getLocation());
+        }else
+            horas.setText(" - ");
+        local.setText("NEW");
         data.get(position).setId(position);
 
         return vi;

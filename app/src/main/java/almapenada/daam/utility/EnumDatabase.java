@@ -21,14 +21,21 @@ public class EnumDatabase {
 
     public final static String FIELD_ID = "_id";
     public final static String FIELD_NAME = "event_name";
+    public final static String FIELD_isPUBLIC = "event_isPublic";
     public final static String FIELD_WEEKDAY = "event_weekday";
     public final static String FIELD_DATE = "event_date";
+    public final static String FIELD_isENDDATE = "event_isEndDate";
+    public final static String FIELD_ENDDATE = "event_endDate";
+    public final static String FIELD_isPRICE = "event_isPrice";
     public final static String FIELD_PRICE = "event_price";
     public final static String FIELD_HOURS = "event_hours";
-    public final static String FIELD_LOCATION = "event_location";
-    public final static String FIELD_LOCATION_lat = "event_locationLat";
-    public final static String FIELD_LOCATION_lng = "event_locationLng";
-    public final static String FIELD_LOCATION_URI = "event_locationURI";
+    public final static String FIELD_isLOCATION = "event_isLocation";
+    //public final static String FIELD_LOCATION = "event_location";
+    //public final static String FIELD_LOCATION_lat = "event_locationLat";
+    //public final static String FIELD_LOCATION_lng = "event_locationLng";
+    public final static String FIELD_LOCATION_latlng = "event_locationLatLng";
+    public final static String FIELD_LOCATION_URI = "event_locationURI";//nao usado
+    public final static String FIELD_FRIENDS_INVITE = "event_freindsInvite";
     public final static String FIELD_GOING = "event_going";
     public final static String FIELD_NEW = "event_new";
 
@@ -44,18 +51,44 @@ public class EnumDatabase {
     public static Event cursorToEvent(Cursor cursor){
         int id = cursor.getInt(cursor.getColumnIndex("_id"));
         String name = cursor.getString(cursor.getColumnIndex("event_name"));
+        boolean isPublic;
+        if(cursor.getInt(cursor.getColumnIndex("event_isPublic"))==0)
+            isPublic = false;
+        else
+            isPublic = true;
         String weekday = cursor.getString(cursor.getColumnIndex("event_weekday"));
         String date = cursor.getString(cursor.getColumnIndex("event_date"));
+        boolean isEndDate;
+        if(cursor.getInt(cursor.getColumnIndex("event_endDate"))==0)
+            isEndDate = false;
+        else
+            isEndDate = true;
+        String endDate = cursor.getString(cursor.getColumnIndex("event_isEndDate"));
+        boolean isPrice;
+        if(cursor.getInt(cursor.getColumnIndex("event_isPrice"))==0)
+            isPrice = false;
+        else
+            isPrice = true;
         String price = cursor.getString(cursor.getColumnIndex("event_price"));
         String hours = cursor.getString(cursor.getColumnIndex("event_hours"));
-        String location = cursor.getString(cursor.getColumnIndex("event_location"));
-        LatLng locationLatLng = new LatLng(cursor.getDouble(cursor.getColumnIndex("event_locationLat")), cursor.getDouble(cursor.getColumnIndex("event_locationLat")));
-        URI locationURI = null;
+        boolean isLocation;
+        if(cursor.getInt(cursor.getColumnIndex("event_isLocation"))==0)
+            isLocation = false;
+        else
+            isLocation = true;
+        //String location = cursor.getString(cursor.getColumnIndex("event_location"));
+        String locationLatLng = cursor.getString(cursor.getColumnIndex("event_locationLatLng"));
+        /*URI locationURI = null;
         try {
             locationURI = new URI(cursor.getString(cursor.getColumnIndex("event_locationURI")));
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        }
+        }*/
+        boolean friends_invite;
+        if(cursor.getInt(cursor.getColumnIndex("event_freindsInvite"))==0)
+            friends_invite=false;
+        else
+            friends_invite=true;
         boolean going;
         if(cursor.getInt(cursor.getColumnIndex("event_going"))==0)
             going=false;
@@ -66,7 +99,7 @@ public class EnumDatabase {
             new_event = false;
         else
             new_event = true;
-        return new Event(id, name, weekday, date, price, hours, location, locationLatLng, locationURI, going, new_event);
+        return new Event(id, name, isPublic, weekday, date, isEndDate, endDate, isPrice, price, hours, isLocation, locationLatLng, friends_invite, going, new_event);
     }
 
     public int getScreenDensity(Activity a){

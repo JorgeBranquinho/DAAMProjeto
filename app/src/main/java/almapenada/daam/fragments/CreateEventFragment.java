@@ -3,6 +3,8 @@ package almapenada.daam.fragments;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -39,8 +42,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
+import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
 
@@ -72,7 +78,7 @@ public class CreateEventFragment extends Fragment {
         final EditText event_price_input = (EditText) v.findViewById(R.id.event_price_input);
         final EditText event_description_input = (EditText) v.findViewById(R.id.event_description_input);
         Button event_people = (Button) v.findViewById(R.id.event_people);
-        CheckBox event_invitable_friends = (CheckBox) v.findViewById(R.id.event_invitable_friends);
+        final CheckBox event_invitable_friends = (CheckBox) v.findViewById(R.id.event_invitable_friends);
         Button event_done = (Button) v.findViewById(R.id.event_done);
 
 
@@ -236,8 +242,42 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 if(!event_name.getText().toString().equals("")) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
-                    database.insertEvent(new Event(0, event_name.getText().toString(), "monday", date_picker.getText().toString(), event_price_input.getText().toString(), "15h", event_location_input.getText().toString(), new LatLng(38.748753, -9.153692), null, false, false));
-                    //TODO:mudar de pagina
+                    String[] datetime = date_picker.getText().toString().split(" ");
+                    //TODO: possivel erro se o array tiver tamanho 0
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+                    Date d = new Date();
+                    String dayOfTheWeek = sdf.format(d);
+                    String dateEnd;
+                    if(date_end_picker.getText().toString().equals("Pick Date"))
+                        dateEnd=" - ";//TODO: por data atual
+                    else
+                        dateEnd=date_end_picker.getText().toString();
+                    String price;
+                    if(!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
+                        price=event_price_input.getText().toString();
+                    else
+                        price=" - ";
+                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, datetime[0], switch1.isActivated(), dateEnd, event_price.isChecked(), price, datetime[1], event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false);
+                    long id = database.insertEvent(e);
+                    e.setId((int) id);
+                    ContentValues values = new ContentValues();
+                    values.put(EnumDatabase.FIELD_ID, e.getId());
+                    values.put(EnumDatabase.FIELD_NAME, e.getEventName());
+                    values.put(EnumDatabase.FIELD_isPUBLIC, e.isPublic());
+                    values.put(EnumDatabase.FIELD_WEEKDAY, e.getWeekDay());
+                    values.put(EnumDatabase.FIELD_DATE, e.getDate());
+                    values.put(EnumDatabase.FIELD_isENDDATE, e.isEndDate());
+                    values.put(EnumDatabase.FIELD_ENDDATE, e.getEnddate());
+                    values.put(EnumDatabase.FIELD_isPRICE, e.isPrice());
+                    values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
+                    values.put(EnumDatabase.FIELD_HOURS, e.getHours());
+                    values.put(EnumDatabase.FIELD_isLOCATION, e.isLocation());
+                    values.put(EnumDatabase.FIELD_LOCATION_latlng, event_location_input.getText().toString());
+                    values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
+                    values.put(EnumDatabase.FIELD_GOING, e.isGoing());
+                    values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+                    boolean res=database.update(e.getId(), values);
+                    ((DrawerActivity) getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
                 }else{
                     Toast.makeText(getContext(), "Event name is Empty", Toast.LENGTH_SHORT);
                 }
@@ -273,9 +313,25 @@ public class CreateEventFragment extends Fragment {
             c.set(year, month, day);
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//"yyyy-MM-dd");
-            String formattedDate = sdf.format(c.getTime());
+            final String formattedDate = sdf.format(c.getTime());
+
             if(type==0) date_picker.setText(formattedDate);
             if(type==1) date_end_picker.setText(formattedDate);
+
+            Calendar mcurrentTime = Calendar.getInstance();
+            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            int minute = mcurrentTime.get(Calendar.MINUTE);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                 @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                     String datetime=formattedDate + " " + selectedHour + ":" + selectedMinute;
+                     if(type==0) date_picker.setText(datetime);
+                     if(type==1) date_end_picker.setText(datetime);
+                }
+            }, hour, minute, true);
+            mTimePicker.setTitle("Select Time");
+            mTimePicker.show();
         }
 
     }
@@ -306,4 +362,3 @@ public class CreateEventFragment extends Fragment {
         }
     }
 }
-//TODO: botao para as horas

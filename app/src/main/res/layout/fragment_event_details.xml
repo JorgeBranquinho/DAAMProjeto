@@ -99,10 +99,18 @@
         android:layout_toStartOf="@+id/event_comments"
         android:layout_alignParentEnd="true" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/map"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/event_description"
+        android:layout_below="@+id/event_location">
+
+        <fragment
+            android:id="@+id/map_event"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.SupportMapFragment" />
+
+    </FrameLayout>
 </RelativeLayout>

@@ -5,9 +5,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.Serializable;
 import java.net.URI;
 
-/**
- * Created by Asus on 20/03/2016.
- */
 public class Event implements Serializable {
     private String eventName="";
     private String weekDay="";
@@ -27,11 +24,11 @@ public class Event implements Serializable {
     private boolean isLocation=false;
     private boolean isPrice=false;
     private String description="";
-    //TODO:falta amigos
+    //TODO:falta os amigos
     private boolean isFriendsInvitable=false;
 
 /**construtor "normal"**/
-    public Event(int id, boolean isPublic, String eventName, String weekDay, String date, boolean isEndDate, String enddate, boolean isPrice, String price, String hours, boolean isLocation, String location_latlng, boolean isFriendsInvitable, boolean going, boolean newEvent){
+    public Event(int id, String eventName, boolean isPublic, String weekDay, String date, boolean isEndDate, String enddate, boolean isPrice, String price, String hours, boolean isLocation, String location_latlng, boolean isFriendsInvitable, boolean going, boolean newEvent){
         this.setId(id);
         this.setIsPublic(isPublic);
         this.eventName=eventName;
@@ -43,9 +40,14 @@ public class Event implements Serializable {
         this.price=price;
         this.hours=hours;
         this.isLocation=isLocation;
-        if(!location_latlng.equals("")) {
-            String[] latlng = location_latlng.split("|");
-            this.location_latlng = new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1]));//falta testar
+        if(isLocation) {
+            try {
+                String[] latlng = location_latlng.split("|");
+                this.location_latlng = new LatLng(Double.parseDouble(latlng[1]), Double.parseDouble(latlng[3]));
+            }catch (java.lang.NumberFormatException e){
+                this.isLocation=false;
+                this.location_latlng=null;
+            }
         }
         this.isFriendsInvitable=isFriendsInvitable;
         this.going=going;
@@ -202,5 +204,13 @@ public class Event implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isLocation(){
+        return this.isLocation;
+    }
+
+    public boolean isPrice(){
+        return this.isPrice;
     }
 }

@@ -1,9 +1,13 @@
 package almapenada.daam.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +16,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.Event;
 
-public class EventDetailsFragment extends Fragment {
+public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
+
+    private GoogleMap map;
+    private SupportMapFragment googleMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,7 +46,6 @@ public class EventDetailsFragment extends Fragment {
         TextView event_guests= (TextView) v.findViewById(R.id.event_guests);
         TextView event_description= (TextView) v.findViewById(R.id.event_description);
         Button event_comments= (Button) v.findViewById(R.id.event_comments);
-        ImageView mapa= (ImageView) v.findViewById(R.id.map);
 
         event_name.setText(e.getEventName());
         event_date.setText(e.getWeekDay() + ", " + e.getDate());
@@ -55,9 +67,29 @@ public class EventDetailsFragment extends Fragment {
             }
         });*/
 
+        //map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map_event)).getMap();
+        //map = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map_event)).getMapAsync(this);
+        /*if (googleMap == null) {
+            //googleMap = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map_event)).getMap();
+            FragmentManager myFM = getActivity().getSupportFragmentManager();
+
+            googleMap = (SupportMapFragment) myFM
+                    .findFragmentById(R.id.map_event);
+            googleMap.getMapAsync(this)
+        }
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        }
+        CameraUpdate center = CameraUpdateFactory.newLatLng(e.getLocation_latlng());
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(20);
+        googleMap.moveCamera(center);
+        googleMap.animateCamera(zoom);*/
         return v;
     }
 
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
 
+    }
 }
