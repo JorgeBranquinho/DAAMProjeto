@@ -76,14 +76,7 @@ public class EnumDatabase {
             isLocation = false;
         else
             isLocation = true;
-        //String location = cursor.getString(cursor.getColumnIndex("event_location"));
         String locationLatLng = cursor.getString(cursor.getColumnIndex("event_locationLatLng"));
-        /*URI locationURI = null;
-        try {
-            locationURI = new URI(cursor.getString(cursor.getColumnIndex("event_locationURI")));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }*/
         boolean friends_invite;
         if(cursor.getInt(cursor.getColumnIndex("event_freindsInvite"))==0)
             friends_invite=false;

@@ -14,6 +14,7 @@ public class SuggestionsDatabase {
     public final static String TABLE_SUGGESTION = "SUGGESTION_TB";
     public final static String FIELD_ID = "_id";
     public final static String FIELD_SUGGESTION = "suggestion";
+    public final static String FIELD_IDEXT = "external_id";
 
     private SQLiteDatabase db;
     private Helper helper;
@@ -29,22 +30,23 @@ public class SuggestionsDatabase {
         db.delete(TABLE_SUGGESTION, null, null);
     }
 
-    public long insertSuggestion(String text)
+    public long insertSuggestion(String text, int id)
     {
         ContentValues values = new ContentValues();
+        values.put(FIELD_IDEXT, id);
         values.put(FIELD_SUGGESTION, text);
         return db.insert(TABLE_SUGGESTION, null, values);
     }
 
     public Cursor getSuggestions(String text)
     {
-        return db.query(TABLE_SUGGESTION, new String[]{FIELD_ID, FIELD_SUGGESTION},
+        return db.query(TABLE_SUGGESTION, new String[]{FIELD_ID, FIELD_IDEXT, FIELD_SUGGESTION},
                 FIELD_SUGGESTION + " LIKE '" + text + "%'", null, null, null, null);
     }
 
     public Cursor getSuggestionsById(int id)
     {
-        return db.query(TABLE_SUGGESTION, new String[]{FIELD_ID, FIELD_SUGGESTION},
+        return db.query(TABLE_SUGGESTION, new String[]{FIELD_ID, FIELD_IDEXT, FIELD_SUGGESTION},
                 FIELD_ID + "=" + id, null, null, null, null);
     }
 
@@ -54,6 +56,10 @@ public class SuggestionsDatabase {
         mcursor.moveToFirst();
         if(mcursor.getInt(0)>0) return false;
         else return true;
+    }
+
+    public void close(){
+        db.close();
     }
 
     /*public void reset () throws SQLException {//so usado para testes. Limpa a BD
@@ -73,7 +79,7 @@ public class SuggestionsDatabase {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE "+TABLE_SUGGESTION+" ("+
-                    FIELD_ID+" integer primary key autoincrement, "+FIELD_SUGGESTION+" text);");
+                    FIELD_ID+" integer primary key autoincrement, "+ FIELD_IDEXT+" integer, "+FIELD_SUGGESTION+" text);");
             Log.d("SUGGESTION", "DB CREATED");
         }
 

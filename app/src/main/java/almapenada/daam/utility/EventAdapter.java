@@ -32,7 +32,7 @@ public class EventAdapter extends BaseAdapter {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        database = new EventsDatabase(activity);
+        //database = new EventsDatabase(activity);
     }
 
     public int getCount() {
@@ -91,6 +91,7 @@ public class EventAdapter extends BaseAdapter {
                                     .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
+                                            database = new EventsDatabase(activity);
                                             database.deleteById(e.getId() + 1);
                                             database.close();//para escrever as mudanças nas DB
                                             database = new EventsDatabase(activity);//reabrir ligacao
@@ -98,6 +99,7 @@ public class EventAdapter extends BaseAdapter {
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
                                             dialog.dismiss();
+                                            database.close();
                                         }
                                     });
                             builder.show();
@@ -133,6 +135,7 @@ public class EventAdapter extends BaseAdapter {
                 } else {
                     going.setText(activity.getString(R.string.not_going_event));
                 }
+                database = new EventsDatabase(activity);
                 ContentValues values = new ContentValues();
                 values.put(EnumDatabase.FIELD_NAME, e.getEventName());
                 values.put(EnumDatabase.FIELD_isPUBLIC, e.isPublic());
@@ -148,7 +151,8 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
-                boolean res = database.update(e.getId(), values);
+                database.update(e.getId(), values);
+                database.close();
             }
         });
         diaSemana.setText(data.get(position).getWeekDay());

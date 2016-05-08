@@ -55,7 +55,7 @@ public class Event implements Serializable {
     }
 
 /**construtor mais simples para testes (assume algumas coisas)**/
-    public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, LatLng location_latlng, URI location_URI, boolean going, boolean newEvent){
+    /*public Event(int id, String eventName, String weekDay, String date, String price, String hours, String location, LatLng location_latlng, URI location_URI, boolean going, boolean newEvent){
         this.setId(id);
         this.eventName=eventName;
         this.weekDay=weekDay;
@@ -74,7 +74,7 @@ public class Event implements Serializable {
         }
         this.going=going;
         this.newEvent=newEvent;
-    }
+    }*/
 
 
 

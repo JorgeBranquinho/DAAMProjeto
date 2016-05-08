@@ -19,15 +19,11 @@ public class EventsDatabase {
     }
 
     public void populateWithExample(){
-        insertEvent(new Event(0, "festa do Seixo Paulo", "monday", "1/2/2012", "15€", "15h", "ISCTE", new LatLng(38.748753, -9.153692), null, false, false));//teste
-        insertEvent(new Event(1, "frango assado", "monday", "3/2/2012", "1€", "15h", "ISCTE", new LatLng(-9.153692, 38.748753), null, false, false));//teste
-        insertEvent(new Event(2, "Snoop Dogg & vinho verde", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, null, false, false));//teste
-        insertEvent(new Event(3, "festa de azeite", "monday", "2/2/2012", "3€", "15h", "ISCTE", null, null, false, false));//teste
-        insertEvent(new Event(4, "makumba", "monday", "4/2/2012", "", "15h", "ISCTE", null, null, false, false));//teste
+        insertEvent(new Event(1,"Festa no ISCTE", true, "Segunda-feira", "09/05/2016", false, "", true, "3€", "18:30", true, "38.748753 -9.153692", true, true, false));//teste
+        insertEvent(new Event(2,"Frango assado", false, "Segunda-feira", "09/05/2016", false, "", false, "", "", false, "", false, false, false));//teste
     }
 
-    public long insertEvent(Event e)
-    {
+    public long insertEvent(Event e){
         ContentValues values = new ContentValues();
         //values.put(EnumDatabase.FIELD_ID, e.getId());
         values.put(EnumDatabase.FIELD_NAME, e.getEventName());
@@ -43,7 +39,7 @@ public class EventsDatabase {
         if(!e.isLocation()){
             values.put(EnumDatabase.FIELD_LOCATION_latlng, "");
         }else {
-            values.put(EnumDatabase.FIELD_LOCATION_latlng, e.getLocation_latlng().latitude + "|" + e.getLocation_latlng().longitude);
+            values.put(EnumDatabase.FIELD_LOCATION_latlng, e.getLocation_latlng().latitude + " " + e.getLocation_latlng().longitude);
         }
         values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
         values.put(EnumDatabase.FIELD_GOING, e.isGoing());

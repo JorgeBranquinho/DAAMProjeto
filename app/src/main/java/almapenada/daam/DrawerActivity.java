@@ -164,10 +164,11 @@ public class DrawerActivity extends AppCompatActivity
             Cursor cursor = database2.getAllEvents();
             if (cursor .moveToFirst()) {
                 while (cursor.isAfterLast() == false) {
-                    database.insertSuggestion(cursor.getString(cursor.getColumnIndex("event_name")));
+                    database.insertSuggestion(cursor.getString(cursor.getColumnIndex("event_name")), cursor.getInt(cursor.getColumnIndex("_id")));//depois aqui metesse um indicador se é evento ou outra coisa
                     cursor.moveToNext();
                 }
             }
+            database2.close();
         }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -189,21 +190,20 @@ public class DrawerActivity extends AppCompatActivity
                     searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                         @Override
                         public boolean onSuggestionSelect(int position) {
-                            //Toast.makeText(getApplicationContext(),simple.getItem(position).toString(), Toast.LENGTH_SHORT).show();//nao interessa
                             return false;
                         }
 
                         @Override
                         public boolean onSuggestionClick(int position) {
-                            Toast.makeText(getApplicationContext(),simple.getItem(position).toString(), Toast.LENGTH_SHORT).show();//tem q se ir a db
-                            Cursor c = database.getSuggestionsById(position);
+                            Cursor c= (Cursor) simple.getItem(position);
                             if(c.moveToFirst()) {
-                                String name = c.getString(c.getColumnIndex(SuggestionsDatabase.FIELD_SUGGESTION));
-                                EventsDatabase database2 = new EventsDatabase(getBaseContext());
-                                Cursor c2 = database2.getEventByName(name);
-                                if(c2.moveToFirst()){
-                                    viewEventDetails(EnumDatabase.cursorToEvent(c2));
+                                EventsDatabase database2 = new EventsDatabase(activity);
+                                Cursor c2 = database2.getEventById(c.getInt(c.getColumnIndex(SuggestionsDatabase.FIELD_IDEXT)));
+                                if(c2.moveToFirst()) {
+                                    Event e = EnumDatabase.cursorToEvent(c2);
+                                    viewEventDetails(e);
                                 }
+                                database2.close();
                             }
                             return false;
                         }

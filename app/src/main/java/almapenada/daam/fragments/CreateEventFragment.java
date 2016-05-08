@@ -243,63 +243,33 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 if(!event_name.getText().toString().equals("")) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
+
                     String[] datetime = date_picker.getText().toString().split(" ");
-                    //TODO: possivel erro se o array tiver tamanho 0
 
-
-                    /*try {
-                        /*SimpleDateFormat sdf=new SimpleDateFormat("dd/MMM/yyyy");
-                        Date date=sdf.parse(sdf.format(new Date(datetime[0])));
-                        System.out.println("ueueu" + date);
-                        sdf=new SimpleDateFormat("MM/dd/yyyy");
-                        String dayOfWeek2 = new SimpleDateFormat("EEEE").format(new Date(sdf.format(date)));
-                        System.out.println("ueueu " + " ---- " + dayOfWeek2);
-
-
-                        SimpleDateFormat sdf=new SimpleDateFormat("dd-MMM-yyyy");
-
-                        Date date=sdf.parse(datetime[0]);
-
-                        sdf=new SimpleDateFormat("MM/dd/yyyy");
-                        System.out.println(sdf.format(date));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }*/
-
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-                    Date d = new Date();
-                    String dayOfTheWeek = sdf.format(d);
-                    String dateEnd;
-                    if(date_end_picker.getText().toString().equals("Pick Date"))
-                        dateEnd=" - ";
+                    String hours;
+                    if(datetime.length>=2)
+                        hours=datetime[1];
                     else
+                        hours=" - ";
+
+                    String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
+
+                    String dateEnd;
+                    if(!date_end_picker.getText().toString().equals("Pick Date") || switch1.isChecked())
                         dateEnd=date_end_picker.getText().toString();
+                    else
+                        dateEnd=" - ";
+
                     String price;
                     if(!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
                         price=event_price_input.getText().toString();
                     else
                         price=" - ";
-                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, datetime[0], switch1.isActivated(), dateEnd, event_price.isChecked(), price, datetime[1], event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false);
+
+                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, datetime[0], switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false);
                     long id = database.insertEvent(e);
-                    e.setId((int) id);
-                    ContentValues values = new ContentValues();
-                    values.put(EnumDatabase.FIELD_ID, e.getId());
-                    values.put(EnumDatabase.FIELD_NAME, e.getEventName());
-                    values.put(EnumDatabase.FIELD_isPUBLIC, e.isPublic());
-                    values.put(EnumDatabase.FIELD_WEEKDAY, e.getWeekDay());
-                    values.put(EnumDatabase.FIELD_DATE, e.getDate());
-                    values.put(EnumDatabase.FIELD_isENDDATE, e.isEndDate());
-                    values.put(EnumDatabase.FIELD_ENDDATE, e.getEnddate());
-                    values.put(EnumDatabase.FIELD_isPRICE, e.isPrice());
-                    values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
-                    values.put(EnumDatabase.FIELD_HOURS, e.getHours());
-                    values.put(EnumDatabase.FIELD_isLOCATION, e.isLocation());
-                    values.put(EnumDatabase.FIELD_LOCATION_latlng, event_location_input.getText().toString());
-                    values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
-                    values.put(EnumDatabase.FIELD_GOING, e.isGoing());
-                    values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
-                    boolean res=database.update(e.getId(), values);
+                    EventAddID(database, e, (int) id, event_location_input.getText().toString());
+                    database.close();
                     ((DrawerActivity) getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
                 }else{
                     Toast.makeText(getContext(), "Event name is Empty", Toast.LENGTH_SHORT);
@@ -307,6 +277,44 @@ public class CreateEventFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    private void EventAddID(EventsDatabase database, Event e, int id, String event_location_input) {//so se obtem o id depois de add o evento. É preciso fazer update.
+        System.out.println(event_location_input);
+        e.setId(id);
+        ContentValues values = new ContentValues();
+        values.put(EnumDatabase.FIELD_ID, e.getId());
+        values.put(EnumDatabase.FIELD_NAME, e.getEventName());
+        values.put(EnumDatabase.FIELD_isPUBLIC, e.isPublic());
+        values.put(EnumDatabase.FIELD_WEEKDAY, e.getWeekDay());
+        values.put(EnumDatabase.FIELD_DATE, e.getDate());
+        values.put(EnumDatabase.FIELD_isENDDATE, e.isEndDate());
+        values.put(EnumDatabase.FIELD_ENDDATE, e.getEnddate());
+        values.put(EnumDatabase.FIELD_isPRICE, e.isPrice());
+        values.put(EnumDatabase.FIELD_PRICE, e.getPrice());
+        values.put(EnumDatabase.FIELD_HOURS, e.getHours());
+        values.put(EnumDatabase.FIELD_isLOCATION, e.isLocation());
+        values.put(EnumDatabase.FIELD_LOCATION_latlng, event_location_input);
+        values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
+        values.put(EnumDatabase.FIELD_GOING, e.isGoing());
+        values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+        database.update(e.getId(), values);
+    }
+
+    private String getDayOfTheWeek(String string) {
+        String dayOfTheWeek="";
+        try {
+            SimpleDateFormat dmy=new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat mdy=new SimpleDateFormat("MM/dd/yyyy");
+            Date date=dmy.parse(string);
+            String outputDateStr = mdy.format(date);
+            Date d = mdy.parse(outputDateStr);//new Date(outputDateStr);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+            dayOfTheWeek = sdf.format(d);
+        } catch (ParseException e) {
+            dayOfTheWeek=" - ";
+        }
+        return dayOfTheWeek;
     }
 
 

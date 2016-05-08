@@ -52,7 +52,7 @@ public class EventDetailsFragment extends Fragment{
         if(e.getPrice().equals(""))
             event_price.setText("Price: " + e.getPrice());
         else
-            event_price.setText("Price N/A");
+            event_price.setText("Price: N/A");
         event_time.setText(e.getHours());
         event_location.setText(e.getLocation());
 
@@ -63,13 +63,17 @@ public class EventDetailsFragment extends Fragment{
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     googleMap.setMyLocationEnabled(true);
                 }
-                Marker mMarker = googleMap.addMarker(new MarkerOptions()
-                        .title(e.getEventName())
-                        .position(e.getLocation_latlng()));
-                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(e.getLocation_latlng().latitude, e.getLocation_latlng().longitude));
-                CameraUpdate zoom = CameraUpdateFactory.zoomTo(11);
-                googleMap.moveCamera(center);
-                googleMap.animateCamera(zoom);
+                if(e.isLocation()) {
+                    Marker mMarker = googleMap.addMarker(new MarkerOptions()
+                            .title(e.getEventName())
+                            .position(e.getLocation_latlng()));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(e.getLocation_latlng().latitude, e.getLocation_latlng().longitude));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(11);
+                    googleMap.moveCamera(center);
+                    googleMap.animateCamera(zoom);
+                }else{
+                    System.out.println("Este evento nao tem gps");
+                }
             }
         });
 
