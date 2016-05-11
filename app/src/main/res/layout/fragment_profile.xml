@@ -1,116 +1,144 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="almapenada.daam.fragments.ProfileFragment">
+    android:orientation="vertical"
+    tools:context="almapenada.daam.fragments.ProfileFragment"
+    android:weightSum="1">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/imageView3"
-        android:src="@android:drawable/sym_def_app_icon"
-        android:contentDescription="imgProfile"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image"
+            android:background="@drawable/add_img"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.21">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="@string/NOME"
+            android:ems="10"
+            android:id="@+id/txtName"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:ems="10"
+            android:id="@+id/txtLocal"
+            android:text="@string/LOCALIZAÇÃO"
+            android:enabled="true"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.10"
+        android:layout_marginBottom="20dp">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSite"
+            android:text="@string/site"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/txtDesc"
+            android:text="Descrição"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="31dp" />
+        android:layout_alignParentStart="true">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="@string/NOME"
-        android:ems="10"
-        android:id="@+id/txtName"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:layout_alignTop="@+id/imageView3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/txtNumber"
+            android:text="Número Telemóvel"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:ems="10"
-        android:id="@+id/txtLocal"
-        android:text="@string/LOCALIZAÇÃO"
-        android:enabled="true"
-        android:textSize="14dp"
-        android:textAlignment="center"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_alignBottom="@+id/imageView3"
-        android:layout_alignLeft="@+id/txtName"
-        android:layout_alignStart="@+id/txtName"
-        android:layout_marginTop="0dp" />
+    </RelativeLayout>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtSite"
-        android:text="@string/site"
-        android:textSize="14dp"
-        android:textAlignment="center"
-        android:layout_marginLeft="37dp"
-        android:layout_marginStart="37dp"
-        android:layout_alignBottom="@+id/btnAdd"
-        android:layout_alignLeft="@+id/txtLocal"
-        android:layout_alignStart="@+id/txtLocal" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ADICIONAR AMIGO"
-        android:id="@+id/btnAdd"
-        android:layout_below="@+id/imageView3"
-        android:layout_toLeftOf="@+id/txtLocal"
-        android:layout_toStartOf="@+id/txtLocal" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_centerHorizontal="true"
+            android:spinnerMode="dropdown"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/txtDesc"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/txtSite"
-        android:layout_centerHorizontal="true"
-        android:text="Descrição"
-        android:textAlignment="center" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:id="@+id/txtNumber"
-        android:layout_below="@+id/txtDesc"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:text="Número Telemóvel"
-        android:textAlignment="center" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Eventos a que vai:"
-        android:id="@+id/lblEvents"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/txtNumber"
-        android:layout_centerHorizontal="true"
-        android:textSize="18dp" />
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_below="@+id/lblEvents"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp" />
-
-</RelativeLayout>
+</LinearLayout>
