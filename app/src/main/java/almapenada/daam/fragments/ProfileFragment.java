@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -60,24 +61,29 @@ public class ProfileFragment extends Fragment {
             if (resultCode == getActivity().RESULT_OK) {
                 if (data != null) {
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    String wholeID = DocumentsContract.getDocumentId(selectedImage);
+                    String id = wholeID.split(":")[1];
+                    String[] column = {MediaStore.Images.Media.DATA};
+                    String sel = MediaStore.Images.Media._ID + "=?";
 
-                    Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
+                    Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
+                    String filePath = "";
+                    int columnIndex = cursor.getColumnIndex(column[0]);
 
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    filePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-                    if(yourSelectedImage != null) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//se a API é 15+
-                            image.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
-                        }
+                    if (cursor.moveToFirst()) {
+                        filePath = cursor.getString(columnIndex);
                     }
+                    cursor.close();
+
+                    Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                        image.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
-}
+    }
+
