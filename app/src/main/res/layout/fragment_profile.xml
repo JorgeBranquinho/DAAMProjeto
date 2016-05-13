@@ -51,7 +51,6 @@
                 android:inputType="textPostalAddress"
                 android:ems="10"
                 android:id="@+id/txtLocal"
-                android:text="@string/LOCALIZAÇÃO"
                 android:enabled="true"
                 android:textSize="16dp"
                 android:textAlignment="center"
@@ -59,13 +58,13 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:hint="@string/LOCALIZAÇÃO" />
 
             <EditText
                 android:layout_width="210dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtSite"
-                android:text="@string/site"
                 android:textSize="16dp"
                 android:textAlignment="center"
                 android:layout_alignParentStart="true"
@@ -73,7 +72,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:hint="@string/site" />
         </LinearLayout>
     </LinearLayout>
 
@@ -88,12 +88,12 @@
             android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/txtDesc"
-            android:text="Descrição"
             android:textAlignment="center"
             android:textSize="16dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:hint="@string/descricao" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -128,13 +128,13 @@
             android:inputType="phone"
             android:ems="10"
             android:id="@+id/txtNumber"
-            android:text="Número Telemóvel"
             android:textAlignment="textStart"
             android:textSize="16dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:hint="@string/numtele" />
 
     </RelativeLayout>
 
@@ -148,9 +148,9 @@
             android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/email"
-            android:text="E-Mail"
             android:layout_marginLeft="10dp"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:hint="@string/email" />
     </RelativeLayout>
 
     <RelativeLayout
