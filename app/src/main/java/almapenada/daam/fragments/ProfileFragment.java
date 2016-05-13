@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import almapenada.daam.R;
@@ -78,6 +75,7 @@ public class ProfileFragment extends Fragment {
                     Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                         image.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+                    
 
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();

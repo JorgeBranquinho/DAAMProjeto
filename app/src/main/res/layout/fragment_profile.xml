@@ -16,14 +16,14 @@
         android:layout_marginTop="20dp">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:id="@+id/image"
             android:background="@drawable/add_img"
             android:layout_gravity="center_horizontal"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="25dp" />
+            android:layout_marginLeft="15dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -34,7 +34,6 @@
                 android:layout_width="210dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="@string/NOME"
                 android:ems="10"
                 android:id="@+id/txtName"
                 android:textSize="16dp"
@@ -43,7 +42,8 @@
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentStart="false"
                 android:layout_alignParentRight="false"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:hint="@string/NOME" />
 
             <EditText
                 android:layout_width="210dp"
