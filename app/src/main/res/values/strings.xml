@@ -53,4 +53,13 @@
     <string name="LOCALIZAÇÃO">LOCALIZAÇÃO</string>
     <string name="site">www.site.org</string>
     <string name="p">p</string>
+    <string name="descricao">Descrição</string>
+    <string name="numtele">Número Telemóvel</string>
+    <string name="email">E-Mail</string>
+    <string-array name="sex_array">
+        <item>Sexo</item>
+        <item>Feminino</item>
+        <item>Masculino</item>
+        <item>Indefinido</item>
+    </string-array>
 </resources>
