@@ -89,7 +89,7 @@ public class CreateEventFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
             }
         });
 
@@ -244,16 +244,20 @@ public class CreateEventFragment extends Fragment {
                 if(!event_name.getText().toString().equals("")) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
-                    String[] datetime = date_picker.getText().toString().split(" ");
+                    String dayOfTheWeek="";
+                    String date="";
+                    String hours="";
+                    if(!date_picker.getText().toString().equals("Pick Date")) {
+                        String[] datetime = date_picker.getText().toString().split(" ");
 
-                    String hours;
-                    if(datetime.length>=2)
-                        hours=datetime[1];
-                    else
-                        hours=" - ";
+                        if (datetime.length >= 2)
+                            hours = datetime[1];
+                        else
+                            hours = " - ";
 
-                    String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
-
+                        dayOfTheWeek = getDayOfTheWeek(datetime[0]);
+                        date=datetime[0];
+                    }
                     String dateEnd;
                     if(!date_end_picker.getText().toString().equals("Pick Date") || switch1.isChecked())
                         dateEnd=date_end_picker.getText().toString();
@@ -266,7 +270,7 @@ public class CreateEventFragment extends Fragment {
                     else
                         price=" - ";
 
-                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, datetime[0], switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false);
+                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
                     database.close();

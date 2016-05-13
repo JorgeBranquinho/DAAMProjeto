@@ -155,17 +155,25 @@ public class EventAdapter extends BaseAdapter {
                 database.close();
             }
         });
-        diaSemana.setText(data.get(position).getWeekDay());
-        diaEvento.setText(data.get(position).getDate());
+        if(!data.get(position).getWeekDay().equals("") || !data.get(position).getDate().equals("")) {
+            diaSemana.setText(data.get(position).getWeekDay());
+            diaEvento.setText(data.get(position).getDate());
+        }else{
+            diaSemana.setText(" - ");
+            diaEvento.setText("");
+        }
         if(!data.get(position).getPrice().equals(""))
             preco.setText("Price: " + data.get(position).getPrice());
         else
             preco.setText(" - ");
-        if(!data.get(position).getHours().equals("")) {
+        if(!data.get(position).getHours().equals(""))
             horas.setText(data.get(position).getHours());
-        }else
+        else
             horas.setText(" - ");
-        local.setText("NEW");
+        if(data.get(position).isNewEvent())
+            local.setText("NEW");
+        else
+            local.setText("");
         data.get(position).setId(position);
 
         return vi;
