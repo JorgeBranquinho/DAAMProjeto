@@ -8,9 +8,12 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.60"
+        android:layout_marginTop="20dp">
 
         <Button
             android:layout_width="wrap_content"
@@ -19,74 +22,68 @@
             android:background="@drawable/add_img"
             android:layout_gravity="center_horizontal"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="25dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="@string/NOME"
+                android:ems="10"
+                android:id="@+id/txtName"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentRight="false"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:ems="10"
+                android:id="@+id/txtLocal"
+                android:text="@string/LOCALIZAÇÃO"
+                android:enabled="true"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtSite"
+                android:text="@string/site"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.21">
+        android:layout_weight="0.15">
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="@string/NOME"
-            android:ems="10"
-            android:id="@+id/txtName"
-            android:textSize="16dp"
-            android:textAlignment="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="42dp">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
-            android:ems="10"
-            android:id="@+id/txtLocal"
-            android:text="@string/LOCALIZAÇÃO"
-            android:enabled="true"
-            android:textSize="16dp"
-            android:textAlignment="center"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.10"
-        android:layout_marginBottom="20dp">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtSite"
-            android:text="@string/site"
-            android:textSize="16dp"
-            android:textAlignment="center"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="363dp"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10"
@@ -94,11 +91,27 @@
             android:text="Descrição"
             android:textAlignment="center"
             android:textSize="16dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="right">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informação Privada"
+            android:id="@+id/textView"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -106,27 +119,43 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_weight="0.12">
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="363dp"
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:ems="10"
             android:id="@+id/txtNumber"
             android:text="Número Telemóvel"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="16dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_marginLeft="10dp" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="57dp">
+
+        <EditText
+            android:layout_width="363dp"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/email"
+            android:text="E-Mail"
+            android:layout_marginLeft="10dp"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -135,10 +164,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
-            android:layout_centerHorizontal="true"
             android:spinnerMode="dropdown"
             android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 </LinearLayout>
