@@ -1,9 +1,11 @@
 package almapenada.daam.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -15,7 +17,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import almapenada.daam.R;
@@ -28,11 +34,13 @@ public class ProfileFragment extends Fragment {
     private ViewPager viewPager;
     private String filePath="";
 
+    private View rootView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         image = (Button) rootView.findViewById(R.id.image);
         image.setOnClickListener(new View.OnClickListener() {
@@ -47,10 +55,32 @@ public class ProfileFragment extends Fragment {
         });
 
 
+        //SPINNER
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.sex_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //spinner.setAdapter(adapter);
+        spinner.setPrompt("BLABLABLA");
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // to do
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // to do
+            }
+
+        });
+
         return rootView;
     }
 
 
+    //Galeria de fotos
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
