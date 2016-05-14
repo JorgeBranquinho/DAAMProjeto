@@ -28,11 +28,11 @@ import almapenada.daam.R;
 
 public class ProfileFragment extends Fragment {
 
-    private ProfileFragment self= this;
+    private ProfileFragment self = this;
     private Button image;
     private static final int SELECT_IMAGE = 1;
     private ViewPager viewPager;
-    private String filePath="";
+    private String filePath = "";
 
     private View rootView;
 
@@ -82,36 +82,42 @@ public class ProfileFragment extends Fragment {
 
     //Galeria de fotos
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECT_IMAGE) {
             if (resultCode == getActivity().RESULT_OK) {
                 if (data != null) {
                     Uri selectedImage = data.getData();
-                    String wholeID = DocumentsContract.getDocumentId(selectedImage);
-                    String id = wholeID.split(":")[1];
-                    String[] column = {MediaStore.Images.Media.DATA};
-                    String sel = MediaStore.Images.Media._ID + "=?";
-
-                    Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
-                    String filePath = "";
-                    int columnIndex = cursor.getColumnIndex(column[0]);
-
-                    if (cursor.moveToFirst()) {
-                        filePath = cursor.getString(columnIndex);
-                    }
-                    cursor.close();
-
-                    Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        String wholeID = DocumentsContract.getDocumentId(selectedImage);
+                        String id = wholeID.split(":")[1];
+                        String[] column = {MediaStore.Images.Media.DATA};
+                        String sel = MediaStore.Images.Media._ID + "=?";
+                        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
+                        String filePath = "";
+                        int columnIndex = cursor.getColumnIndex(column[0]);
+                        if (cursor.moveToFirst()) {
+                            filePath = cursor.getString(columnIndex);
+                        }
+                        cursor.close();
+                        Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
                         image.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
-                    
-
+                    } else {
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        filePath = cursor.getString(columnIndex);
+                        cursor.close();
+                        Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//se a API é 15+
+                            image.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+                        }
+                    }
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
-    }
+}
 
