@@ -19,7 +19,7 @@ public class EventsDatabase {
     }
 
     public void populateWithExample(){
-        insertEvent(new Event(1,"Festa no ISCTE", true, "Segunda-feira", "09/05/2016", false, "", true, "3€", "18:30", true, "38.748753 -9.153692", true, true, false));//teste
+        insertEvent(new Event(1,"Festa no ISCTE", true, "Segunda-feira", "09/05/2016", false, "", true, "3", "18:30", true, "38.748753 -9.153692", true, true, false));//teste
         insertEvent(new Event(2,"Frango assado", false, "Segunda-feira", "09/05/2016", false, "", false, "", "", false, "", false, false, false));//teste
     }
 

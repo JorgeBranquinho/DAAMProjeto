@@ -96,8 +96,6 @@ public class EventDetailsFragment extends Fragment{
                 }
             }
         });
-
-
         return v;
     }
 

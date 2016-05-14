@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +48,7 @@ public class EventListFragment extends Fragment {
         event_list = (ListView) rootView.findViewById(R.id.event_list);
         event_list.setAdapter(adapter);
 
+        database.close();
         return rootView;
     }
 
@@ -61,6 +63,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByRecent(){
+        refresh();
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if(events_to_display.size()==0)return;
         Collections.sort(events_to_display, new Comparator<Event>() {
@@ -81,17 +84,19 @@ public class EventListFragment extends Fragment {
 
     public void orderByNear() {
         //TODO:este é lixado xD
+        Toast.makeText(getContext(), "Opcção não disponivel", Toast.LENGTH_SHORT).show();
     }
 
     public void orderByCheaper() {
-        events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        refresh();
+        events_to_display= (ArrayList<Event>) full_event_list.clone();
         if(events_to_display.size()==0)return;
         Collections.sort(events_to_display, new Comparator<Event>() {
             @Override
             public int compare(Event event2, Event event1) {
-                if (event1.getPrice().equals("")) return 1;
-                if (event2.getPrice().equals("")) return -1;
-                return Integer.parseInt(String.valueOf(event2.getPrice()))<Integer.parseInt(String.valueOf(event1.getPrice()))?-1:1;
+                if (event1.getPrice().equals("") || event1.getPrice().equals(" - ")) return 1;
+                if (event2.getPrice().equals("") || event2.getPrice().equals(" - ")) return -1;
+                return Double.parseDouble(String.valueOf(event2.getPrice()))<Double.parseDouble(String.valueOf(event1.getPrice()))?-1:1;
             }
         });
         adapter=new EventAdapter(getActivity(), events_to_display);
@@ -99,6 +104,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByGoing() {
+        refresh();
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if(events_to_display.size()==0)return;
         ListIterator<Event> iter = events_to_display.listIterator();
@@ -112,6 +118,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByNotGoing() {
+        refresh();
         events_to_display= (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if(events_to_display.size()==0)return;
         ListIterator<Event> iter = events_to_display.listIterator();
@@ -122,5 +129,14 @@ public class EventListFragment extends Fragment {
         }
         adapter=new EventAdapter(getActivity(), events_to_display);
         event_list.setAdapter(adapter);
+    }
+
+    private void refresh(){
+        full_event_list=new ArrayList<Event>();
+        database = new EventsDatabase(getActivity());
+        populateEventList(database.getAllEvents());
+        adapter=new EventAdapter(getActivity(), full_event_list);
+        event_list.setAdapter(adapter);
+        database.close();
     }
 }
