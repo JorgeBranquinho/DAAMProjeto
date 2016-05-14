@@ -56,17 +56,19 @@ public class ProfileFragment extends Fragment {
 
 
         //SPINNER
-        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+        final Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.sex_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //spinner.setAdapter(adapter);
-        spinner.setPrompt("BLABLABLA");
+        spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // to do
+                int index = parentView.getSelectedItemPosition();
+                //só para testar
+                Toast.makeText(getActivity(), "You have selected item : " + adapter.getItem(index), Toast.LENGTH_SHORT).show();
+                // guardar adapter.getItem(index)
             }
 
             @Override
