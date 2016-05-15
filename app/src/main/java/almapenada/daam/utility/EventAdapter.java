@@ -99,8 +99,8 @@ public class EventAdapter extends BaseAdapter {
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
                                             dialog.dismiss();
-                                            if(res) Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
-                                            else Toast.makeText(activity, "Ocorreu um erro a remover o evento", Toast.LENGTH_SHORT).show();
+                                            if(res) Toast.makeText(activity, R.string.EventRemoved, Toast.LENGTH_SHORT).show();
+                                            else Toast.makeText(activity, R.string.ErrorRemoveEvent, Toast.LENGTH_SHORT).show();
                                         }
                                     });
                             builder.show();
@@ -166,7 +166,7 @@ public class EventAdapter extends BaseAdapter {
             diaEvento.setText("");
         }
         if(data.get(position).isPrice() && !data.get(position).getPrice().equals(""))
-            preco.setText("Price: " + data.get(position).getPrice() + "€");
+            preco.setText(R.string.price + data.get(position).getPrice() + "€");
         else
             preco.setText(" - ");
         if(!data.get(position).getHours().equals(""))
@@ -174,7 +174,7 @@ public class EventAdapter extends BaseAdapter {
         else
             horas.setText("");
         if(data.get(position).isNewEvent())
-            local.setText("NEW");
+            local.setText(R.string.NewEvent);
         else
             local.setText("");
         data.get(position).setId(position);

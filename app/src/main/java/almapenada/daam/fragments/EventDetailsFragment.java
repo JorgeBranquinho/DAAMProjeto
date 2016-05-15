@@ -64,9 +64,9 @@ public class EventDetailsFragment extends Fragment{
         if(!e.getWeekDay().equals("") && !e.getDate().equals(""))
             event_date.setText(e.getWeekDay() + ", " + e.getDate());
         if(e.isPrice() && !e.getPrice().equals(""))
-            event_price.setText("Price: " + e.getPrice());
+            event_price.setText(getResources().getString(R.string.price) + e.getPrice());
         else
-            event_price.setText("Price: N/A");
+            event_price.setText(getResources().getString(R.string.price) + "N/A");
         event_time.setText(e.getHours());
         event_location.setText(e.getLocation());
         event_description.setText(e.getDescription());

@@ -99,7 +99,7 @@ public class DrawerActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (id_menuItem == R.id.nav_events) {
-                    viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
+                    viewFragment(new CreateEventFragment(), getString(R.string.CreateNewEvent), false, -1);
                 } else {
                     Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -174,17 +174,19 @@ public class DrawerActivity extends AppCompatActivity
                 }
             }
             database2.close();
+            database.close();
         }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String text) {
-                Toast.makeText(getBaseContext(), "procuraste por " + text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), text + getString(R.string.NotFound), Toast.LENGTH_SHORT).show();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String text) {
+                SuggestionsDatabase database = new SuggestionsDatabase(getApplicationContext());
                 Cursor cursor = database.getSuggestions(text);
                 if (cursor.getCount() != 0) {
                     String[] columns = new String[]{SuggestionsDatabase.FIELD_SUGGESTION};
@@ -245,7 +247,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id_menuItem == R.id.nav_profile) {
             // Handle the camera action
-            viewFragment(new ProfileFragment(), "My Profile",false,-1);
+            viewFragment(new ProfileFragment(), getString(R.string.MyProfile),false,-1);
         } else if (id_menuItem == R.id.nav_home) {
             viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
         } else if (id_menuItem == R.id.nav_events) {

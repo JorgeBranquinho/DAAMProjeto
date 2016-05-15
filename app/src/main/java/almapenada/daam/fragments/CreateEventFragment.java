@@ -91,7 +91,7 @@ public class CreateEventFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
+                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.selectPicture)), SELECT_IMAGE);
             }
         });
 
@@ -100,15 +100,15 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 final EditText edittext = new EditText(getContext());
-                alert.setTitle("Insert a description");
+                alert.setTitle(R.string.InsertDescription);
                 alert.setView(edittext);
                 edittext.setText(event_description_input.getText());
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         event_description_input.setText(edittext.getText().toString());
                     }
                 });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //nao fazer nada
                     }
@@ -147,22 +147,22 @@ public class CreateEventFragment extends Fragment {
                 //final String regexStr = "^[0-9]*$";
                 final EditText lat = new EditText(getContext());
                 final EditText lng = new EditText(getContext());
-                lat.setText("latitude");
-                lng.setText("longitude");
+                lat.setText(R.string.latitude);
+                lng.setText(R.string.longitude);
                 LinearLayout layout = new LinearLayout(getContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
-                alert.setTitle("Insert latitude and longitude");
+                alert.setTitle(R.string.InsertLatLng);
                 layout.addView(lat);
                 layout.addView(lng);
                 alert.setView(layout);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //if(lat.getText().toString().trim().matches(regexStr) && lng.getText().toString().trim().matches(regexStr))
                         event_location_input.setText(lat.getText().toString() + " " + lng.getText().toString());
                         //else event_location_input.setText("invalid");
                     }
                 });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //nao fazer nada
                     }
@@ -219,7 +219,7 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DialogFragment picker = new DatePickerFragment2(0);
-                picker.show(getFragmentManager(), "datePicker");
+                picker.show(getFragmentManager(), getResources().getString(R.string.SelectDate));
             }
         });
         event_end.setOnClickListener(new View.OnClickListener() {
@@ -241,14 +241,14 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DialogFragment picker = new DatePickerFragment2(1);
-                picker.show(getFragmentManager(), "datePicker");
+                picker.show(getFragmentManager(), getResources().getString(R.string.SelectDate));
             }
         });
 
         event_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!event_name.getText().toString().equals("") && !date_picker.getText().toString().equals("Pick Date")) {
+                if (!event_name.getText().toString().equals("") && !date_picker.getText().toString().equals(getResources().getString(R.string.PickDate))) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
                     String hours = "";
@@ -262,13 +262,13 @@ public class CreateEventFragment extends Fragment {
                     String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
                     String date = datetime[0];
                     String dateEnd;
-                    if (!date_end_picker.getText().toString().equals("Pick Date") && event_end.isChecked())
+                    if (!date_end_picker.getText().toString().equals(getResources().getString(R.string.PickDate)) && event_end.isChecked())
                         dateEnd = date_end_picker.getText().toString();
                     else
                         dateEnd = " - ";
 
                     String price;
-                    if (!event_price_input.getText().toString().equals("Price") && event_price.isChecked())
+                    if (!event_price_input.getText().toString().equals(getResources().getString(R.string.preco)) && event_price.isChecked())
                         price = event_price_input.getText().toString();
                     else
                         price = " - ";
@@ -279,7 +279,7 @@ public class CreateEventFragment extends Fragment {
                     database.close();
                     ((DrawerActivity) getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
                 } else {
-                    Toast.makeText(getContext(), "Event name or date are Empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.CreateEventWarn, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -373,7 +373,7 @@ public class CreateEventFragment extends Fragment {
                     if (type == 1) date_end_picker.setText(datetime);
                 }
             }, hour, minute, true);
-            mTimePicker.setTitle("Select Time");
+            mTimePicker.setTitle(getResources().getString(R.string.SelectTime));
             mTimePicker.show();
         }
 
@@ -394,7 +394,7 @@ public class CreateEventFragment extends Fragment {
                 }).setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                event_price_input.setText("Pick price");
+                event_price_input.setText(R.string.PickPrice);
                 dialog.dismiss();
             }
         });
@@ -446,7 +446,7 @@ public class CreateEventFragment extends Fragment {
                         }
                     }
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
-                    Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.Cancelled, Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -131,7 +131,7 @@ public class EventListFragment extends Fragment {
             });
             adapter = new EventAdapter(getActivity(), events_to_display);
             event_list.setAdapter(adapter);
-        }else Toast.makeText(getContext(), "Localização GPS não disponivel", Toast.LENGTH_SHORT).show();
+        }else Toast.makeText(getContext(), R.string.GPSNotFound, Toast.LENGTH_SHORT).show();
     }
 
     public void orderByCheaper() {

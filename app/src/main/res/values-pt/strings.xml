@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DAAM</string>
     <string name="aceitar">Aceitar</string>
     <string name="action_search">Procurar</string>
     <string name="action_settings">Definições</string>
@@ -32,4 +31,40 @@
     <string name="error_incorrect_password">Password incorrecta</string>
     <string name="error_invalid_email" translatable="false">Email inválido</string>
     <string name="error_invalid_password" translatable="false">Password demasiado curta</string>
+    <string name="price">"Preço: "</string>
+    <string name="selectPicture">Escolha uma imagem</string>
+    <string name="InsertDescription">Insira uma descrição</string>
+    <string name="InsertLatLng">Insira a latitude e longitude</string>
+    <string name="SelectDate">Selecione a data</string>
+    <string name="PickDate">Escolha a data</string>
+    <string name="descricao">Descrição</string>
+    <string name="numtele">Número Telemóvel</string>
+    <string name="preco">Preço</string>
+    <string name="CreateEventWarn">Nome ou data do evento estão vazios</string>
+    <string name="SelectTime">Escolha as horas</string>
+    <string name="PickPrice">Escolha o preço</string>
+    <string name="Cancelled">Cancelado</string>
+    <string name="GPSNotFound">Localização GPS não disponivel</string>
+    <string name="ErrorSpinner">Não existe essa opção no spinner</string>
+    <string name="List">Lista</string>
+    <string name="Map">Mapa</string>
+    <string name="EventRemoved">Removido o evento</string>
+    <string name="ErrorRemoveEvent">Ocorreu um erro a remover o evento</string>
+    <string name="NewEvent">NOVO</string>
+    <string name="NotFound">" não encontrado"</string>
+    <string name="MyProfile">Meu Perfil</string>
+    <string name="DefaultEventName">Nome</string>
+    <string name="EventPrivate">Privado</string>
+    <string name="EventPublic">Publico</string>
+    <string name="EventDate">Data do evento:</string>
+    <string name="EventEndDate">Data de Fim:</string>
+    <string name="EventLocation">Localização:</string>
+    <string name="EventDescription">Descrição:</string>
+    <string name="Location">Localização</string>
+    <string name="AddPeople">Adicionar Pessoas</string>
+    <string name="CanFriendsInvite">Amigos podem convidar?</string>
+    <string name="Create">Criar</string>
+    <string name="ViewComments">Ver comentários</string>
+    <string name="WhosGoing">Quem vai?</string>
+    <string name="CreateNewEvent">Criar Novo Evento</string>
 </resources>
