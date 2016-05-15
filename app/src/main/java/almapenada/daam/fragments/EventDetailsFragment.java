@@ -61,9 +61,9 @@ public class EventDetailsFragment extends Fragment{
         }
 
         event_name.setText(e.getEventName());
-        if(!e.getWeekDay().equals("") || !e.getDate().equals(""))
+        if(!e.getWeekDay().equals("") && !e.getDate().equals(""))
             event_date.setText(e.getWeekDay() + ", " + e.getDate());
-        if(e.isPrice() || !e.getPrice().equals(""))
+        if(e.isPrice() && !e.getPrice().equals(""))
             event_price.setText("Price: " + e.getPrice());
         else
             event_price.setText("Price: N/A");
@@ -74,7 +74,7 @@ public class EventDetailsFragment extends Fragment{
         if(img.exists()) {
             Bitmap btmp= BitmapFactory.decodeFile(img.getAbsolutePath());
             event_img.setImageBitmap(btmp);
-        }
+        }else System.out.println("[error] nao ha path da imagem: " + e.getFilepath());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_event);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -117,6 +117,8 @@ public class EventDetailsFragment extends Fragment{
         values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
         values.put(EnumDatabase.FIELD_GOING, e.isGoing());
         values.put(EnumDatabase.FIELD_NEW, false);
+        values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
+        values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
         database.update(e.getId(), values);
         database.close();
     }

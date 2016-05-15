@@ -52,6 +52,8 @@ public class Event implements Serializable {
         this.isFriendsInvitable=isFriendsInvitable;
         this.going=going;
         this.newEvent=newEvent;
+        this.description="";
+        this.filepath="";
     }
 
     public Event(int id, String eventName, boolean isPublic, String weekDay, String date, boolean isEndDate, String enddate, boolean isPrice, String price, String hours, boolean isLocation, String location_latlng, boolean isFriendsInvitable, boolean going, boolean newEvent, String filepath, String description){

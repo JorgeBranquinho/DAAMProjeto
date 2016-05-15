@@ -152,6 +152,8 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+                values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
+                values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
                 database.update(e.getId(), values);
                 database.close();
             }
@@ -163,7 +165,7 @@ public class EventAdapter extends BaseAdapter {
             diaSemana.setText("");
             diaEvento.setText("");
         }
-        if(!data.get(position).getPrice().equals(""))
+        if(data.get(position).isPrice() && !data.get(position).getPrice().equals(""))
             preco.setText("Price: " + data.get(position).getPrice() + "€");
         else
             preco.setText(" - ");

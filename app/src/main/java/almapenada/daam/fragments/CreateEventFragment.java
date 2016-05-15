@@ -257,7 +257,7 @@ public class CreateEventFragment extends Fragment {
                     if (datetime.length >= 2)
                         hours = datetime[1];
                     else
-                        hours = " - ";
+                        hours = "";
 
                     String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
                     String date = datetime[0];
@@ -305,6 +305,8 @@ public class CreateEventFragment extends Fragment {
         values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
         values.put(EnumDatabase.FIELD_GOING, e.isGoing());
         values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+        values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
+        values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
         database.update(e.getId(), values);
     }
 

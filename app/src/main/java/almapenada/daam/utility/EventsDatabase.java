@@ -19,7 +19,7 @@ public class EventsDatabase {
     }
 
     public void populateWithExample(){
-        insertEvent(new Event(1,"Festa no ISCTE", true, "Segunda-feira", "09/05/2016", false, "", true, "3", "18:30", true, "38.748753 -9.153692", true, true, false));//teste
+        insertEvent(new Event(1,"Festa no ISCTE", true, "Segunda-feira", "09/05/2016", false, "", true, "3€", "18:30", true, "38.748753 -9.153692", true, true, false));//teste
         insertEvent(new Event(2,"Frango assado", false, "Segunda-feira", "09/05/2016", false, "", false, "", "", false, "", false, false, false));//teste
     }
 
@@ -44,6 +44,8 @@ public class EventsDatabase {
         values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
         values.put(EnumDatabase.FIELD_GOING, e.isGoing());
         values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+        values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
+        values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
         return db.insert(EnumDatabase.TABLE_EVENT, null, values);
     }
 
@@ -58,17 +60,17 @@ public class EventsDatabase {
 
     public Cursor getEventByName(String text)
     {
-        return db.query(EnumDatabase.TABLE_EVENT, new String[]{EnumDatabase.FIELD_ID, EnumDatabase.FIELD_NAME, EnumDatabase.FIELD_isPUBLIC, EnumDatabase.FIELD_WEEKDAY, EnumDatabase.FIELD_DATE, EnumDatabase.FIELD_isENDDATE, EnumDatabase.FIELD_ENDDATE, EnumDatabase.FIELD_isPRICE, EnumDatabase.FIELD_PRICE, EnumDatabase.FIELD_HOURS, EnumDatabase.FIELD_isLOCATION, EnumDatabase.FIELD_LOCATION_latlng, EnumDatabase.FIELD_FRIENDS_INVITE, EnumDatabase.FIELD_GOING, EnumDatabase.FIELD_NEW},
+        return db.query(EnumDatabase.TABLE_EVENT, new String[]{EnumDatabase.FIELD_ID, EnumDatabase.FIELD_NAME, EnumDatabase.FIELD_isPUBLIC, EnumDatabase.FIELD_WEEKDAY, EnumDatabase.FIELD_DATE, EnumDatabase.FIELD_isENDDATE, EnumDatabase.FIELD_ENDDATE, EnumDatabase.FIELD_isPRICE, EnumDatabase.FIELD_PRICE, EnumDatabase.FIELD_HOURS, EnumDatabase.FIELD_isLOCATION, EnumDatabase.FIELD_LOCATION_latlng, EnumDatabase.FIELD_FRIENDS_INVITE, EnumDatabase.FIELD_GOING, EnumDatabase.FIELD_NEW, EnumDatabase.FIELD_DESCRIPTION, EnumDatabase.FIELD_FILEPATH},
                 EnumDatabase.FIELD_NAME + "=" + text, null, null, null, null);
     }
 
     public Cursor getEventById(int id){
-        return db.query(EnumDatabase.TABLE_EVENT, new String[]{EnumDatabase.FIELD_ID, EnumDatabase.FIELD_NAME, EnumDatabase.FIELD_isPUBLIC, EnumDatabase.FIELD_WEEKDAY, EnumDatabase.FIELD_DATE, EnumDatabase.FIELD_isENDDATE, EnumDatabase.FIELD_ENDDATE, EnumDatabase.FIELD_isPRICE, EnumDatabase.FIELD_PRICE, EnumDatabase.FIELD_HOURS, EnumDatabase.FIELD_isLOCATION, EnumDatabase.FIELD_LOCATION_latlng, EnumDatabase.FIELD_FRIENDS_INVITE, EnumDatabase.FIELD_GOING, EnumDatabase.FIELD_NEW},
+        return db.query(EnumDatabase.TABLE_EVENT, new String[]{EnumDatabase.FIELD_ID, EnumDatabase.FIELD_NAME, EnumDatabase.FIELD_isPUBLIC, EnumDatabase.FIELD_WEEKDAY, EnumDatabase.FIELD_DATE, EnumDatabase.FIELD_isENDDATE, EnumDatabase.FIELD_ENDDATE, EnumDatabase.FIELD_isPRICE, EnumDatabase.FIELD_PRICE, EnumDatabase.FIELD_HOURS, EnumDatabase.FIELD_isLOCATION, EnumDatabase.FIELD_LOCATION_latlng, EnumDatabase.FIELD_FRIENDS_INVITE, EnumDatabase.FIELD_GOING, EnumDatabase.FIELD_NEW, EnumDatabase.FIELD_DESCRIPTION, EnumDatabase.FIELD_FILEPATH},
                 EnumDatabase.FIELD_ID + "=" + id, null, null, null, null);
     }
 
     public Cursor getAllEvents(){
-        return db.query(EnumDatabase.TABLE_EVENT, new String[]{EnumDatabase.FIELD_ID, EnumDatabase.FIELD_NAME, EnumDatabase.FIELD_isPUBLIC, EnumDatabase.FIELD_WEEKDAY, EnumDatabase.FIELD_DATE, EnumDatabase.FIELD_isENDDATE, EnumDatabase.FIELD_ENDDATE, EnumDatabase.FIELD_isPRICE, EnumDatabase.FIELD_PRICE, EnumDatabase.FIELD_HOURS, EnumDatabase.FIELD_isLOCATION, EnumDatabase.FIELD_LOCATION_latlng, EnumDatabase.FIELD_FRIENDS_INVITE, EnumDatabase.FIELD_GOING, EnumDatabase.FIELD_NEW},
+        return db.query(EnumDatabase.TABLE_EVENT, new String[]{EnumDatabase.FIELD_ID, EnumDatabase.FIELD_NAME, EnumDatabase.FIELD_isPUBLIC, EnumDatabase.FIELD_WEEKDAY, EnumDatabase.FIELD_DATE, EnumDatabase.FIELD_isENDDATE, EnumDatabase.FIELD_ENDDATE, EnumDatabase.FIELD_isPRICE, EnumDatabase.FIELD_PRICE, EnumDatabase.FIELD_HOURS, EnumDatabase.FIELD_isLOCATION, EnumDatabase.FIELD_LOCATION_latlng, EnumDatabase.FIELD_FRIENDS_INVITE, EnumDatabase.FIELD_GOING, EnumDatabase.FIELD_NEW, EnumDatabase.FIELD_DESCRIPTION, EnumDatabase.FIELD_FILEPATH},
                 null, null, null, null, null);
     }
 
@@ -99,7 +101,7 @@ public class EventsDatabase {
                     EnumDatabase.FIELD_WEEKDAY + " text, " + EnumDatabase.FIELD_DATE+ " date, " + EnumDatabase.FIELD_isENDDATE +" boolean, " + EnumDatabase.FIELD_ENDDATE +" text, " +
                     EnumDatabase.FIELD_isPRICE + " boolean, " + EnumDatabase.FIELD_PRICE +" text, " + EnumDatabase.FIELD_HOURS + " text, " + EnumDatabase.FIELD_isLOCATION + " boolean, " +
                     EnumDatabase.FIELD_LOCATION_latlng + " text, " + EnumDatabase.FIELD_FRIENDS_INVITE +" boolean, " +
-                    EnumDatabase.FIELD_GOING +" boolean, " + EnumDatabase.FIELD_NEW + " boolean);");
+                    EnumDatabase.FIELD_GOING +" boolean, " + EnumDatabase.FIELD_NEW + " boolean, " + EnumDatabase.FIELD_DESCRIPTION + " text, " + EnumDatabase.FIELD_FILEPATH + " text);");
         }
 
         @Override
