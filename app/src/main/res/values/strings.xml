@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DAAM</string>
+    <string name="app_name" translatable="false">DAAM</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -49,23 +49,53 @@
         <item>View by: Not going</item>
     </string-array>
     <string name="title_activity_map">Map</string>
-    <string name="NOME">NOME</string>
-    <string name="LOCALIZAÇÃO">LOCALIZAÇÃO</string>
-    <string name="site">www.site.org</string>
-    <string name="p">p</string>
-    <string name="descricao">Descrição</string>
-    <string name="numtele">Número Telemóvel</string>
-    <string name="email">E-Mail</string>
-    <string name="name">Daniela Costa</string>
-    <string name="local">Lisboa, Portugal</string>
-    <string name="descr">www...blogspot.com</string>
-    <string name="addremove">Add or Remove</string>
-    <string name="text">Mestrado em Engenharia Informática</string>
-    <string name="number">91X XXX XXX</string>
+    <string name="NOME">Name</string>
+    <string name="LOCALIZAÇÃO">Location</string>
+    <string name="site" translatable="false">www.site.org</string>
+    <string name="p" translatable="false">p</string>
+    <string name="email" translatable="false">E-Mail</string>
+    <string name="price">"Price: "</string>
+    <string name="selectPicture">Select Picture</string>
+    <string name="InsertDescription">Insert a description</string>
+    <string name="latitude" translatable="false">latitude</string>
+    <string name="longitude" translatable="false">longitude</string>
+    <string name="InsertLatLng">Insert latitude and longitude</string>
+    <string name="SelectDate">Select a date</string>
+    <string name="PickDate">Pick Date</string>
     <string-array name="sex_array">
         <item>Sexo</item>
         <item>Feminino</item>
         <item>Masculino</item>
         <item>Indefinido</item>
     </string-array>
+    <string name="descricao">Description</string>
+    <string name="numtele">Phone number</string>
+    <string name="preco">Price</string>
+    <string name="CreateEventWarn">Event name or date are Empty</string>
+    <string name="SelectTime">Select Time</string>
+    <string name="PickPrice">Pick price</string>
+    <string name="Cancelled">Cancelled</string>
+    <string name="GPSNotFound">Localização GPS não disponivel</string>
+    <string name="ErrorSpinner">No such option on spinner</string>
+    <string name="List">List</string>
+    <string name="Map">Map</string>
+    <string name="EventRemoved">Event Removed</string>
+    <string name="ErrorRemoveEvent">An error occurred while removing event</string>
+    <string name="NewEvent">NEW</string>
+    <string name="NotFound">" not found"</string>
+    <string name="MyProfile">My Profile</string>
+    <string name="DefaultEventName">Name</string>
+    <string name="EventPrivate">Private</string>
+    <string name="EventPublic">Public</string>
+    <string name="EventDate">Event Date:</string>
+    <string name="EventEndDate">End Date:</string>
+    <string name="EventLocation">Location:</string>
+    <string name="EventDescription">Description:</string>
+    <string name="Location">Location</string>
+    <string name="AddPeople">Add People</string>
+    <string name="CanFriendsInvite">Friends can invite?</string>
+    <string name="Create">Create</string>
+    <string name="ViewComments">View comments</string>
+    <string name="WhosGoing">Who\'s going?</string>
+    <string name="CreateNewEvent">Create New Event</string>
 </resources>
