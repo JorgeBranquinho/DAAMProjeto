@@ -59,7 +59,7 @@ public class EventsFragment extends Fragment {
                     case 4: eventlistfrag.orderByNotGoing();
                         break;
                     default:
-                        Toast.makeText(getContext(), "No such option on spinner", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), R.string.ErrorSpinner, Toast.LENGTH_SHORT);
                         break;
                 }
             }
@@ -77,8 +77,8 @@ public class EventsFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         Adapter ad = new Adapter(getFragmentManager());
         eventlistfrag = new EventListFragment();
-        ad.addFragment(eventlistfrag, "List");
-        ad.addFragment(new MapFragment(), "Map");
+        ad.addFragment(eventlistfrag, getResources().getString(R.string.List));
+        ad.addFragment(new MapFragment(), getResources().getString(R.string.Map));
         viewPager.setAdapter(ad);
     }
 

@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -53,11 +55,11 @@ import almapenada.daam.utility.EventsDatabase;
 
 public class CreateEventFragment extends Fragment {
 
-    private CreateEventFragment self= this;
+    private CreateEventFragment self = this;
     public static Button date_picker;
     public static Button date_end_picker;
     private static final int SELECT_IMAGE = 1;
-    private String filePath="";
+    private String filePath = "";
     private Button event_img;
 
     @Override
@@ -72,11 +74,11 @@ public class CreateEventFragment extends Fragment {
         final RadioButton event_price = (RadioButton) v.findViewById(R.id.event_price);
         final RadioButton event_location = (RadioButton) v.findViewById(R.id.event_location);
         date_picker = (Button) v.findViewById(R.id.date_picker);
-        final Switch switch1 = (Switch) v.findViewById(R.id.switch1);
-        final TextView event_end = (TextView) v.findViewById(R.id.event_end);
+        //final Switch switch1 = (Switch) v.findViewById(R.id.switch1);
+        final RadioButton event_end = (RadioButton) v.findViewById(R.id.event_end);
         date_end_picker = (Button) v.findViewById(R.id.date_end_picker);
         final Button event_location_input = (Button) v.findViewById(R.id.event_location_input);
-        final EditText event_price_input = (EditText) v.findViewById(R.id.event_price_input);
+        final Button event_price_input = (Button) v.findViewById(R.id.event_price_input);
         final EditText event_description_input = (EditText) v.findViewById(R.id.event_description_input);
         Button event_people = (Button) v.findViewById(R.id.event_people);
         final CheckBox event_invitable_friends = (CheckBox) v.findViewById(R.id.event_invitable_friends);
@@ -89,7 +91,7 @@ public class CreateEventFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);//
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
+                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.selectPicture)), SELECT_IMAGE);
             }
         });
 
@@ -98,15 +100,15 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 final EditText edittext = new EditText(getContext());
-                alert.setTitle("Insert a description");
+                alert.setTitle(R.string.InsertDescription);
                 alert.setView(edittext);
                 edittext.setText(event_description_input.getText());
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         event_description_input.setText(edittext.getText().toString());
                     }
                 });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //nao fazer nada
                     }
@@ -135,7 +137,7 @@ public class CreateEventFragment extends Fragment {
         event_price_input.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_price_input.setText("");
+                pricePicker(event_price_input);
             }
         });
         event_location_input.setOnClickListener(new View.OnClickListener() {
@@ -145,22 +147,22 @@ public class CreateEventFragment extends Fragment {
                 //final String regexStr = "^[0-9]*$";
                 final EditText lat = new EditText(getContext());
                 final EditText lng = new EditText(getContext());
-                lat.setText("latitude");
-                lng.setText("longitude");
+                lat.setText(R.string.latitude);
+                lng.setText(R.string.longitude);
                 LinearLayout layout = new LinearLayout(getContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
-                alert.setTitle("Insert latitude and longitude");
+                alert.setTitle(R.string.InsertLatLng);
                 layout.addView(lat);
                 layout.addView(lng);
                 alert.setView(layout);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //if(lat.getText().toString().trim().matches(regexStr) && lng.getText().toString().trim().matches(regexStr))
-                            event_location_input.setText(lat.getText().toString() + " " + lng.getText().toString());
+                        event_location_input.setText(lat.getText().toString() + " " + lng.getText().toString());
                         //else event_location_input.setText("invalid");
                     }
                 });
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //nao fazer nada
                     }
@@ -184,99 +186,100 @@ public class CreateEventFragment extends Fragment {
             }
         });
         event_price.setOnClickListener(new View.OnClickListener() {
-            private boolean checked=false;
+            private boolean checked = false;
+
             @Override
             public void onClick(View v) {
                 if (!checked) {
                     event_price.setChecked(true);
                     event_price_input.setEnabled(true);
-                }else {
+                } else {
                     event_price.setChecked(false);
                     event_price_input.setEnabled(false);
                 }
-                checked=!checked;
+                checked = !checked;
             }
         });
         event_location.setOnClickListener(new View.OnClickListener() {
-            private boolean checked=false;
+            private boolean checked = false;
+
             @Override
             public void onClick(View v) {
                 if (!checked) {
                     event_location.setChecked(true);
                     event_location_input.setEnabled(true);
-                }else {
+                } else {
                     event_location.setChecked(false);
                     event_location_input.setEnabled(false);
                 }
-                checked=!checked;
+                checked = !checked;
             }
         });
         date_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment picker = new DatePickerFragment2(0);
-                picker.show(getFragmentManager(), "datePicker");
+                picker.show(getFragmentManager(), getResources().getString(R.string.SelectDate));
             }
         });
-        switch1.setOnClickListener(new View.OnClickListener() {
+        event_end.setOnClickListener(new View.OnClickListener() {
+            private boolean checked = false;
+
             @Override
             public void onClick(View v) {
-                if (switch1.isChecked()) {
+                if (!checked) {
+                    event_end.setChecked(true);
                     date_end_picker.setEnabled(true);
-                    event_end.setEnabled(true);
                 } else {
+                    event_end.setChecked(false);
                     date_end_picker.setEnabled(false);
-                    event_end.setEnabled(false);
                 }
+                checked = !checked;
             }
         });
         date_end_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment picker = new DatePickerFragment2(1);
-                picker.show(getFragmentManager(), "datePicker");
+                picker.show(getFragmentManager(), getResources().getString(R.string.SelectDate));
             }
         });
 
         event_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!event_name.getText().toString().equals("")) {
+                if (!event_name.getText().toString().equals("") && !date_picker.getText().toString().equals(getResources().getString(R.string.PickDate))) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
-                    String dayOfTheWeek="";
-                    String date="";
-                    String hours="";
-                    if(!date_picker.getText().toString().equals("Pick Date")) {
-                        String[] datetime = date_picker.getText().toString().split(" ");
+                    String hours = "";
+                    String[] datetime = date_picker.getText().toString().split(" ");
 
-                        if (datetime.length >= 2)
-                            hours = datetime[1];
-                        else
-                            hours = " - ";
-
-                        dayOfTheWeek = getDayOfTheWeek(datetime[0]);
-                        date=datetime[0];
-                    }
-                    String dateEnd;
-                    if(!date_end_picker.getText().toString().equals("Pick Date") || switch1.isChecked())
-                        dateEnd=date_end_picker.getText().toString();
+                    if (datetime.length >= 2)
+                        hours = datetime[1];
                     else
-                        dateEnd=" - ";
+                        hours = "";
+
+                    String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
+                    String date = datetime[0];
+                    String dateEnd;
+                    if (!date_end_picker.getText().toString().equals(getResources().getString(R.string.PickDate)) && event_end.isChecked())
+                        dateEnd = date_end_picker.getText().toString();
+                    else
+                        dateEnd = " - ";
 
                     String price;
-                    if(!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
-                        price=event_price_input.getText().toString();
+                    if (!event_price_input.getText().toString().equals(getResources().getString(R.string.preco)) && event_price.isChecked())
+                        price = event_price_input.getText().toString();
                     else
-                        price=" - ";
+                        price = " - ";
 
-                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
+                    Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, event_end.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
                     database.close();
                     ((DrawerActivity) getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
-                }else{
-                    Toast.makeText(getContext(), "Event name is Empty", Toast.LENGTH_SHORT);
+                } else {
+                    Toast.makeText(getContext(), R.string.CreateEventWarn, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -302,21 +305,23 @@ public class CreateEventFragment extends Fragment {
         values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
         values.put(EnumDatabase.FIELD_GOING, e.isGoing());
         values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+        values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
+        values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
         database.update(e.getId(), values);
     }
 
     private String getDayOfTheWeek(String string) {
-        String dayOfTheWeek="";
+        String dayOfTheWeek = "";
         try {
-            SimpleDateFormat dmy=new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat mdy=new SimpleDateFormat("MM/dd/yyyy");
-            Date date=dmy.parse(string);
+            SimpleDateFormat dmy = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat mdy = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = dmy.parse(string);
             String outputDateStr = mdy.format(date);
             Date d = mdy.parse(outputDateStr);//new Date(outputDateStr);
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
             dayOfTheWeek = sdf.format(d);
         } catch (ParseException e) {
-            dayOfTheWeek=" - ";
+            dayOfTheWeek = " - ";
         }
         return dayOfTheWeek;
     }
@@ -324,12 +329,15 @@ public class CreateEventFragment extends Fragment {
 
     public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-        private int type=-1;
+        private int type = -1;
 
-        public DatePickerFragment2(){};
+        public DatePickerFragment2() {
+        }
+
+        ;
 
         public DatePickerFragment2(int i) {
-            this.type=i;
+            this.type = i;
         }
 
         @Override
@@ -350,48 +358,95 @@ public class CreateEventFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//"yyyy-MM-dd");
             final String formattedDate = sdf.format(c.getTime());
 
-            if(type==0) date_picker.setText(formattedDate);
-            if(type==1) date_end_picker.setText(formattedDate);
+            if (type == 0) date_picker.setText(formattedDate);
+            if (type == 1) date_end_picker.setText(formattedDate);
 
             Calendar mcurrentTime = Calendar.getInstance();
             int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
             int minute = mcurrentTime.get(Calendar.MINUTE);
             TimePickerDialog mTimePicker;
             mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                 @Override
+                @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                     String datetime=formattedDate + " " + selectedHour + ":" + selectedMinute;
-                     if(type==0) date_picker.setText(datetime);
-                     if(type==1) date_end_picker.setText(datetime);
+                    String datetime = formattedDate + " " + selectedHour + ":" + selectedMinute;
+                    if (type == 0) date_picker.setText(datetime);
+                    if (type == 1) date_end_picker.setText(datetime);
                 }
             }, hour, minute, true);
-            mTimePicker.setTitle("Select Time");
+            mTimePicker.setTitle(getResources().getString(R.string.SelectTime));
             mTimePicker.show();
         }
 
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    private void pricePicker(final Button event_price_input){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View theView = inflater.inflate(R.layout.number_picker_dialog, null);
+        final NumberPicker unit_euro = (NumberPicker) theView.findViewById(R.id.euro_picker);
+        final NumberPicker cent = (NumberPicker) theView.findViewById(R.id.cent_picker);
+        builder.setView(theView)
+                .setPositiveButton(R.string.aceitar,new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        event_price_input.setText(unit_euro.getValue() + "."+cent.getValue()*5);
+                    }
+                }).setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                event_price_input.setText(R.string.PickPrice);
+                dialog.dismiss();
+            }
+        });
+        unit_euro.setMinValue(0);
+        unit_euro.setMaxValue(99);
+        String cents[] = new String[20];
+        for(int i = 0;i < 100; i+=5) {
+            if( i < 10 )
+                cents[i/5] = "0"+i;
+            else
+                cents[i/5] = ""+i;
+        }
+        cent.setDisplayedValues(cents);
+        cent.setMinValue(0);
+        cent.setMaxValue(19);
+        cent.setValue(0);
+        builder.show();
+    }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECT_IMAGE) {
             if (resultCode == getActivity().RESULT_OK) {
                 if (data != null) {
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                    Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    filePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//se a API é 15+
-                        event_img.setBackground(new BitmapDrawable(getContext().getResources(),yourSelectedImage));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        String wholeID = DocumentsContract.getDocumentId(selectedImage);
+                        String id = wholeID.split(":")[1];
+                        String[] column = {MediaStore.Images.Media.DATA};
+                        String sel = MediaStore.Images.Media._ID + "=?";
+                        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
+                        int columnIndex = cursor.getColumnIndex(column[0]);
+                        if (cursor.moveToFirst()) {
+                            filePath = cursor.getString(columnIndex);
+                        }
+                        cursor.close();
+                        Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                        event_img.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+                    } else {
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        filePath = cursor.getString(columnIndex);
+                        cursor.close();
+                        Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//se a API é 15+
+                            event_img.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+                        }
                     }
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
-                    Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.Cancelled, Toast.LENGTH_SHORT).show();
                 }
             }
         }

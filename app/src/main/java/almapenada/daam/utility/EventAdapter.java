@@ -90,16 +90,17 @@ public class EventAdapter extends BaseAdapter {
                                     })
                                     .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
+
                                             database = new EventsDatabase(activity);
-                                            database.deleteById(e.getId() + 1);
+                                            boolean res=database.deleteById(e.getId() + 1);
+                                            if(!res)    System.out.println("[error] nao apagou evento " + e.getId());
                                             database.close();//para escrever as mudanças nas DB
-                                            database = new EventsDatabase(activity);//reabrir ligacao
                                             data.remove(event_position);
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
                                             dialog.dismiss();
-                                            database.close();
+                                            if(res) Toast.makeText(activity, R.string.EventRemoved, Toast.LENGTH_SHORT).show();
+                                            else Toast.makeText(activity, R.string.ErrorRemoveEvent, Toast.LENGTH_SHORT).show();
                                         }
                                     });
                             builder.show();
@@ -151,6 +152,8 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
+                values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
+                values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
                 database.update(e.getId(), values);
                 database.close();
             }
@@ -159,19 +162,19 @@ public class EventAdapter extends BaseAdapter {
             diaSemana.setText(data.get(position).getWeekDay());
             diaEvento.setText(data.get(position).getDate());
         }else{
-            diaSemana.setText(" - ");
+            diaSemana.setText("");
             diaEvento.setText("");
         }
-        if(!data.get(position).getPrice().equals(""))
-            preco.setText("Price: " + data.get(position).getPrice());
+        if(data.get(position).isPrice() && !data.get(position).getPrice().equals(""))
+            preco.setText(R.string.price + data.get(position).getPrice() + "€");
         else
             preco.setText(" - ");
         if(!data.get(position).getHours().equals(""))
             horas.setText(data.get(position).getHours());
         else
-            horas.setText(" - ");
+            horas.setText("");
         if(data.get(position).isNewEvent())
-            local.setText("NEW");
+            local.setText(R.string.NewEvent);
         else
             local.setText("");
         data.get(position).setId(position);
