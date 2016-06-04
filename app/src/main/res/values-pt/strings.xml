@@ -67,4 +67,6 @@
     <string name="ViewComments">Ver comentários</string>
     <string name="WhosGoing">Quem vai?</string>
     <string name="CreateNewEvent">Criar Novo Evento</string>
+    <string name="LOCALIZAÇÃO" translatable="false">Localização</string>
+    <string name="NOME">Nome</string>
 </resources>
