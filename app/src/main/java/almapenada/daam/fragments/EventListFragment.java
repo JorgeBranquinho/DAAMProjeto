@@ -4,31 +4,36 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.IOException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 
 import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
@@ -41,6 +46,8 @@ public class EventListFragment extends Fragment {
 
     private View rootView;
     private EventAdapter adapter;
+    private ArrayList<Event> temp_events = new ArrayList<Event>();
+    private ArrayList<Integer> owned_events = new ArrayList<>();
     private ArrayList<Event> events_to_display = new ArrayList<Event>();
     private ArrayList<Event> full_event_list = new ArrayList<Event>();
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -49,7 +56,7 @@ public class EventListFragment extends Fragment {
     private LocationManager locationMangaer = null;
     private MyLocationListener locationListener;
     private boolean track = false;
-    private Location userLocation=null;
+    private Location userLocation = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class EventListFragment extends Fragment {
             database.populateWithExample();
 
         populateEventList(database.getAllEvents());
+        populateEventListRemote();
 
         adapter = new EventAdapter(getActivity(), full_event_list);
 
@@ -77,11 +85,69 @@ public class EventListFragment extends Fragment {
         return rootView;
     }
 
+    private void populateEventListRemote() {
+        new DownloadEvents().execute();
+    }
+
+    class DownloadEvents extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            String response = "";
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://daamservices-daam.rhcloud.com/getEventById/1"));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+                temp_events.add(jsonToEvent(response));
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            full_event_list=temp_events;
+            orderByRecent();
+        }
+
+        private Event jsonToEvent(String response) {
+            JSONObject jobj = null;
+            try {
+                jobj = new JSONObject(response);
+
+                if (jobj.get("status").toString().compareTo("OK") == 0) {
+                    JSONArray poi = jobj.getJSONArray("teste");
+                    database = new EventsDatabase(getActivity());
+                    for (int i = 0; i < poi.length(); i++) {
+                        JSONObject t_poi = poi.getJSONObject(i);
+                        if(!owned_events.contains(Integer.parseInt(t_poi.getString("id")))) {
+                            Event x = new Event(Integer.parseInt(t_poi.getString("id")), t_poi.getString("eventName"), Integer.parseInt(t_poi.getString("isPublic")) == 1 ? true : false, t_poi.getString("weekDay"), t_poi.getString("date"), Integer.parseInt(t_poi.getString("isEndDate")) == 1 ? true : false, t_poi.getString("endDate"), Integer.parseInt(t_poi.getString("isPrice")) == 1 ? true : false, t_poi.getString("price"), t_poi.getString("hours"), Integer.parseInt(t_poi.getString("isLocation")) == 1 ? true : false, t_poi.getString("location_latlng"), Integer.parseInt(t_poi.getString("isFriendsInvitable")) == 1 ? true : false, false, false);
+                            database.insertEvent(x);
+                            full_event_list.add(x);
+                        }
+                    }
+                    database.close();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     private void populateEventList(Cursor cursor) {
         if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {
                 Event e = (new EnumDatabase()).cursorToEvent(cursor);
                 full_event_list.add(e);
+                owned_events.add(e.getId());
                 cursor.moveToNext();
             }
         }
@@ -108,7 +174,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByNear() {
-        if (displayGpsStatus() && track && userLocation!=null) {
+        if (displayGpsStatus() && track && userLocation != null) {
             refresh();
             events_to_display = (ArrayList<Event>) full_event_list.clone();
             if (events_to_display.size() == 0) return;
@@ -131,7 +197,7 @@ public class EventListFragment extends Fragment {
             });
             adapter = new EventAdapter(getActivity(), events_to_display);
             event_list.setAdapter(adapter);
-        }else Toast.makeText(getContext(), R.string.GPSNotFound, Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(getContext(), R.string.GPSNotFound, Toast.LENGTH_SHORT).show();
     }
 
     public void orderByCheaper() {
