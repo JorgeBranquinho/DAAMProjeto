@@ -34,16 +34,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/name"
                 android:id="@+id/nomePerfil"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20sp"
+                android:text="Daniela Costa" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/local"
+                android:text="Lisboa, Portugal"
                 android:id="@+id/localPerfil"
                 android:textAlignment="center"
                 android:textSize="20dp" />
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/descr"
+                android:text="www....blogspot.com"
                 android:id="@+id/textView2"
                 android:textAlignment="center"
                 android:textSize="20dp" />
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/addRemove"
-            android:text="@string/addremove"
+            android:text="add-remove"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text"
+            android:text="Mestrado em Engenharia Informática"
             android:id="@+id/descrPerfil"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -104,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/number"
+            android:text="91X XXX XXX"
             android:id="@+id/numPerfil"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
