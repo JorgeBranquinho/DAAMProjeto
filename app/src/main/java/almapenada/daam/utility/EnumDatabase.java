@@ -34,12 +34,10 @@ public class EnumDatabase {
     //public final static String FIELD_LOCATION_lat = "event_locationLat";
     //public final static String FIELD_LOCATION_lng = "event_locationLng";
     public final static String FIELD_LOCATION_latlng = "event_locationLatLng";
-    //public final static String FIELD_LOCATION_URI = "event_locationURI";//nao usado
+    public final static String FIELD_LOCATION_URI = "event_locationURI";//nao usado
     public final static String FIELD_FRIENDS_INVITE = "event_freindsInvite";
     public final static String FIELD_GOING = "event_going";
     public final static String FIELD_NEW = "event_new";
-    public final static String FIELD_FILEPATH = "event_filepath";
-    public final static String FIELD_DESCRIPTION = "event_description";
 
 
     /**SuggestionsDB**/
@@ -94,9 +92,7 @@ public class EnumDatabase {
             new_event = false;
         else
             new_event = true;
-        String description = cursor.getString(cursor.getColumnIndex("event_description"));
-        String filepath = cursor.getString(cursor.getColumnIndex("event_filepath"));
-        return new Event(id, name, isPublic, weekday, date, isEndDate, endDate, isPrice, price, hours, isLocation, locationLatLng, friends_invite, going, new_event, filepath, description);
+        return new Event(id, name, isPublic, weekday, date, isEndDate, endDate, isPrice, price, hours, isLocation, locationLatLng, friends_invite, going, new_event);
     }
 
     public int getScreenDensity(Activity a){

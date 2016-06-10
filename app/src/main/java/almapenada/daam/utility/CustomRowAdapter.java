@@ -1,8 +1,8 @@
 package almapenada.daam.utility;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +18,13 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
     private Activity context;
     private String[] names;
     private Drawable[] images;
-    private int friendsOrGroups;
 
 
-    public CustomRowAdapter( Activity context, String[] names, Drawable[] images, int friendsOrGroups ) {
-        super(context, R.layout.general_row_tab,names);
+    public CustomRowAdapter( Activity context, String[] names, Drawable[] images ) {
+        super(context, R.layout.friend_tab,names);
         this.context = context;
         this.names = names;
         this.images = images;
-        this.friendsOrGroups = friendsOrGroups;
     }
 
     @Override
@@ -34,8 +32,7 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = context.getLayoutInflater();
 
         View rowView = null;
-        rowView = inflater.inflate(R.layout.general_row_tab,null,true);
-
+        rowView = inflater.inflate(R.layout.friend_tab,null,true);
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.friends_list_name);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.friends_list_image);

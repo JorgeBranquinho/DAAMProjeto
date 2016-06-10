@@ -1,23 +1,23 @@
 package almapenada.daam.utility;
 
-        import java.util.ArrayList;
-
         import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.content.ContentValues;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.BaseAdapter;
-        import android.widget.CheckBox;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import almapenada.daam.DrawerActivity;
-        import almapenada.daam.R;
+import java.util.ArrayList;
+
+import almapenada.daam.DrawerActivity;
+import almapenada.daam.R;
 
 public class EventAdapter extends BaseAdapter {
 
@@ -90,17 +90,16 @@ public class EventAdapter extends BaseAdapter {
                                     })
                                     .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-
+                                            Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
                                             database = new EventsDatabase(activity);
-                                            boolean res=database.deleteById(e.getId() + 1);
-                                            if(!res)    System.out.println("[error] nao apagou evento " + e.getId());
+                                            database.deleteById(e.getId() + 1);
                                             database.close();//para escrever as mudanças nas DB
+                                            database = new EventsDatabase(activity);//reabrir ligacao
                                             data.remove(event_position);
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
                                             dialog.dismiss();
-                                            if(res) Toast.makeText(activity, R.string.EventRemoved, Toast.LENGTH_SHORT).show();
-                                            else Toast.makeText(activity, R.string.ErrorRemoveEvent, Toast.LENGTH_SHORT).show();
+                                            database.close();
                                         }
                                     });
                             builder.show();
@@ -152,44 +151,29 @@ public class EventAdapter extends BaseAdapter {
                 values.put(EnumDatabase.FIELD_FRIENDS_INVITE, e.isFriendsInvitable());
                 values.put(EnumDatabase.FIELD_GOING, going.isChecked());
                 values.put(EnumDatabase.FIELD_NEW, e.isNewEvent());
-                values.put(EnumDatabase.FIELD_DESCRIPTION, e.getDescription());
-                values.put(EnumDatabase.FIELD_FILEPATH, e.getFilepath());
                 database.update(e.getId(), values);
                 database.close();
             }
         });
-<<<<<<< HEAD
         if(!data.get(position).getWeekDay().equals("") || !data.get(position).getDate().equals("")) {
             diaSemana.setText(data.get(position).getWeekDay());
             diaEvento.setText(data.get(position).getDate());
         }else{
-            diaSemana.setText("");
+            diaSemana.setText(" - ");
             diaEvento.setText("");
         }
-        if(data.get(position).isPrice() && !data.get(position).getPrice().equals(""))
-            preco.setText(R.string.price + data.get(position).getPrice() + "€");
-=======
-        diaSemana.setText(data.get(position).getWeekDay());
-        diaEvento.setText(data.get(position).getDate());
         if(!data.get(position).getPrice().equals(""))
             preco.setText("Price: " + data.get(position).getPrice());
->>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
         else
             preco.setText(" - ");
-        if(!data.get(position).getHours().equals("")) {
+        if(!data.get(position).getHours().equals(""))
             horas.setText(data.get(position).getHours());
-<<<<<<< HEAD
         else
-            horas.setText("");
+            horas.setText(" - ");
         if(data.get(position).isNewEvent())
-            local.setText(R.string.NewEvent);
+            local.setText("NEW");
         else
             local.setText("");
-=======
-        }else
-            horas.setText(" - ");
-        local.setText("NEW");
->>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
         data.get(position).setId(position);
 
         return vi;

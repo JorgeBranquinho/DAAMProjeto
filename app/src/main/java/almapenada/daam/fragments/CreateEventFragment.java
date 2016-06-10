@@ -269,13 +269,13 @@ public class CreateEventFragment extends Fragment {
                         price=event_price_input.getText().toString();
                     else
                         price=" - ";
-/*
+
                     Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
                     database.close();
                     ((DrawerActivity) getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
-               */ }else{
+                }else{
                     Toast.makeText(getContext(), "Event name is Empty", Toast.LENGTH_SHORT);
                 }
             }

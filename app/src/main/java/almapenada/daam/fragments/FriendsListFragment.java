@@ -29,6 +29,7 @@ public class FriendsListFragment extends Fragment {
     private ListView list_friends;
     private CustomRowAdapter adapter;
     private View rootView;
+    private EditText inputSearch;
     private String[] friends_list_names = new String[5];
     private Drawable[] friends_list_images = new Drawable[5];
     private String[] dummy_friends = { "Jorge Branquinho", "Ivo Silva", "Daniela Costa", "Andre Carvalho", "Diogo Leo" };
@@ -45,13 +46,14 @@ public class FriendsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
+        inputSearch = (EditText) rootView.findViewById(R.id.inputSearch);
         final ListView list_friends = (ListView) rootView.findViewById(R.id.friends_listview);
 
         for ( int i = 0 ; i < dummy_friends.length ; i++ ) {
             friends_list_images[i] = rootView.getResources().getDrawable(R.drawable.user);
         }
 
-        adapter = new CustomRowAdapter(getActivity(), dummy_friends, friends_list_images, 0);
+        adapter = new CustomRowAdapter(getActivity(), dummy_friends, friends_list_images);
         list_friends.setAdapter(adapter);
 
         list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -59,6 +61,28 @@ public class FriendsListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "Hello " + friends_list_names[position], Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                adapter.getFilter().filter(cs);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                          int arg3) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
             }
         });
 
