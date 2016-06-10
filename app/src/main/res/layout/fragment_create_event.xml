@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/DefaultEventName"
+            android:text="Name"
             android:id="@+id/event_name"
             android:layout_marginRight="63dp"
             android:layout_marginEnd="63dp"
@@ -51,7 +51,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/EventPrivate"
+            android:text="Private"
             android:id="@+id/eventPrivate"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -61,7 +61,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/EventPublic"
+            android:text="Public"
             android:id="@+id/eventPublic"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/EventDate"
+            android:text="Event Date:"
             android:id="@+id/event_date"
             android:layout_marginLeft="55dp"
             android:layout_centerVertical="true"
@@ -91,7 +91,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/PickDate"
+            android:text="Pick Date"
             android:id="@+id/date_picker"
             android:layout_marginRight="58dp"
             android:layout_marginEnd="58dp"
@@ -100,33 +100,43 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Has end date?"
+        android:id="@+id/switch1"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight=".08"
+        android:checked="false" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight=".08">
 
-        <RadioButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/EventEndDate"
+            android:text="End Date:"
             android:id="@+id/event_end"
             android:layout_marginLeft="56dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="56dp"
-            android:layout_weight="1.0"/>
+            android:layout_weight="1.0"
+            android:enabled="false" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/PickDate"
+            android:text="Pick Date"
             android:id="@+id/date_end_picker"
-            android:layout_marginRight="58dp"
-            android:layout_marginEnd="58dp"
+            android:layout_marginRight="49dp"
+            android:layout_marginEnd="49dp"
             android:enabled="false"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -144,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/EventLocation"
+            android:text="Location:"
             android:id="@+id/event_location"
             android:layout_toLeftOf="@+id/event_location_input"
             android:layout_toStartOf="@+id/event_location_input"
@@ -165,7 +175,7 @@
             android:maxLength="20"
             android:enabled="false"
             android:layout_weight="1.0"
-            android:text="@string/Location"
+            android:text="Location"
             android:ems="4"
             android:layout_alignTop="@+id/event_location"
             android:textSize="11dp"
@@ -183,7 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/price"
+            android:text="Price:"
             android:id="@+id/event_price"
             android:layout_marginLeft="55dp"
             android:layout_centerVertical="true"
@@ -191,22 +201,21 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="55dp"/>
 
-        <Button
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/event_price_input"
-            android:layout_marginRight="62dp"
-            android:layout_marginEnd="62dp"
-            android:maxLength="20"
-            android:layout_weight="1.0"
-            android:text="@string/preco"
-            android:enabled="false"
-            android:ems="4"
-            android:textSize="11dp"
+            android:layout_marginRight="58dp"
+            android:layout_marginEnd="58dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@+id/event_price"
-            android:layout_alignTop="@+id/event_price" />
+            android:maxLength="20"
+            android:layout_weight="1.0"
+            android:text="Price"
+            android:enabled="false"
+            android:ems="4"
+            android:background="@drawable/edit_text_custom"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -236,7 +245,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:text="@string/descricao"
+            android:text="Description"
             android:ems="4"
             android:singleLine="true"
             android:background="@drawable/edit_text_custom"/>
@@ -245,7 +254,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/AddPeople"
+        android:text="Add People"
         android:id="@+id/event_people"
         android:layout_gravity="center_horizontal"
         android:layout_weight=".04"/>
@@ -253,7 +262,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/CanFriendsInvite"
+        android:text="Friends can invite?"
         android:id="@+id/event_invitable_friends"
         android:layout_gravity="center_horizontal"
         android:checked="true"
@@ -262,7 +271,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Create"
+        android:text="Create"
         android:id="@+id/event_done"
         android:layout_gravity="center_horizontal"
         android:layout_weight=".04"/>
