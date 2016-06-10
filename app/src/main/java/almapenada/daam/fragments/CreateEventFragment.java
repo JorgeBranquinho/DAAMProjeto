@@ -91,7 +91,11 @@ public class CreateEventFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);//
+<<<<<<< HEAD
                 startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.selectPicture)), SELECT_IMAGE);
+=======
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
             }
         });
 
@@ -251,6 +255,7 @@ public class CreateEventFragment extends Fragment {
                 if (!event_name.getText().toString().equals("") && !date_picker.getText().toString().equals(getResources().getString(R.string.PickDate))) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
+<<<<<<< HEAD
                     String hours = "";
                     String[] datetime = date_picker.getText().toString().split(" ");
 
@@ -261,6 +266,18 @@ public class CreateEventFragment extends Fragment {
 
                     String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
                     String date = datetime[0];
+=======
+                    String[] datetime = date_picker.getText().toString().split(" ");
+
+                    String hours;
+                    if(datetime.length>=2)
+                        hours=datetime[1];
+                    else
+                        hours=" - ";
+
+                    String dayOfTheWeek = getDayOfTheWeek(datetime[0]);
+
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
                     String dateEnd;
                     if (!date_end_picker.getText().toString().equals(getResources().getString(R.string.PickDate)) && event_end.isChecked())
                         dateEnd = date_end_picker.getText().toString();
@@ -273,7 +290,11 @@ public class CreateEventFragment extends Fragment {
                     else
                         price = " - ";
 
+<<<<<<< HEAD
                     Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, event_end.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
+=======
+                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, datetime[0], switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false);
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
                     database.close();

@@ -158,6 +158,7 @@ public class EventAdapter extends BaseAdapter {
                 database.close();
             }
         });
+<<<<<<< HEAD
         if(!data.get(position).getWeekDay().equals("") || !data.get(position).getDate().equals("")) {
             diaSemana.setText(data.get(position).getWeekDay());
             diaEvento.setText(data.get(position).getDate());
@@ -167,16 +168,28 @@ public class EventAdapter extends BaseAdapter {
         }
         if(data.get(position).isPrice() && !data.get(position).getPrice().equals(""))
             preco.setText(R.string.price + data.get(position).getPrice() + "€");
+=======
+        diaSemana.setText(data.get(position).getWeekDay());
+        diaEvento.setText(data.get(position).getDate());
+        if(!data.get(position).getPrice().equals(""))
+            preco.setText("Price: " + data.get(position).getPrice());
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
         else
             preco.setText(" - ");
-        if(!data.get(position).getHours().equals(""))
+        if(!data.get(position).getHours().equals("")) {
             horas.setText(data.get(position).getHours());
+<<<<<<< HEAD
         else
             horas.setText("");
         if(data.get(position).isNewEvent())
             local.setText(R.string.NewEvent);
         else
             local.setText("");
+=======
+        }else
+            horas.setText(" - ");
+        local.setText("NEW");
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
         data.get(position).setId(position);
 
         return vi;

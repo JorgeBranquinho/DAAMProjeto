@@ -1,12 +1,8 @@
 package almapenada.daam.fragments;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,13 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
-
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
-import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
-import almapenada.daam.utility.EventsDatabase;
 
 public class EventDetailsFragment extends Fragment{
 
@@ -46,7 +38,6 @@ public class EventDetailsFragment extends Fragment{
 
         ((DrawerActivity) getActivity()).HideFabIcon();
 
-        ImageView event_img = (ImageView) v.findViewById(R.id.event_img);
         TextView event_name = (TextView) v.findViewById(R.id.event_name);
         TextView event_date= (TextView) v.findViewById(R.id.event_date);
         TextView event_price= (TextView) v.findViewById(R.id.event_price);
@@ -56,25 +47,30 @@ public class EventDetailsFragment extends Fragment{
         TextView event_description= (TextView) v.findViewById(R.id.event_description);
         Button event_comments= (Button) v.findViewById(R.id.event_comments);
 
-        if(e.isNewEvent()){
-            updateNewEvent(e);
-        }
-
         event_name.setText(e.getEventName());
+<<<<<<< HEAD
         if(!e.getWeekDay().equals("") && !e.getDate().equals(""))
             event_date.setText(e.getWeekDay() + ", " + e.getDate());
         if(e.isPrice() && !e.getPrice().equals(""))
             event_price.setText(getResources().getString(R.string.price) + e.getPrice());
+=======
+        event_date.setText(e.getWeekDay() + ", " + e.getDate());
+        if(e.getPrice().equals(""))
+            event_price.setText("Price: " + e.getPrice());
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
         else
             event_price.setText(getResources().getString(R.string.price) + "N/A");
         event_time.setText(e.getHours());
         event_location.setText(e.getLocation());
+<<<<<<< HEAD
         event_description.setText(e.getDescription());
         File img = new File(e.getFilepath());
         if(img.exists()) {
             Bitmap btmp= BitmapFactory.decodeFile(img.getAbsolutePath());
             event_img.setImageBitmap(btmp);
         }else System.out.println("[error] nao ha path da imagem: " + e.getFilepath());
+=======
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_event);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -99,6 +95,7 @@ public class EventDetailsFragment extends Fragment{
         return v;
     }
 
+<<<<<<< HEAD
     private void updateNewEvent(Event e) {
         EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
         ContentValues values = new ContentValues();
@@ -123,4 +120,6 @@ public class EventDetailsFragment extends Fragment{
         database.close();
     }
 
+=======
+>>>>>>> parent of de48376... /-\|_|\/|/-\|>€|\|/-\|)/-\
 }

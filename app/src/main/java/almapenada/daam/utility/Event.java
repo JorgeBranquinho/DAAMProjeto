@@ -17,7 +17,7 @@ public class Event implements Serializable {
     private boolean going=false;
     private boolean newEvent=false;
     private int id=-1;
-    private String filepath="";
+
     private boolean isPublic=false;
     private boolean isEndDate=false;
     private String enddate="";
@@ -54,34 +54,6 @@ public class Event implements Serializable {
         this.newEvent=newEvent;
         this.description="";
         this.filepath="";
-    }
-
-    public Event(int id, String eventName, boolean isPublic, String weekDay, String date, boolean isEndDate, String enddate, boolean isPrice, String price, String hours, boolean isLocation, String location_latlng, boolean isFriendsInvitable, boolean going, boolean newEvent, String filepath, String description){
-        this.setId(id);
-        this.setIsPublic(isPublic);
-        this.eventName=eventName;
-        this.weekDay=weekDay;
-        this.date=date;
-        this.isEndDate=isEndDate;
-        this.enddate=enddate;
-        this.isPrice=isPrice;
-        this.price=price;
-        this.hours=hours;
-        this.isLocation=isLocation;
-        if(isLocation) {
-            try {
-                String[] latlng = location_latlng.split(" ");
-                this.location_latlng = new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1]));
-            }catch (java.lang.NumberFormatException e){
-                this.isLocation=false;
-                this.location_latlng=null;
-            }
-        }
-        this.isFriendsInvitable=isFriendsInvitable;
-        this.going=going;
-        this.newEvent=newEvent;
-        this.filepath=filepath;
-        this.description=description;
     }
 
 /**construtor mais simples para testes (assume algumas coisas)**/
@@ -242,13 +214,5 @@ public class Event implements Serializable {
 
     public boolean isPrice(){
         return this.isPrice;
-    }
-
-    public String getFilepath() {
-        return filepath;
-    }
-
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
     }
 }
