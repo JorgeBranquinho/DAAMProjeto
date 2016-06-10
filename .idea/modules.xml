@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DAAM.iml" filepath="$PROJECT_DIR$/DAAM.iml" />
       <module fileurl="file://$PROJECT_DIR$/DAAMProjeto.iml" filepath="$PROJECT_DIR$/DAAMProjeto.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
