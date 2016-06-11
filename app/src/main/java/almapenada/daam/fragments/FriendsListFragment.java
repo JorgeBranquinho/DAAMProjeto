@@ -52,7 +52,7 @@ public class FriendsListFragment extends Fragment {
             friends_list_images[i] = rootView.getResources().getDrawable(R.drawable.user);
         }
 
-        adapter = new CustomRowAdapter(getActivity(), dummy_friends, friends_list_images);
+        adapter = new CustomRowAdapter(getActivity(), dummy_friends, friends_list_images, true, getActivity());
         list_friends.setAdapter(adapter);
 
         list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {

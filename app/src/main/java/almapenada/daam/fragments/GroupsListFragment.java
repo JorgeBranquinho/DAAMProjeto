@@ -49,7 +49,7 @@ public class GroupsListFragment extends Fragment  {
             groups_list_images[i] = rootView.getResources().getDrawable(R.drawable.user);
         }
 
-        adapter = new CustomRowAdapter(getActivity(), dummy_groups, groups_list_images);
+        adapter = new CustomRowAdapter(getActivity(), dummy_groups, groups_list_images, false, getActivity());
         list_groups.setAdapter(adapter);
 
         list_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
