@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.ListIterator;
 
 import almapenada.daam.utility.EnumDatabase;
@@ -50,8 +52,8 @@ public class EventListFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
         database = new EventsDatabase(getActivity());
-        if (database.isEmpty())
-            database.populateWithExample();
+        //if (database.isEmpty())
+            //database.populateWithExample();
 
         populateEventList(database.getAllEvents());
         populateEventListRemote();
@@ -77,9 +79,10 @@ public class EventListFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... arg0) {
             String response = "";
+            //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://daamservices-daam.rhcloud.com/getEventById/1"));
+                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/events/byUser/1"));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
                 response = reader.readLine();
                 temp_events.add(jsonToEvent(response));
@@ -92,6 +95,7 @@ public class EventListFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            //Toast.makeText(getActivity().getApplicationContext(), "Eventos atualizados", Toast.LENGTH_LONG).show();
             full_event_list = temp_events;
             orderByRecent();
         }
@@ -105,15 +109,23 @@ public class EventListFragment extends Fragment {
                     database = new EventsDatabase(getActivity());
                     for (int i = 0; i < poi.length(); i++) {
                         JSONObject t_poi = poi.getJSONObject(i);
+                        System.out.println("ueueue aqui");
                         if (!owned_events.contains(Integer.parseInt(t_poi.getString("id")))) {
-                            Event x = new Event(Integer.parseInt(t_poi.getString("id")), t_poi.getString("eventName"), Integer.parseInt(t_poi.getString("isPublic")) == 1 ? true : false, t_poi.getString("weekDay"), t_poi.getString("date"), Integer.parseInt(t_poi.getString("isEndDate")) == 1 ? true : false, t_poi.getString("endDate"), Integer.parseInt(t_poi.getString("isPrice")) == 1 ? true : false, t_poi.getString("price"), t_poi.getString("hours"), Integer.parseInt(t_poi.getString("isLocation")) == 1 ? true : false, t_poi.getString("location_latlng"), Integer.parseInt(t_poi.getString("isFriendsInvitable")) == 1 ? true : false, false, false);
+                            SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat  format2 = new SimpleDateFormat("dd/MM/yyyy");
+                            Date date = format.parse(t_poi.getString("date").substring(0,10));
+                            String dataevento = format2.format(date);
+                            Event x = new Event(Integer.parseInt(t_poi.getString("id")), t_poi.getString("eventName"), Integer.parseInt(t_poi.getString("isPublic")) == 1 ? true : false, t_poi.getString("weekDay"), dataevento, Integer.parseInt(t_poi.getString("isEndDate")) == 1 ? true : false, t_poi.getString("endDate"), Integer.parseInt(t_poi.getString("isPrice")) == 1 ? true : false, t_poi.getString("price"), t_poi.getString("hours"), Integer.parseInt(t_poi.getString("isLocation")) == 1 ? true : false, t_poi.getString("location_latlng"), Integer.parseInt(t_poi.getString("isFriendsInvitable")) == 1 ? true : false, false, false);
                             database.insertEvent(x);
+                            System.out.println("ueueue deu");
                             full_event_list.add(x);
                         }
                     }
                     database.close();
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
             return null;
