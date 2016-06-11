@@ -98,4 +98,5 @@
     <string name="ViewComments">View comments</string>
     <string name="WhosGoing">Who\'s going?</string>
     <string name="CreateNewEvent">Create New Event</string>
+    <string name="signup">Sign Up</string>
 </resources>

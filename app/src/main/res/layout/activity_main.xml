@@ -12,10 +12,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tap to login"
+        android:text="Sign In"
         android:id="@+id/button"
-        android:layout_marginBottom="53dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/button3"
         android:layout_centerHorizontal="true" />
 
     <ImageView
@@ -35,5 +34,14 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/imageView"
         android:layout_toStartOf="@+id/imageView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup"
+        android:id="@+id/button3"
+        android:layout_marginBottom="51dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
