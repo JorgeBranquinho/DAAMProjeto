@@ -27,7 +27,6 @@ public class SignUpActivity extends AppCompatActivity {
     private View rootView;
     private ImageView imgView;
     private static final int SELECT_PICTURE = 1;
-    private String selectedImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,55 +50,19 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_IMAGE) {
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    Uri selectedImage = data.getData();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        String wholeID = DocumentsContract.getDocumentId(selectedImage);
-                        String id = wholeID.split(":")[1];
-                        String[] column = {MediaStore.Images.Media.DATA};
-                        String sel = MediaStore.Images.Media._ID + "=?";
-                        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
-                        String filePath = "";
-                        int columnIndex = cursor.getColumnIndex(column[0]);
-                        if (cursor.moveToFirst()) {
-                            filePath = cursor.getString(columnIndex);
-                        }
-                        cursor.close();
-                        Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-                        //imgView.setImageBitmap(new Bitmap());
-                        imgView.setImageBitmap(yourSelectedImage);
-                        //image.setBackground(new BitmapDrawable(getResources(), yourSelectedImage));
-                    } else {
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        filePath = cursor.getString(columnIndex);
-                        cursor.close();
-                        Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {//se a API é 15+
-                            imgView.setImageBitmap(yourSelectedImage);
-                            //image.setBackground(new BitmapDrawable(getResources(), yourSelectedImage));
-                        }
-                    }
-                } else if (resultCode == RESULT_CANCELED) {
-                    Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }*/
+       super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
+                Cursor cursor=null;
                 Uri selectedImageUri = data.getData();
-                selectedImagePath = getPath(selectedImageUri);
+                filePath = getPath(cursor,selectedImageUri);
                 imgView.setImageURI(selectedImageUri);
             }
         }
     }
-    public String getPath(Uri uri) {
+    public String getPath(Cursor cursor, Uri uri) {
         // just some safety built in
+
         if( uri == null ) {
             // TODO perform some logging or show user feedback
             return null;
@@ -107,13 +70,23 @@ public class SignUpActivity extends AppCompatActivity {
         // try to retrieve the image from the media store first
         // this will only work for images selected from gallery
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String wholeID = DocumentsContract.getDocumentId(uri);
+            String id = wholeID.split(":")[1];
+            String sel = MediaStore.Images.Media._ID + "=?";
+            cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, sel, new String[]{id}, null);
+        }else{
+            cursor = getContentResolver().query(uri, projection, null, null, null);
+        }
+        //Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
         if( cursor != null ){
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
+
             return cursor.getString(column_index);
         }
+        //Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
         // this is our fallback here
         return uri.getPath();
     }

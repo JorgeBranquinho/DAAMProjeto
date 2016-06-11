@@ -17,6 +17,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -39,6 +41,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +55,7 @@ import almapenada.daam.R;
 import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
+import almapenada.daam.utility.ScalingUtilies;
 
 public class CreateEventFragment extends Fragment {
 
@@ -59,6 +65,7 @@ public class CreateEventFragment extends Fragment {
     private static final int SELECT_IMAGE = 1;
     private String filePath="";
     private Button event_img;
+    private static final int SELECT_PICTURE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -374,7 +381,7 @@ public class CreateEventFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_IMAGE) {
+        /*if (requestCode == SELECT_IMAGE) {
             if (resultCode == getActivity().RESULT_OK) {
                 if (data != null) {
                     Uri selectedImage = data.getData();
@@ -394,6 +401,114 @@ public class CreateEventFragment extends Fragment {
                     Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
                 }
             }
+        }*/
+        if (resultCode == getActivity().RESULT_OK) {
+            filePath = "";
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                if (data != null) {
+                    filePath = getPath(selectedImageUri);
+                    filePath = decodeFile(filePath,125,125);
+                    Bitmap yourSelectedImage = getImageBitmap(filePath);
+                    //Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        event_img.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+                    }
+                }
+            }
         }
+    }
+
+    public String getPath(Uri uri) {
+        // just some safety built in
+        Cursor cursor;
+        if( uri == null ) {
+            // TODO perform some logging or show user feedback
+            return null;
+        }
+        // try to retrieve the image from the media store first
+        // this will only work for images selected from gallery
+        String[] projection = { MediaStore.Images.Media.DATA };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String wholeID = DocumentsContract.getDocumentId(uri);
+            String id = wholeID.split(":")[1];
+            String sel = MediaStore.Images.Media._ID + "=?";
+            cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, sel, new String[]{id}, null);
+        }else{
+            cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        }
+        //Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if( cursor != null ){
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        //Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
+        // this is our fallback here
+        return uri.getPath();
+    }
+
+    private Bitmap getImageBitmap(String filePath) {
+        Bitmap bm = null;
+        bm = BitmapFactory.decodeFile(filePath);
+        return bm;
+    }
+
+    private String decodeFile(String path,int DESIREDWIDTH, int DESIREDHEIGHT) {
+        String strMyImagePath = null;
+        Bitmap scaledBitmap = null;
+
+        try {
+            // Part 1: Decode image
+            Bitmap unscaledBitmap = almapenada.daam.utility.ScalingUtilies.decodeFile(path, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
+
+            if (!(unscaledBitmap.getWidth() <= DESIREDWIDTH && unscaledBitmap.getHeight() <= DESIREDHEIGHT)) {
+                // Part 2: Scale image
+                scaledBitmap = almapenada.daam.utility.ScalingUtilies.createScaledBitmap(unscaledBitmap, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
+            } else {
+               if (unscaledBitmap != null && !unscaledBitmap.isRecycled()) {
+                    unscaledBitmap.recycle();
+                }
+                return path;
+            }
+
+            // Store to tmp file
+
+            String extr = Environment.getExternalStorageDirectory().toString();
+            File mFolder = new File(extr + "/TMMFOLDER");
+            if (!mFolder.exists()) {
+                mFolder.mkdir();
+            }
+
+            String s = "tmp.png";
+
+            File f = new File(mFolder.getAbsolutePath(), s);
+
+            strMyImagePath = f.getAbsolutePath();
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(f);
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+            if (scaledBitmap != null && !scaledBitmap.isRecycled()) {
+               scaledBitmap.recycle();
+            }
+        } catch (Throwable e) {
+        }
+
+        if (strMyImagePath == null) {
+            return path;
+        }
+        return strMyImagePath;
+
     }
 }
