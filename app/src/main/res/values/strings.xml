@@ -99,9 +99,5 @@
     <string name="WhosGoing">Who\'s going?</string>
     <string name="CreateNewEvent">Create New Event</string>
     <string name="signup">Sign Up</string>
-    <string name="nome">Nome:*</string>
-    <string name="mail">Email:*</string>
-    <string name="password">Password:*</string>
-    <string name="rpassword">Repetir \nPassword:*</string>
-    <string name="telemovel">Telemóvel:</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 </resources>

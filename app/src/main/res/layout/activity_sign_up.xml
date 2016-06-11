@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="almapenada.daam.SignUpActivity"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="51dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Sign Up"
+            android:id="@+id/signup"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_gravity="right" >
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="146dp"
+                android:layout_height="wrap_content"
+                android:text="Nome:*"
+                android:id="@+id/nome"
+                android:textSize="20dp"
+                android:layout_weight="0"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/putnome"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignLeft="@+id/putemail"
+                android:elegantTextHeight="false"
+                android:singleLine="true"
+                android:nestedScrollingEnabled="true"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email:*"
+                android:id="@+id/email"
+                android:layout_below="@+id/nome"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/putemail"
+                android:layout_alignBottom="@+id/email"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/email"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:nestedScrollingEnabled="true"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password:*"
+                android:id="@+id/password"
+                android:textSize="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/email"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentLeft="true" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pass"
+                android:layout_alignBottom="@+id/password"
+                android:password="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@+id/password"
+                android:layout_marginLeft="10dp"
+                android:nestedScrollingEnabled="true"
+                android:singleLine="true"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/password"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repetir \nPassword:*"
+                android:id="@+id/repetirpass"
+                android:layout_below="@+id/password"
+                android:layout_marginTop="15dp"
+                android:textSize="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reppass"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:layout_alignBottom="@+id/repetirpass"
+                android:password="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:singleLine="true"
+                android:nestedScrollingEnabled="true"
+                android:layout_toRightOf="@+id/repetirpass"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Telemóvel:"
+                android:id="@+id/telemovel"
+                android:textSize="20dp"
+                android:layout_alignParentBottom="false"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/repetirpass"
+                android:layout_alignParentLeft="true" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tlm"
+                android:inputType="phone"
+                android:layout_toRightOf="@+id/telemovel"
+                android:layout_alignRight="@+id/reppass"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:layout_alignBottom="@+id/telemovel"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:phoneNumber="true"
+                android:nestedScrollingEnabled="true"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Imagem:"
+                android:id="@+id/imagem"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="false"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/telemovel"
+                android:textSize="20dp"
+                android:layout_alignParentLeft="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Escolher Imagem"
+                android:id="@+id/chooseImage"
+                android:layout_alignParentBottom="false"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentEnd="false"
+                android:layout_below="@+id/imageView3"
+                android:layout_alignParentTop="false" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:src="@drawable/user"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="fitXY"
+                android:layout_alignTop="@+id/imagem"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submeter"
+                android:id="@+id/submit"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentTop="false"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentBottom="false"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@+id/chooseImage"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>
