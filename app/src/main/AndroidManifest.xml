@@ -69,7 +69,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".SignUpActivity"></activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:parentActivityName=".MainActivity"
+            />
     </application>
 
 </manifest>

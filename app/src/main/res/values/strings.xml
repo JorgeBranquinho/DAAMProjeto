@@ -50,7 +50,7 @@
     </string-array>
     <string name="title_activity_map">Map</string>
     <string name="NOME">Name</string>
-    <string name="LOCALIZAÇÃO">Location</string>
+    <string name="LOCALIZAÇÃO" translatable="false">Location</string>
     <string name="site" translatable="false">www.site.org</string>
     <string name="p" translatable="false">p</string>
     <string name="email" translatable="false">E-Mail</string>
@@ -105,4 +105,5 @@
     <string name="password">Password:*</string>
     <string name="rpassword">Repetir \nPassword:*</string>
     <string name="telemovel">Telemóvel:</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
