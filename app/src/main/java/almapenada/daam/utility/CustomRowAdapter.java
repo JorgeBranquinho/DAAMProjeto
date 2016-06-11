@@ -18,6 +18,7 @@ import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.ProfileFragment;
+import almapenada.daam.fragments.ProfileFriendFragment;
 
 
 public class CustomRowAdapter extends ArrayAdapter<String> {
@@ -54,7 +55,7 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View arg0) {
                 if(friend_group == true)
-                    ((DrawerActivity)activity).viewFragment(new ProfileFragment(), names[pos], false, -1);
+                    ((DrawerActivity)activity).viewFragment(new ProfileFriendFragment(), names[pos], false, -1);
                 if(friend_group == false)
                     ((DrawerActivity)activity).viewFragment(new FriendsFragment(), names[pos], true, R.drawable.plus);
             }
@@ -77,7 +78,7 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
                     if (Math.abs(deltaX) > MIN_DISTANCE && !avoid_double_click) {
                             avoid_double_click = true;
                             final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setMessage("Tem a certeza que quer remover"+ names[pos] + "?")
+                            builder.setMessage("Tem a certeza que quer remover "+ names[pos] + "?")
                                     .setPositiveButton(R.string.cancelar, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             avoid_double_click = false;
