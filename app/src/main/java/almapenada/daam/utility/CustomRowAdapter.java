@@ -23,7 +23,7 @@ import almapenada.daam.fragments.ProfileFragment;
 public class CustomRowAdapter extends ArrayAdapter<String> {
 
     private FragmentActivity activity;
-    private Object friend_group;
+    private boolean friend_group;
     private Activity context;
     private String[] names;
     private Drawable[] images;
