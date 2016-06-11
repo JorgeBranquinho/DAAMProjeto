@@ -46,7 +46,6 @@ public class FriendsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
-        inputSearch = (EditText) rootView.findViewById(R.id.inputSearch);
         final ListView list_friends = (ListView) rootView.findViewById(R.id.friends_listview);
 
         for ( int i = 0 ; i < dummy_friends.length ; i++ ) {

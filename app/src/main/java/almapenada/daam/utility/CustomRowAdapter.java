@@ -33,8 +33,8 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
         View rowView = null;
         rowView = inflater.inflate(R.layout.general_row_tab,null,true);
 
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.friends_list_name);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.friends_list_image);
+        TextView txtTitle = (TextView) rowView.findViewById(R.id.list_name);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.list_image);
 
         txtTitle.setText(names[position]);
         if (images != null) {

@@ -13,8 +13,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import almapenada.daam.R;
 import almapenada.daam.utility.CustomRowAdapter;
+import almapenada.daam.utility.Event;
+import almapenada.daam.utility.EventAdapter;
 
 /**
  */
@@ -40,7 +44,6 @@ public class GroupsListFragment extends Fragment  {
 
         rootView = inflater.inflate(R.layout.fragment_groups_list, container, false);
 
-        inputSearch = (EditText) rootView.findViewById(R.id.inputSearch);
         final ListView list_groups = (ListView) rootView.findViewById(R.id.groups_listview);
 
         for ( int i = 0 ; i < dummy_groups.length ; i++ ) {
@@ -79,7 +82,6 @@ public class GroupsListFragment extends Fragment  {
                 // TODO Auto-generated method stub
             }
         });
-
 
 
         return rootView;

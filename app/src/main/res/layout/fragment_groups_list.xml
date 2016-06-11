@@ -4,16 +4,9 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".fragments.GroupsListFragment">
 
-<EditText android:id="@+id/inputSearch"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:hint="Search group.."
-    android:inputType="textVisiblePassword"/>
-
-<ListView
+    <ListView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/groups_listview"
-    android:layout_centerHorizontal="true"
-    android:layout_below="@+id/inputSearch" />
+    android:layout_centerHorizontal="true" />
 </RelativeLayout>
