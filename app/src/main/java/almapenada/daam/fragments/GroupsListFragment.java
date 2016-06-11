@@ -24,10 +24,9 @@ import almapenada.daam.utility.EventAdapter;
  */
 public class GroupsListFragment extends Fragment  {
 
-    private ListView list_friends;
+    private ListView list_groups;
     private CustomRowAdapter adapter;
     private View rootView;
-    private EditText inputSearch;
     private String[] groups_list_names = new String[3];
     private Drawable[] groups_list_images = new Drawable[3];
     private String[] dummy_groups = { "Família", "Amigos", "Faculdade"};
@@ -51,35 +50,13 @@ public class GroupsListFragment extends Fragment  {
         }
 
         adapter = new CustomRowAdapter(getActivity(), dummy_groups, groups_list_images);
-        list_friends.setAdapter(adapter);
+        list_groups.setAdapter(adapter);
 
-        list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), groups_list_names[position], Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-
-        inputSearch.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                adapter.getFilter().filter(cs);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                                          int arg3) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub
             }
         });
 
