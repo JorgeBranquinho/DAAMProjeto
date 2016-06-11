@@ -103,6 +103,7 @@ public class ProfileFragment extends Fragment {
                         cursor.close();
                         Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
                         image.setBackground(new BitmapDrawable(getContext().getResources(), yourSelectedImage));
+
                     } else {
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
                         Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
