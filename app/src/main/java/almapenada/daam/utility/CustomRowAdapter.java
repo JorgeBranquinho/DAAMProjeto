@@ -17,6 +17,7 @@ import android.widget.Toast;
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.fragments.FriendsFragment;
+import almapenada.daam.fragments.FriendsListFragment;
 import almapenada.daam.fragments.ProfileFragment;
 import almapenada.daam.fragments.ProfileFriendFragment;
 
@@ -57,7 +58,7 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
                 if(friend_group == true)
                     ((DrawerActivity)activity).viewFragment(new ProfileFriendFragment(), names[pos], false, -1);
                 if(friend_group == false)
-                    ((DrawerActivity)activity).viewFragment(new FriendsFragment(), names[pos], true, R.drawable.plus);
+                    ((DrawerActivity)activity).viewFragment(new FriendsListFragment(), names[pos], true, R.drawable.plus);
             }
         });
 
@@ -76,31 +77,31 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
                     x2 = event.getX();
                     float deltaX = x2 - x1;
                     if (Math.abs(deltaX) > MIN_DISTANCE && !avoid_double_click) {
-                            avoid_double_click = true;
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setMessage("Tem a certeza que quer remover "+ names[pos] + "?")
-                                    .setPositiveButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            avoid_double_click = false;
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
+                        avoid_double_click = true;
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("Tem a certeza que quer remover "+ names[pos] + "?")
+                                .setPositiveButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        avoid_double_click = false;
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
                                             /*Toast.makeText(activity, "Removido", Toast.LENGTH_SHORT).show();
                                             database = new EventsDatabase(activity);
                                             database.deleteById(e.getId() + 1);
                                             database.close();//para escrever as mudanças nas DB
                                             database = new EventsDatabase(activity);//reabrir ligacao
                                             database.close();*/
-                                            names[list_position] = "";
-                                            images[list_position] = null;
-                                            self.notifyDataSetChanged();
-                                            avoid_double_click = false;
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            builder.show();
+                                        names[list_position] = "";
+                                        images[list_position] = null;
+                                        self.notifyDataSetChanged();
+                                        avoid_double_click = false;
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builder.show();
                     } else {
                         //user fez tap
                     }

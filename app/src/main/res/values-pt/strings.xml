@@ -14,7 +14,7 @@
     <string name="title_friends">Amigos e Grupos</string>
     <string name="going_event">Vou</string>
     <string name="not_going_event">Não vou</string>
-    <string name="title_home">Inicio</string>
+    <string name="title_home">Início</string>
     <string name="view_by_prompt">Ver por:</string>
     <string-array name="view_by">
         <item>Ver por: Mais recentes</item>
@@ -69,4 +69,8 @@
     <string name="CreateNewEvent">Criar Novo Evento</string>
     <string name="LOCALIZAÇÃO" translatable="false">Localização</string>
     <string name="NOME">Nome</string>
+    <string name="title_profile">Perfil</string>
+    <string name="title_settings">Definições</string>
+    <string name="title_about">Sobre</string>
+    <string name="title_logout">Sair</string>
 </resources>

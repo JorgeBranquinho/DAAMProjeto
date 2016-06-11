@@ -16,9 +16,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import almapenada.daam.MainActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.CustomRowAdapter;
+import almapenada.daam.utility.Event;
 
 
 /**
@@ -33,12 +36,7 @@ public class FriendsListFragment extends Fragment {
     private String[] friends_list_names = new String[5];
     private Drawable[] friends_list_images = new Drawable[5];
     private String[] dummy_friends = { "Jorge Branquinho", "Ivo Silva", "Daniela Costa", "Andre Carvalho", "Diogo Leo" };
-    private String[] dummy_users = { "Jorge Branquinho", "Ivo Silva", "Daniela Costa", "Andre Carvalho", "Diogo Leo", "Manuel Azeiteiro", "Francisco", "A tua mae"
-                                , "A mae dele", "Tó Zé", "Ana.." };
 
-
-    public FriendsListFragment() {
-    }
 
 
     @Override
