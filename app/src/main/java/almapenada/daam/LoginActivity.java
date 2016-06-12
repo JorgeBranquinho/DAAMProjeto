@@ -3,32 +3,23 @@ package almapenada.daam;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.PermissionChecker;
-import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
-
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -54,20 +44,24 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.json.JSONArray;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import almapenada.daam.utility.User;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -100,8 +94,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    private AccessTokenTracker accessTokenTracker;
-    private AccessToken accessToken;
 
 
 
@@ -114,11 +106,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.setText("teste@daam.com");
-        populateAutoComplete();
+        //mEmailView.setText("teste@daam.com");
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setText("daam");
+        //mPasswordView.setText("daam");
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -144,66 +135,72 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
-        if(isNetworkAvailable()) {
-            callbackManager = CallbackManager.Factory.create();
+        loginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
+                if (isNetworkAvailable()) {
+                    callbackManager = CallbackManager.Factory.create();
 
-            if (AccessToken.getCurrentAccessToken() != null) {
-                Profile p = Profile.getCurrentProfile();
-                user = new User();
-                user.setFirstName(p.getFirstName());
-                user.setLastName(p.getLastName());
-                try {
-                    Uri uriImage = Uri.parse(p.getProfilePictureUri(200, 200).toString());
-                    user.setPictureURL(new URL(String.valueOf(uriImage)));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                callDrawerActivity();
-            } else
-                System.out.println("ueueueu");
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    Bundle params = new Bundle();
-                    params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
-                    new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
-                        @Override
-                        public void onCompleted(GraphResponse response) {
-                            if (response != null) {
-                                try {
-                                    JSONObject data = response.getJSONObject();
-                                    try {
-                                        user = new User();
-                                        user.setFacebookID(data.getString("id").toString());
-                                        String fullname = data.getString("name").toString();
-                                        user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
-                                        user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
-                                        user.setGender(data.getString("gender").toString());
-                                        user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    callDrawerActivity();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                    if (AccessToken.getCurrentAccessToken() != null) {
+                        Profile p = Profile.getCurrentProfile();
+                        user = new User();
+                        user.setFirstName(p.getFirstName());
+                        user.setLastName(p.getLastName());
+                        try {
+                            Uri uriImage = Uri.parse(p.getProfilePictureUri(200, 200).toString());
+                            user.setPictureURL(new URL(String.valueOf(uriImage)));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
                         }
-                    }).executeAsync();
-                }
+                        callDrawerActivity();
+                    } else
+                        System.out.println("ueueueu");
+                    loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            Bundle params = new Bundle();
+                            params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
+                            new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
+                                @Override
+                                public void onCompleted(GraphResponse response) {
+                                    if (response != null) {
+                                        try {
+                                            JSONObject data = response.getJSONObject();
+                                            try {
+                                                user = new User();
+                                                user.setFacebookID(data.getString("id").toString());
+                                                String fullname = data.getString("name").toString();
+                                                user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
+                                                user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
+                                                user.setGender(data.getString("gender").toString());
+                                                user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            callDrawerActivity();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }).executeAsync();
+                        }
 
-                @Override
-                public void onCancel() {
-                    Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT).show();
-                }
+                        @Override
+                        public void onCancel() {
+                            Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT).show();
+                        }
 
-                @Override
-                public void onError(FacebookException exception) {
-                    Toast.makeText(getBaseContext(), "Login attempt failed - check network connection", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onError(FacebookException exception) {
+                            Toast.makeText(getBaseContext(), "Login attempt failed - check network connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+
     }
 
     private boolean isNetworkAvailable() {
@@ -227,48 +224,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 //fim das cenas do facebook
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
 
 
     /**
@@ -423,6 +378,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+    public String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public void showDialogMessage(String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+        alertDialogBuilder.setTitle("Event Me");
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        LoginActivity.this.finish();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    };
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -441,22 +432,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
+            String host = "https://eventservice-daam.rhcloud.com";
+            String method = "/login/";
+            String response = "";
+            String pass = md5(mPassword) + md5("event");
+            System.out.println(host + method + mEmail + pass );
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpGet(host + method + mEmail + "/" + pass ));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+                JSONObject jobj = null;
+                try {
+                    jobj = new JSONObject(response);
+                    System.out.println("Resposta: " + jobj.get("status").toString());
+                    if (jobj.get("status").toString().compareTo("OK") == 0) {
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    showDialogMessage("Erro na resposta JSON");
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                showDialogMessage("Erro na ligação ao servidor");
             }
-
-            return true;
+            return false;
         }
 
         @Override
