@@ -137,9 +137,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
-        loginButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
                 if (isNetworkAvailable()) {
                     callbackManager = CallbackManager.Factory.create();
@@ -200,8 +197,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         }
                     });
                 }
-            }
-        });
 
     }
 

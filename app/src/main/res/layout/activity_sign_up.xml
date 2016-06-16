@@ -143,9 +143,9 @@
                 android:layout_below="@+id/password" />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/puttlm"
+                android:id="@+id/tlm"
                 android:inputType="phone"
                 android:layout_toRightOf="@+id/telemovel"
                 android:layout_marginRight="10dp"
@@ -155,8 +155,7 @@
                 android:nestedScrollingEnabled="true"
                 android:singleLine="true"
                 android:layout_centerHorizontal="true"
-                android:layout_alignLeft="@+id/putnome"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignLeft="@+id/putemail" />
 
             <Button
                 android:layout_width="wrap_content"

@@ -56,18 +56,20 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText reppass;
     private View mProgressView;
     private View signup_form;
+    View focusView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         putnome = (EditText) findViewById(R.id.putnome);
         putemail = (EditText) findViewById(R.id.putemail);
         pass = (EditText) findViewById(R.id.pass);
         tlm = (EditText) findViewById(R.id.tlm);
-        reppass = (EditText) findViewById(R.id.reppass);
         mProgressView = findViewById(R.id.signup_progress);
         signup_form = findViewById(R.id.signup_form);
 
@@ -145,7 +147,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateParams() {
 
-        View focusView = null;
+
 
         if (!(isNetworkAvailable())){
             showSuccessMessage("Terá que ter connecção à Internet!");
@@ -153,19 +155,23 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         if ( getName().isEmpty()) {
+            showSuccessMessage("Nome tem que ser preenchido");
             focusView = putnome;
         }
 
         if ((!(getEmail().contains("@"))) || (getEmail().isEmpty())) {
+            showSuccessMessage("Email tem que ser preenchido");
             focusView = putemail;
         }
 
         if ((!(getPassword().length() >= 5) ) || (getPassword().isEmpty())) {
+            showSuccessMessage("Password tem que ser bem preenchida (8 caracteres)");
             focusView = pass;
         }
 
 
         if ((!(getTelefone().length() >= 8) ) || (getTelefone().isEmpty())) {
+            showSuccessMessage("Telefone tem que ser bem preenchido");
             focusView = tlm;
         }
 
@@ -173,9 +179,6 @@ public class SignUpActivity extends AppCompatActivity {
             focusView.requestFocus();
             return false;
         }
-
-
-
         return true;
     }
 
@@ -235,7 +238,7 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-                        SignUpActivity.this.finish();
+                        //SignUpActivity.this.finish();
                     }
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
