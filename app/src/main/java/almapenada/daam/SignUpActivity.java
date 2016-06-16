@@ -89,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ( validateParams() && isNetworkAvailable()) {
+                if ( validateParams()) {
                     showProgress(true);
                     createUser();
                 } else {
@@ -144,10 +144,38 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean validateParams() {
-        if ( getName().isEmpty() || getEmail().isEmpty() || getPassword().isEmpty() || getRepPassword().isEmpty() || getTelefone().isEmpty() ) {
-            maketoast("Need to fill the required fields");
+
+        View focusView = null;
+
+        if (!(isNetworkAvailable())){
+            showSuccessMessage("Terá que ter connecção à Internet!");
             return false;
         }
+
+        if ( getName().isEmpty()) {
+            focusView = putnome;
+        }
+
+        if ((!(getEmail().contains("@"))) || (getEmail().isEmpty())) {
+            focusView = putemail;
+        }
+
+        if ((!(getPassword().length() >= 5) ) || (getPassword().isEmpty())) {
+            focusView = pass;
+        }
+
+
+        if ((!(getTelefone().length() >= 8) ) || (getTelefone().isEmpty())) {
+            focusView = tlm;
+        }
+
+        if (focusView!=null){
+            focusView.requestFocus();
+            return false;
+        }
+
+
+
         return true;
     }
 
@@ -172,7 +200,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public String getPasswordMd5() {
-        String p = md5(getPassword()) + md5("event");
+        String p = md5(getPassword()) + md5("eventme");
         return p;
     }
 
@@ -196,12 +224,12 @@ public class SignUpActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void showSuccessMessage() {
+    public void showSuccessMessage(String msg) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
-        alertDialogBuilder.setTitle("Sucesso");
+        alertDialogBuilder.setTitle("Sign up");
         alertDialogBuilder
-                .setMessage("Successfully created user!")
+                .setMessage(msg)
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -273,7 +301,7 @@ public class SignUpActivity extends AppCompatActivity {
                 System.out.println("Resposta: " + jobj.get("status").toString());
 
                 if (jobj.get("status").toString().compareTo("OK") == 0) {
-                    showSuccessMessage();
+                    showSuccessMessage("Utilizador criado com sucesso!");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
