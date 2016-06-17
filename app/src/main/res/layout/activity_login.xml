@@ -84,7 +84,7 @@
             android:layout_width="123dp"
             android:layout_height="wrap_content"
             android:text="@string/action_sign_in"
-            android:background="@drawable/mybuttonyellow"
+            android:background="@drawable/myyellowbutton"
 
 
             android:layout_gravity="center_horizontal"

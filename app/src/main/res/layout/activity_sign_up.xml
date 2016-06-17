@@ -155,7 +155,7 @@
                 android:id="@+id/chooseImage"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/telemovel"
-                android:background="@drawable/mybuttonyellow"
+                android:background="@drawable/myyellowbutton"
                 android:layout_marginLeft="100dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="100dp"
@@ -182,7 +182,7 @@
                 android:layout_alignParentBottom="false"
                 android:layout_marginLeft="10dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/mybuttonyellow"
+                android:background="@drawable/myyellowbutton"
                 android:layout_below="@+id/imageView3" />
 
         </RelativeLayout>
