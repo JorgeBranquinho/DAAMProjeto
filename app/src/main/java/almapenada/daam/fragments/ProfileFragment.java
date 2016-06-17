@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.ScalingUtilies;
 
@@ -74,7 +75,7 @@ public class ProfileFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 int index = parentView.getSelectedItemPosition();
                 //só para testar
-               // Toast.makeText(getActivity(), "You have selected item : " + adapter.getItem(index), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), "You have selected item : " + adapter.getItem(index), Toast.LENGTH_SHORT).show();
                 // guardar adapter.getItem(index)
             }
 
@@ -85,8 +86,12 @@ public class ProfileFragment extends Fragment {
 
         });
 
+        ((DrawerActivity) getActivity()).setActionBarTitle("Nome de Utilizador");
+
         return rootView;
     }
+
+
 
 
     //Galeria de fotos

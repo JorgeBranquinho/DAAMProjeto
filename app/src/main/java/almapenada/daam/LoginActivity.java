@@ -135,26 +135,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        System.out.println("IMA FAGGOTS!!!!");
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        /*System.out.println("IMA !!!!");
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 logface = true;
 
             }
-        });*/
+        });
 
 
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
 
-
-        //if(logface ){
+       // if(logface ){
             System.out.println("IMA HERE FAGGOTS!!!!");
-            loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
+
             LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
             if (isNetworkAvailable()) {
-                callbackManager = CallbackManager.Factory.create();
+                //callbackManager = CallbackManager.Factory.create();
 
                 if (AccessToken.getCurrentAccessToken() != null) {
                     Profile p = Profile.getCurrentProfile();

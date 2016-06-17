@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.FragmentsAdapter;
 
@@ -28,7 +29,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
-
+        ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_friends));
         viewPager = (ViewPager) rootView.findViewById(R.id.friends_viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);

@@ -77,7 +77,6 @@ public class DrawerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         Bundle b = getIntent().getExtras();
         user = (User) b.getSerializable("User");
         if (user != null) {
@@ -95,15 +94,11 @@ public class DrawerActivity extends AppCompatActivity
 
         // Botao que flutoa na actividade
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.plus);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (id_menuItem == R.id.nav_events) {
                     viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
-                } else {
-                    Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
             }
         });
 
@@ -347,6 +342,10 @@ public class DrawerActivity extends AppCompatActivity
         client.disconnect();
     }
 
+
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
 
     //img do face
     private class DownloadImageTask extends AsyncTask<URL, Void, Bitmap> {

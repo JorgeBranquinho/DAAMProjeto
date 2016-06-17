@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventAdapter;
 import almapenada.daam.R;
@@ -32,6 +33,7 @@ public class EventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = (ViewGroup) inflater.inflate(R.layout.fragment_events, container, false);
+        ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_events));
 
         viewpager = (ViewPager) rootView.findViewById(R.id.viewpager);
         if (viewpager != null) {
