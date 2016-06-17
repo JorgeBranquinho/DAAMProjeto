@@ -4,7 +4,7 @@
     <string name="action_search">Procurar</string>
     <string name="action_settings">Definições</string>
     <string name="action_sign_in_short">Entrar</string>
-    <string name="action_sign_in">Entrar ou registar</string>
+    <string name="action_sign_in">Entrar</string>
     <string name="cancelar">Cancelar</string>
     <string name="msg_apagar_evento">Tem a certeza que quer remover?</string>
     <string name="error_field_required">Necessita preencher este campo</string>
@@ -73,4 +73,8 @@
     <string name="title_settings">Definições</string>
     <string name="title_about">Sobre</string>
     <string name="title_logout">Sair</string>
+    <string name="signup">Registar</string>
+    <string name="title_activity_sign_up">Registar</string>
+    <string name="signIn">Entrar</string>
+    <string name="help">Ajuda</string>
 </resources>
