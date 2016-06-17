@@ -17,17 +17,17 @@ public class HelpActivity extends AppCompatActivity {
         sliderShow = (SliderLayout) findViewById(R.id.slider);
 
         TextSliderView textSliderView = new TextSliderView(this);
-        textSliderView.image("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+        textSliderView.image(R.drawable.img_about1);
 
         TextSliderView textSliderView2 = new TextSliderView(this);
-        textSliderView2.image("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+        textSliderView2.image(R.drawable.img_about2);
 
-        TextSliderView textSliderView3 = new TextSliderView(this);
-        textSliderView3.image("http://cdn3.nflximg.net/images/3093/2043093.jpg");
+        //TextSliderView textSliderView3 = new TextSliderView(this);
+        //textSliderView3.image("http://cdn3.nflximg.net/images/3093/2043093.jpg");
 
         sliderShow.addSlider(textSliderView);
         sliderShow.addSlider(textSliderView2);
-        sliderShow.addSlider(textSliderView3);
+        //sliderShow.addSlider(textSliderView3);
 
 
     }
