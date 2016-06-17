@@ -19,7 +19,7 @@
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:id="@+id/image"
-            android:background="@drawable/add_img"
+            android:background="@drawable/ninja"
             android:layout_gravity="center_horizontal"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
@@ -43,7 +43,8 @@
                 android:layout_alignParentStart="false"
                 android:layout_alignParentRight="false"
                 android:layout_marginLeft="10dp"
-                android:hint="@string/NOME" />
+                android:hint="@string/NOME"
+                android:enabled="true" />
 
             <EditText
                 android:layout_width="210dp"
@@ -160,14 +161,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:spinnerMode="dropdown"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
 </LinearLayout>

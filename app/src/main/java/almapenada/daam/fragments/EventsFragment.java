@@ -34,7 +34,6 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = (ViewGroup) inflater.inflate(R.layout.fragment_events, container, false);
         ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_events));
-
         viewpager = (ViewPager) rootView.findViewById(R.id.viewpager);
         if (viewpager != null) {
             setupViewPager(viewpager);

@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
 
 
         //SPINNER
-        final Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        /*final Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.sex_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -84,7 +84,7 @@ public class ProfileFragment extends Fragment {
                 // to do
             }
 
-        });
+        });*/
 
         ((DrawerActivity) getActivity()).setActionBarTitle("Nome de Utilizador");
 
