@@ -7,41 +7,64 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="almapenada.daam.MainActivity">
+    tools:context="almapenada.daam.MainActivity"
+    android:background="@drawable/bgg">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign In"
-        android:id="@+id/button"
-        android:layout_above="@+id/button3"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/logo"
-        android:layout_alignTop="@+id/button2"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Help"
-        android:id="@+id/button2"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/imageView"
-        android:layout_toStartOf="@+id/imageView" />
+        android:text="@string/signIn"
+        android:id="@+id/signIn"
+        android:layout_above="@+id/signUp"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/mybutton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="35dp"
+        android:layout_marginLeft="35dp"
+        android:textSize="20dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signup"
-        android:id="@+id/button3"
+        android:id="@+id/signUp"
         android:layout_marginBottom="51dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/mybutton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/help"
+        android:id="@+id/txtHelp"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:textSize="15dp"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#1a1919" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:src="@drawable/cenas2"
+        android:layout_above="@+id/signIn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

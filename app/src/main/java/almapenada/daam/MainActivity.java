@@ -1,18 +1,11 @@
 package almapenada.daam;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button b = (Button) findViewById(R.id.button);
+        Button b = (Button) findViewById(R.id.signIn);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,15 +22,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        Button b2 = (Button) findViewById(R.id.button2);
-        b2.setOnClickListener(new View.OnClickListener() {
+
+        TextView txt = (TextView) findViewById(R.id.txtHelp);
+
+        txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, HelpActivity.class));
-
             }
         });
-        Button b3 = (Button) findViewById(R.id.button3);
+        Button b3 = (Button) findViewById(R.id.signUp);
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

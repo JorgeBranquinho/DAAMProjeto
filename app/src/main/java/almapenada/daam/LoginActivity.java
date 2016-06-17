@@ -95,16 +95,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-
+    private boolean logface=false;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(this.getApplicationContext());//facebook
-        setContentView(R.layout.activity_login);
+        FacebookSdk.sdkInitialize(getApplicationContext());//facebook
 
+        setContentView(R.layout.activity_login);
+        callbackManager = CallbackManager.Factory.create();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -127,76 +128,92 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+               attemptLogin();
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-
+        System.out.println("IMA FAGGOTS!!!!");
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
-                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
-                if (isNetworkAvailable()) {
-                    callbackManager = CallbackManager.Factory.create();
+        /*System.out.println("IMA !!!!");
+        loginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logface = true;
 
-                    if (AccessToken.getCurrentAccessToken() != null) {
-                        Profile p = Profile.getCurrentProfile();
-                        user = new User();
-                        user.setFirstName(p.getFirstName());
-                        user.setLastName(p.getLastName());
-                        try {
-                            Uri uriImage = Uri.parse(p.getProfilePictureUri(200, 200).toString());
-                            user.setPictureURL(new URL(String.valueOf(uriImage)));
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                        callDrawerActivity();
-                    } else
-                        System.out.println("ueueueu");
-                    loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            Bundle params = new Bundle();
-                            params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
-                            new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
-                                @Override
-                                public void onCompleted(GraphResponse response) {
-                                    if (response != null) {
+            }
+        });*/
+
+
+
+
+        //if(logface ){
+            System.out.println("IMA HERE FAGGOTS!!!!");
+            loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
+            if (isNetworkAvailable()) {
+                callbackManager = CallbackManager.Factory.create();
+
+                if (AccessToken.getCurrentAccessToken() != null) {
+                    Profile p = Profile.getCurrentProfile();
+                    user = new User();
+                    user.setFirstName(p.getFirstName());
+                    user.setLastName(p.getLastName());
+                    try {
+                        Uri uriImage = Uri.parse(p.getProfilePictureUri(200, 200).toString());
+                        user.setPictureURL(new URL(String.valueOf(uriImage)));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    callDrawerActivity();
+                } else
+                    System.out.println("ueueueu");
+                loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Bundle params = new Bundle();
+                        params.putString("fields", "id,name,email,gender,cover,picture.type(large)");
+                        new GraphRequest(loginResult.getAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback() {
+                            @Override
+                            public void onCompleted(GraphResponse response) {
+                                if (response != null) {
+                                    try {
+                                        JSONObject data = response.getJSONObject();
                                         try {
-                                            JSONObject data = response.getJSONObject();
-                                            try {
-                                                user = new User();
-                                                user.setFacebookID(data.getString("id").toString());
-                                                String fullname = data.getString("name").toString();
-                                                user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
-                                                user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
-                                                user.setGender(data.getString("gender").toString());
-                                                user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            callDrawerActivity();
+                                            user = new User();
+                                            user.setFacebookID(data.getString("id").toString());
+                                            String fullname = data.getString("name").toString();
+                                            user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
+                                            user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
+                                            user.setGender(data.getString("gender").toString());
+                                            user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
+                                        callDrawerActivity();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
-                            }).executeAsync();
-                        }
+                            }
+                        }).executeAsync();
+                    }
 
-                        @Override
-                        public void onCancel() {
-                            Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT).show();
-                        }
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(getBaseContext(), "Login attempt canceled", Toast.LENGTH_SHORT).show();
+                    }
 
-                        @Override
-                        public void onError(FacebookException exception) {
-                            Toast.makeText(getBaseContext(), "Login attempt failed - check network connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Toast.makeText(getBaseContext(), "Login attempt failed - check network connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        //}
+
 
     }
 
@@ -212,6 +229,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onActivityResult(requestCode, resultCode, data);
         if(!isNetworkAvailable()) return;
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override
