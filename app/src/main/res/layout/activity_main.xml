@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="almapenada.daam.MainActivity"
-    android:background="@drawable/bgg">
+    android:background="@drawable/blabla">
 
     <Button
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:padding="10dp"
         android:textColor="#ffffff"
-        android:background="@drawable/mybutton"
+        android:background="#64000000"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_marginRight="35dp"
@@ -36,13 +36,14 @@
         android:layout_centerHorizontal="true"
         android:padding="10dp"
         android:textColor="#ffffff"
-        android:background="@drawable/mybutton"
+        android:background="#64000000"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_marginRight="35dp"
         android:layout_marginLeft="35dp"
         android:layout_marginTop="10dp"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,9 +63,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView2"
-        android:src="@drawable/cenas2"
-        android:layout_above="@+id/signIn"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:src="@drawable/cenascenas"
+        android:layout_marginTop="101dp"
+        android:layout_below="@+id/txtHelp"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -6,7 +6,7 @@
     tools:context="almapenada.daam.SignUpActivity"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="#fff5ba">
+    android:background="#fffaea">
 
     <!-- Login progress -->
     <ProgressBar
@@ -21,15 +21,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="51dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Sign Up"
-            android:id="@+id/signup"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp" />
 
     </LinearLayout>
 
@@ -158,13 +149,17 @@
                 android:layout_alignLeft="@+id/putemail" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Escolher Imagem"
                 android:id="@+id/chooseImage"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/telemovel"
-                android:layout_marginTop="10dp" />
+                android:background="@drawable/mybuttonyellow"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="100dp"
+                android:layout_alignParentEnd="false" />
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -172,7 +167,9 @@
                 android:layout_height="100dp"
                 android:scaleType="fitXY"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@+id/chooseImage" />
+                android:layout_below="@+id/chooseImage"
+                android:src="@drawable/ninja"
+                android:layout_marginTop="10dp" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -185,6 +182,7 @@
                 android:layout_alignParentBottom="false"
                 android:layout_marginLeft="10dp"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/mybuttonyellow"
                 android:layout_below="@+id/imageView3" />
 
         </RelativeLayout>
