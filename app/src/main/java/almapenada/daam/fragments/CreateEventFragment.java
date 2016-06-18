@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,10 +42,20 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -510,5 +521,79 @@ public class CreateEventFragment extends Fragment {
         }
         return strMyImagePath;
 
+    }
+
+    class CreateEventTask extends AsyncTask<Void, String, String> {
+
+        private String name;
+        private String email;
+        private String password;
+        private String telefone;
+        private String image;
+        private String host = "https://eventservice-daam.rhcloud.com";
+        private String methodInsert = "/insert/event/";
+
+        public CreateEventTask(String name, String email, String password, String telefone, String image) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+            this.telefone = telefone;
+            this.image = image;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... arg0) {
+            String response = "";
+            try {
+                Boolean validEmail = true;
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost post = new HttpPost(host + methodInsert);
+
+                JSONObject json = new JSONObject();
+                json.put("name", name);
+                json.put("email", email);
+                json.put("password", password);
+                json.put("telephone", telefone);
+                json.put("image", image);
+
+                String message = json.toString();
+
+                post.setEntity(new StringEntity(message, "UTF8"));
+                post.setHeader("Content-type", "application/json");
+
+                HttpResponse httpResponse = httpclient.execute(post);
+                if (httpResponse != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                    response = reader.readLine();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result != "") {
+                JSONObject jobj = null;
+                try {
+                    jobj = new JSONObject(result);
+                    System.out.println("Resposta: " + jobj.get("status").toString());
+
+                    if (jobj.get("status").toString().compareTo("OK") == 0) {
+                        //showDialogMessage("Utilizador criado com sucesso!", true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

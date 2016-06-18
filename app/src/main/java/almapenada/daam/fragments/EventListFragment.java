@@ -91,7 +91,6 @@ public class EventListFragment extends Fragment {
             try {
                 Bundle b = getActivity().getIntent().getExtras();
                 User user = (User) b.getSerializable("User");
-                System.out.println("ueueue" + user.getIdUser());
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/events/byUser/" + user.getIdUser()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
