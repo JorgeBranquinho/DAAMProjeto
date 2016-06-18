@@ -311,7 +311,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 2;
+        return password.length() > 0;
     }
 
     /**
@@ -474,14 +474,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     System.out.println("Resposta: " + jobj.get("status").toString());
                     if (jobj.get("status").toString().compareTo("OK") == 0) {
                         JSONArray array = jobj.getJSONArray("userLogin");
+                        System.out.println("Array: " + array );
+                        System.out.println("Teste - " + array.length() );
                         for (int i = 0; i < array.length(); i++) {
+                            JSONObject t_user = array.getJSONObject(i);
+                            user = new User();
+                            user.setFirstName(t_user.getString("name"));
+                            user.setLastName("");
+                            user.setEmail(t_user.getString("email"));
+                            user.setTelefone(t_user.getString("telephone"));
+                            if ( t_user.getString("description") != null ) {
+                                user.setDescricao(t_user.getString("description"));
+                            } else {
+                                user.setDescricao("");
+                            }
+                            if (t_user.getString("gender") != null ) {
+                                user.setGender(t_user.getString("gender"));
+                            } else {
+                                user.setGender("");
+                            }
+
                             return true;
                         }
                         return false;
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
-                    showDialogMessage("Erro na resposta JSON");
+                    //e.printStackTrace();
+                    showDialogMessage("Erro na resposta JSON" );
                 }
             } catch (Exception e) {
                 e.printStackTrace();

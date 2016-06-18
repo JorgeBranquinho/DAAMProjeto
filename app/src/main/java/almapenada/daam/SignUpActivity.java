@@ -64,8 +64,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         putfirstname = (EditText) findViewById(R.id.putfirstname);
         putlastname = (EditText) findViewById(R.id.putlastname);
@@ -214,7 +212,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public String getPasswordMd5() {
-        String p = md5(getPassword()) + md5("eventme");
+        String p = md5(getPassword()) + md5("event");
         return p;
     }
 
