@@ -36,6 +36,7 @@ import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventAdapter;
 import almapenada.daam.R;
 import almapenada.daam.utility.EventsDatabase;
+import almapenada.daam.utility.User;
 
 
 public class EventListFragment extends Fragment {
@@ -88,8 +89,11 @@ public class EventListFragment extends Fragment {
             String response = "";
             //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
             try {
+                Bundle b = getActivity().getIntent().getExtras();
+                User user = (User) b.getSerializable("User");
+                System.out.println("ueueue" + user.getIdUser());
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/events/byUser/1"));
+                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/events/byUser/" + user.getIdUser()));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
                 response = reader.readLine();
                 temp_events.add(jsonToEvent(response));
@@ -149,7 +153,6 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByRecent() {
-        refresh();
         events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if (events_to_display.size() == 0) return;
         Collections.sort(events_to_display, new Comparator<Event>() {
@@ -196,15 +199,14 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByCheaper() {
-        refresh();
-        events_to_display = (ArrayList<Event>) full_event_list.clone();
+        events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if (events_to_display.size() == 0) return;
         Collections.sort(events_to_display, new Comparator<Event>() {
             @Override
             public int compare(Event event2, Event event1) {
-                if (event1.getPrice().equals("") || event1.getPrice().equals(" - ")) return 1;
-                if (event2.getPrice().equals("") || event2.getPrice().equals(" - ")) return -1;
-                return Double.parseDouble(String.valueOf(event2.getPrice())) < Double.parseDouble(String.valueOf(event1.getPrice())) ? -1 : 1;
+                if (event1.getPrice().equals("")) return 1;
+                if (event2.getPrice().equals("")) return -1;
+                return Integer.parseInt(String.valueOf(event2.getPrice())) < Integer.parseInt(String.valueOf(event1.getPrice())) ? -1 : 1;
             }
         });
         adapter = new EventAdapter(getActivity(), events_to_display);
@@ -212,8 +214,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByGoing() {
-        refresh();
-        events_to_display = (ArrayList<Event>) full_event_list.clone();
+        events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if (events_to_display.size() == 0) return;
         ListIterator<Event> iter = events_to_display.listIterator();
         while (iter.hasNext()) {
@@ -226,8 +227,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByNotGoing() {
-        refresh();
-        events_to_display = (ArrayList<Event>) full_event_list.clone();
+        events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if (events_to_display.size() == 0) return;
         ListIterator<Event> iter = events_to_display.listIterator();
         while (iter.hasNext()) {

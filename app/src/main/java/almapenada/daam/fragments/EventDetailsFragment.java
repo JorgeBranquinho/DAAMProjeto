@@ -2,17 +2,22 @@ package almapenada.daam.fragments;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -49,7 +54,8 @@ public class EventDetailsFragment extends Fragment{
         TextView event_location= (TextView) v.findViewById(R.id.event_location);
         TextView event_guests= (TextView) v.findViewById(R.id.event_guests);
         TextView event_description= (TextView) v.findViewById(R.id.event_description);
-        Button event_comments= (Button) v.findViewById(R.id.event_comments);
+        //Button event_comments= (Button) v.findViewById(R.id.event_comments);
+
 
         if(e.isNewEvent()){
             updateNewEvent(e);
@@ -70,6 +76,21 @@ public class EventDetailsFragment extends Fragment{
             Bitmap btmp= BitmapFactory.decodeFile(img.getAbsolutePath());
             event_img.setImageBitmap(btmp);
         }
+        final LayoutInflater inflaterfinal = inflater;
+        event_guests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CharSequence guests[] = new CharSequence[] {"Ze", "Maria", "To Ze", "Snoop Dogg"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setItems(guests, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // the user clicked on colors[which]
+                    }
+                });
+                builder.show();
+            }
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_event);
         mapFragment.getMapAsync(new OnMapReadyCallback() {

@@ -1,6 +1,7 @@
 package almapenada.daam.utility;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -38,6 +39,10 @@ public class User implements Serializable{
     private Bitmap picture;
 
     private URL pictureURL;
+
+    private Drawable pictureDrawable;
+
+    private String phone;
 
     public int getIdUser() {
         return idUser;
@@ -149,5 +154,21 @@ public class User implements Serializable{
 
     public void setPictureURL(URL pictureURL) {
         this.pictureURL = pictureURL;
+    }
+
+    public void setPictureDrawable(Drawable pictureDrawable) {
+        this.pictureDrawable = pictureDrawable;
+    }
+
+    public Drawable getPictureDrawable() {
+        return pictureDrawable;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 }

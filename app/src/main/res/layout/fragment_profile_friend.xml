@@ -129,6 +129,17 @@
             android:id="@+id/eventos"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
+
+        <ProgressBar
+            android:id="@+id/login_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:foregroundGravity="center"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -3,22 +3,17 @@ package almapenada.daam.fragments;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.CustomRowAdapter;
-import almapenada.daam.utility.Event;
-import almapenada.daam.utility.EventAdapter;
+import almapenada.daam.utility.User;
 
 /**
  */
@@ -27,10 +22,10 @@ public class GroupsListFragment extends Fragment  {
     private ListView list_groups;
     private CustomRowAdapter adapter;
     private View rootView;
-    private String[] groups_list_names = new String[3];
-    private Drawable[] groups_list_images = new Drawable[3];
-    private String[] dummy_groups = { "Família", "Amigos", "Faculdade"};
-
+    //private String[] groups_list_names = new String[3];
+    //private Drawable[] groups_list_images = new Drawable[3];
+    //private String[] dummy_groups = { "Família", "Amigos", "Faculdade"};
+    private User[] dummy_users;
 
     public GroupsListFragment() {
         // Required empty public constructor
@@ -45,24 +40,36 @@ public class GroupsListFragment extends Fragment  {
 
         final ListView list_groups = (ListView) rootView.findViewById(R.id.groups_listview);
 
-        for ( int i = 0 ; i < dummy_groups.length ; i++ ) {
-            groups_list_images[i] = rootView.getResources().getDrawable(R.drawable.user);
-        }
+        createDummys();
 
-        adapter = new CustomRowAdapter(getActivity(), dummy_groups, groups_list_images, false, getActivity());
+        adapter = new CustomRowAdapter(getActivity(), dummy_users, false, getActivity());
         list_groups.setAdapter(adapter);
 
-        list_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*list_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), groups_list_names[position], Toast.LENGTH_LONG).show();
+                ((DrawerActivity)(getActivity())).viewMyProfile(adapter.getItem(position));
+                //Toast.makeText(getContext(), groups_list_names[position], Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
 
 
         return rootView;
 
+    }
+
+    private void createDummys(){
+        dummy_users=new User[3];
+        dummy_users[0]=new User();
+        dummy_users[0].setFirstName("Família");
+        dummy_users[0].setPictureDrawable(rootView.getResources().getDrawable(R.drawable.user));
+        dummy_users[1]=new User();
+        dummy_users[1].setFirstName("Amigos");
+        dummy_users[1].setPictureDrawable(rootView.getResources().getDrawable(R.drawable.user));
+        dummy_users[2]=new User();
+        dummy_users[2].setFirstName("Faculdade");
+        dummy_users[2].setPictureDrawable(rootView.getResources().getDrawable(R.drawable.user));
     }
 
 }

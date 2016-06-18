@@ -146,6 +146,10 @@ public class DrawerActivity extends AppCompatActivity
         } catch (IllegalStateException e) {
             //nao fazer nada, ja esta no home
         }*/
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
     }
 

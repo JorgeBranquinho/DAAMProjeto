@@ -189,6 +189,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                             sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedpreferences.edit();
                                             user = new User();
+                                            if(user.getIdUser()==0)user.setIdUser(1);
                                             user.setFacebookID(data.getString("id").toString());
                                             String fullname = data.getString("name").toString();
                                             user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));

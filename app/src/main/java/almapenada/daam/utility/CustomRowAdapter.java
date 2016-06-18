@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,11 +20,10 @@ import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.FriendsListFragment;
-import almapenada.daam.fragments.ProfileFragment;
 import almapenada.daam.fragments.ProfileFriendFragment;
 
 
-public class CustomRowAdapter extends ArrayAdapter<String> {
+public class CustomRowAdapter extends ArrayAdapter<User> {
 
     private FragmentActivity activity;
     private boolean friend_group;
@@ -33,28 +34,18 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
     private User[] users;
 
 
-    public CustomRowAdapter(Activity context, String[] names, Drawable[] images, boolean friend_group, FragmentActivity activity) {
-        super(context, R.layout.general_row_tab,names);
-        this.context = context;
-        this.names = names;
-        this.images = images;
-        this.friend_group = friend_group;
-        this.activity = activity;
-
-    }
-
-    /*public CustomRowAdapter(Activity context, User[] users, Drawable[] images, boolean friend_group, FragmentActivity activity) {
-        for(int i=0; i<users.length;i++){
-            names[i]=users[i].getFirstName();
-        }
-        super(context, R.layout.general_row_tab,names);
+    public CustomRowAdapter(Activity context, User[] users, boolean friend_group, FragmentActivity activity) {
+        super(context, R.layout.general_row_tab,users);
         this.context = context;
         this.users = users;
         this.images = images;
         this.friend_group = friend_group;
         this.activity = activity;
-
-    }*/
+        names=new String[users.length];
+        for(int i=0; i<users.length;i++){
+            names[i]=users[i].getFirstName() + " " + users[i].getLastName();
+        }
+    }
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
@@ -66,13 +57,25 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.list_image);
         final int pos = position;
         rowView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
-                if(friend_group == true)
-                    ((DrawerActivity)activity).viewFragment(new ProfileFriendFragment(), names[pos], false, -1);
-                if(friend_group == false)
-                    ((DrawerActivity)activity).viewFragment(new FriendsListFragment(), names[pos], true, R.drawable.plus);
+                if(friend_group == true) {
+                    //User u = new User();
+                    User u=users[pos];
+                    /*u.setFirstName(names[pos].substring(0, names[pos].lastIndexOf(" ")));
+                    u.setLastName(names[pos].substring(names[pos].lastIndexOf(" ") + 1));
+                    u.setEmail(users[pos].getEmail());
+                    u.setPhone(users[pos].getPhone());
+                    u.setDescricao(users[pos].getDescricao());
+                    u.setPictureDrawable(users[pos].getPictureDrawable());*/
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("friendUser", u);
+                    ProfileFriendFragment frag = new ProfileFriendFragment();
+                    frag.setArguments(bundle);
+                    ((DrawerActivity) activity).viewFragment(frag, names[pos], false, -1);
+                }else {
+                    ((DrawerActivity) activity).viewFragment(new FriendsListFragment(), names[pos], true, R.drawable.plus);
+                }
             }
         });
 
@@ -139,7 +142,7 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public String getItem(int position) {
+    public User getItem(int position) {
         return super.getItem(position);
     }
 

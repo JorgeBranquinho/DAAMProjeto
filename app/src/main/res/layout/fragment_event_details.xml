@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="almapenada.daam.fragments.EventDetailsFragment">
+    tools:context="almapenada.daam.fragments.EventDetailsFragment"
+    android:id="@+id/relLay">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -70,7 +71,8 @@
         android:id="@+id/event_guests"
         android:layout_alignTop="@+id/event_location"
         android:layout_toLeftOf="@+id/event_time"
-        android:layout_toStartOf="@+id/event_time" />
+        android:layout_toStartOf="@+id/event_time"
+        android:textColor="#727bfa" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -82,14 +84,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
+    <!--Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View comments"
         android:id="@+id/event_comments"
         android:layout_alignTop="@+id/event_description"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="25dp" /-->
 
     <ImageView
         android:layout_width="fill_parent"
