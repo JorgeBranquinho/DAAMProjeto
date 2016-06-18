@@ -44,6 +44,10 @@ public class User implements Serializable{
 
     private String phone;
 
+    private Boolean pushFlag = false;
+
+    private Boolean infpFlag = false;
+
     public int getIdUser() {
         return idUser;
     }
@@ -170,5 +174,21 @@ public class User implements Serializable{
 
     public String getPhone() {
         return phone;
+    }
+
+    public Boolean getPushFlag() {
+        return pushFlag;
+    }
+
+    public void setPushFlag(Boolean pushFlag) {
+        this.pushFlag = pushFlag;
+    }
+
+    public Boolean getInfpFlag() {
+        return infpFlag;
+    }
+
+    public void setInfpFlag(Boolean infpFlag) {
+        this.infpFlag = infpFlag;
     }
 }
