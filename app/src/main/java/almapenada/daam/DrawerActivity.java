@@ -48,6 +48,7 @@ import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.fragments.ProfileFragment;
+import almapenada.daam.fragments.SettingsFragment;
 import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
@@ -68,6 +69,7 @@ public class DrawerActivity extends AppCompatActivity
     private GoogleApiClient client;
     private Activity activity=this;
     private User user=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,7 +250,7 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id_menuItem == R.id.nav_friends) {
             viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
         } else if (id_menuItem == R.id.nav_settings) {
-            //TODO:falta fazer
+            viewSettings(user);
         } else if (id_menuItem == R.id.nav_about) {
             Intent intent = new Intent(this, HelpActivity.class);
             startActivity(intent);
@@ -300,6 +302,17 @@ public class DrawerActivity extends AppCompatActivity
         viewFragment(frag, getResources().getString(R.string.MyProfile), false, -1);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void viewSettings(User u){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", u);
+        SettingsFragment frag = new SettingsFragment();
+        frag.setArguments(bundle);
+        viewFragment(frag, getResources().getString(R.string.title_settings), false, -1);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
     }
 
     public void viewEventDetails(Event e) {
