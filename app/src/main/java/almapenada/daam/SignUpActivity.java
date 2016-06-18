@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -27,7 +29,8 @@ import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +39,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import almapenada.daam.utility.UserProfile;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -49,14 +50,14 @@ public class SignUpActivity extends AppCompatActivity {
     private View rootView;
     private ImageView imgView;
     private static final int SELECT_PICTURE = 1;
-    private EditText putnome;
+    private EditText putfirstname;
+    private EditText putlastname;
     private EditText putemail;
     private EditText pass;
     private EditText tlm;
-    private EditText reppass;
     private View mProgressView;
     private View signup_form;
-    View focusView = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,8 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        putnome = (EditText) findViewById(R.id.putnome);
+        putfirstname = (EditText) findViewById(R.id.putfirstname);
+        putlastname = (EditText) findViewById(R.id.putlastname);
         putemail = (EditText) findViewById(R.id.putemail);
         pass = (EditText) findViewById(R.id.pass);
         tlm = (EditText) findViewById(R.id.tlm);
@@ -106,12 +108,20 @@ public class SignUpActivity extends AppCompatActivity {
        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
-                Cursor cursor=null;
+                Cursor cursor = null;
                 Uri selectedImageUri = data.getData();
                 filePath = getPath(cursor,selectedImageUri);
-                imgView.setImageURI(selectedImageUri);
+                Bitmap yourSelectedImage = getImageBitmap(filePath);
+                //imgView.setImageURI(selectedImageUri);
+                imgView.setImageBitmap(yourSelectedImage);
             }
         }
+    }
+
+    private Bitmap getImageBitmap(String filePath) {
+        Bitmap bm = null;
+        bm = BitmapFactory.decodeFile(filePath);
+        return bm;
     }
 
     public String getPath(Cursor cursor, Uri uri) {
@@ -146,36 +156,36 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean validateParams() {
-
-
+        View focusView = null;
+        String error = "";
 
         if (!(isNetworkAvailable())){
-            showSuccessMessage("Terá que ter connecção à Internet!");
+            showDialogMessage("Terá que ter connecção à Internet!", false);
             return false;
         }
 
         if ( getName().isEmpty()) {
-            showSuccessMessage("Nome tem que ser preenchido");
-            focusView = putnome;
+            error = "Nome tem que ser preenchido" + "\n";
+            focusView = putfirstname;
         }
 
         if ((!(getEmail().contains("@"))) || (getEmail().isEmpty())) {
-            showSuccessMessage("Email tem que ser preenchido");
+            error += "Email tem que ser preenchido" + "\n";
             focusView = putemail;
         }
 
         if ((!(getPassword().length() >= 5) ) || (getPassword().isEmpty())) {
-            showSuccessMessage("Password tem que ser bem preenchida (8 caracteres)");
+            error += "Password tem que ser bem preenchida (8 caracteres)" + "\n";
             focusView = pass;
         }
 
-
         if ((!(getTelefone().length() >= 8) ) || (getTelefone().isEmpty())) {
-            showSuccessMessage("Telefone tem que ser bem preenchido");
+            error += "Telefone tem que ser bem preenchido" + "\n";
             focusView = tlm;
         }
 
         if (focusView!=null){
+            showDialogMessage(error, false);
             focusView.requestFocus();
             return false;
         }
@@ -187,11 +197,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void createUser() {
-        new CreateUserTask().execute();
+        new CreateUserTask(getName(), getEmail(), getPasswordMd5(), getTelefone(), getImage()).execute();
     }
 
     public String getName() {
-        return putnome.getText().toString();
+        String n = putfirstname.getText().toString() + " " + putlastname.getText().toString();
+        return n;
     }
 
     public String getEmail() {
@@ -207,17 +218,12 @@ public class SignUpActivity extends AppCompatActivity {
         return p;
     }
 
-    public String getRepPassword() {
-        return reppass.getText().toString();
-    }
-
     public String getTelefone() {
         return tlm.getText().toString();
     }
 
-    public void createProfile(String id, String name, String email, String telefone, String image) {
-        new UserProfile(id, name, email, telefone, image);
-        System.out.println("Consegui: " + id + name + email + telefone + image);
+    public String getImage() {
+        return "teste";
     }
 
     private boolean isNetworkAvailable() {
@@ -227,7 +233,7 @@ public class SignUpActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void showSuccessMessage(String msg) {
+    public void showDialogMessage(String msg, final boolean tofinish) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
         alertDialogBuilder.setTitle("Sign up");
@@ -238,7 +244,10 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-                        //SignUpActivity.this.finish();
+                        if ( tofinish ) {
+                            SignUpActivity.this.finish();
+                        }
+                        //
                     }
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -265,6 +274,24 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     class CreateUserTask extends AsyncTask<Void, String, String> {
+
+        private String name;
+        private String email;
+        private String password;
+        private String telefone;
+        private String image;
+        private String host = "https://eventservice-daam.rhcloud.com";
+        private String methodInsert = "/insert/user/";
+        private String methodCheckEmail = "/check/email/";
+
+        public CreateUserTask(String name, String email, String password, String telefone, String image ) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+            this.telefone = telefone;
+            this.image = image;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -272,22 +299,32 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... arg0) {
-            System.out.println("Vou começar");
-            String name =  getName() + "/";
-            String email =  getEmail()+ "/";
-            String password = getPasswordMd5()+ "/";
-            String telefone = getTelefone()+ "/";
-            String image = "testeimage"+ "/";
-            String host = "https://eventservice-daam.rhcloud.com";
-            String method = "/insert/user/";
             String response = "";
-            System.out.println(host + method + name + email + password + telefone + image);
             try {
+                Boolean validEmail = true;
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse httpResponse = httpclient.execute(new HttpGet(host + method + name + email + password + telefone + image));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
-                response = reader.readLine();
+                HttpPost post = new HttpPost(host + methodInsert);
+
+                JSONObject json = new JSONObject();
+                json.put("name", name);
+                json.put("email", email);
+                json.put("password", password);
+                json.put("telephone", telefone);
+                json.put("image", image);
+
+                String message = json.toString();
+
+                post.setEntity(new StringEntity(message, "UTF8"));
+                post.setHeader("Content-type", "application/json");
+
+                HttpResponse httpResponse = httpclient.execute(post);
+                if ( httpResponse != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                    response = reader.readLine();
+                }
+
             } catch (Exception e) {
+                showDialogMessage("Erro na ligação a base de dados", false);
                 e.printStackTrace();
             }
             return response;
@@ -297,17 +334,18 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             showProgress(false);
-            JSONObject jobj = null;
-            UserProfile user = null;
-            try {
-                jobj = new JSONObject(result);
-                System.out.println("Resposta: " + jobj.get("status").toString());
+            if (result != "" ) {
+                JSONObject jobj = null;
+                try {
+                    jobj = new JSONObject(result);
+                    System.out.println("Resposta: " + jobj.get("status").toString());
 
-                if (jobj.get("status").toString().compareTo("OK") == 0) {
-                    showSuccessMessage("Utilizador criado com sucesso!");
+                    if (jobj.get("status").toString().compareTo("OK") == 0) {
+                        showDialogMessage("Utilizador criado com sucesso!", true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
 
