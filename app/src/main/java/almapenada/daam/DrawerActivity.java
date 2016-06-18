@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -62,12 +63,11 @@ public class DrawerActivity extends AppCompatActivity
     private FragmentManager fragManager;
     private FragmentTransaction transaction;
     private Fragment currentFragment;
-    private User user = null;
     private ImageView nav_img;
     private int id_menuItem;
     private GoogleApiClient client;
     private Activity activity=this;
-
+    private User user=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +124,19 @@ public class DrawerActivity extends AppCompatActivity
         transaction.commit();
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //saveToSharedPreferences(user.getFirstName() + " " + user.getLastName() );
     }
+
+    /*private void saveToSharedPreferences(String name) {
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(Name, name);
+        editor.commit();
+    }*/
 
     @Override
     public void onBackPressed() {
-        try {
+        /*try {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -137,7 +145,8 @@ public class DrawerActivity extends AppCompatActivity
             }
         } catch (IllegalStateException e) {
             //nao fazer nada, ja esta no home
-        }
+        }*/
+        viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
     }
 
     private Fragment getCurrentFragment(){
@@ -217,21 +226,6 @@ public class DrawerActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -239,10 +233,10 @@ public class DrawerActivity extends AppCompatActivity
         id_menuItem = item.getItemId();
 
         if (id_menuItem == R.id.nav_profile) {
-            // Handle the camera action
-            //Item it = (Item) findViewById(R.id.action_search);
-           // it.setVisible(false);
-            viewFragment(new ProfileFragment(), "My Profile", false, -1);
+            if(user!=null)
+                viewMyProfile(user);
+            else
+                viewFragment(new ProfileFragment(), getResources().getString(R.string.MyProfile), false, -1);
         } else if (id_menuItem == R.id.nav_home) {
             viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
         } else if (id_menuItem == R.id.nav_events) {
@@ -292,6 +286,16 @@ public class DrawerActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         setTitle(title);
         transaction.commit();
+    }
+
+    public void viewMyProfile(User u){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", u);
+        ProfileFragment frag = new ProfileFragment();
+        frag.setArguments(bundle);
+        viewFragment(frag, getResources().getString(R.string.MyProfile), false, -1);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     public void viewEventDetails(Event e) {
@@ -385,7 +389,8 @@ public class DrawerActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(Bitmap result) {
-            user.setPicture(result);
+            //user.setPicture(result);
+            //System.out.println("ueueu" + user.getPicture());
             nav_img.setImageBitmap(result);
         }
     }

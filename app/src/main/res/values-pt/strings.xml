@@ -77,4 +77,10 @@
     <string name="title_activity_sign_up">Registar</string>
     <string name="signIn">Entrar</string>
     <string name="help">Ajuda</string>
+    <string name="event_list">LISTA</string>
+    <string name="nome">Nome:*</string>
+    <string name="rpassword">Repetir \nPassword:*</string>
+    <string name="telemovel">Telemóvel:</string>
+    <string name="navigation_drawer_close" translatable="false"></string>
+    <string name="permission_rationale" translatable="false">É necessária a permissão dos contactos</string>
 </resources>

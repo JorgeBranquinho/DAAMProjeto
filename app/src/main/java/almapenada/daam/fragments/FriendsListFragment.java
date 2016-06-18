@@ -22,6 +22,7 @@ import almapenada.daam.MainActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.CustomRowAdapter;
 import almapenada.daam.utility.Event;
+import almapenada.daam.utility.User;
 
 
 /**
@@ -36,7 +37,7 @@ public class FriendsListFragment extends Fragment {
     private String[] friends_list_names = new String[5];
     private Drawable[] friends_list_images = new Drawable[5];
     private String[] dummy_friends = { "Jorge Branquinho", "Ivo Silva", "Daniela Costa", "Andre Carvalho", "Diogo Leo" };
-
+    private User[] dummy_users;
 
 
     @Override
@@ -44,9 +45,11 @@ public class FriendsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
+        createDummys();
+
         final ListView list_friends = (ListView) rootView.findViewById(R.id.friends_listview);
 
-        for ( int i = 0 ; i < dummy_friends.length ; i++ ) {
+        for ( int i = 0 ; i < dummy_users.length ; i++ ) {
             friends_list_images[i] = rootView.getResources().getDrawable(R.drawable.user);
         }
 
@@ -65,7 +68,15 @@ public class FriendsListFragment extends Fragment {
         return rootView;
     }
 
-
+    private void createDummys(){
+        dummy_users=new User[3];
+        dummy_users[0]=new User();
+        dummy_users[0].setFirstName("Ze");
+        dummy_users[1]=new User();
+        dummy_users[1].setFirstName("Maria");
+        dummy_users[2]=new User();
+        dummy_users[2].setFirstName("Snoop Dogg");
+    }
 
 
 

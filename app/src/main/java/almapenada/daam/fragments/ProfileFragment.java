@@ -5,22 +5,30 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +37,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
+import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.ScalingUtilies;
+import almapenada.daam.utility.User;
 
 public class ProfileFragment extends Fragment {
 
+    private User user;
     private ProfileFragment self = this;
     private Button image;
     private static final int SELECT_IMAGE = 1;
@@ -43,6 +55,9 @@ public class ProfileFragment extends Fragment {
     private String filePath = "";
     private static final int SELECT_PICTURE = 1;
     private View rootView;
+    private EditText username;
+    private EditText email;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,11 +65,26 @@ public class ProfileFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        username = (EditText) rootView.findViewById(R.id.txtName);
+        email = (EditText) rootView.findViewById(R.id.email);
         image = (Button) rootView.findViewById(R.id.image);
+
+        Bundle b = getActivity().getIntent().getExtras();
+        user = (User) b.getSerializable("User");
+        if (user != null) {
+            username.setText(user.getFirstName() + " " + user.getLastName());
+            username.setClickable(false);
+            username.setFocusable(false);
+            email.setText(user.getEmail());
+            email.setClickable(false);
+            email.setFocusable(false);
+            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
+        }
+
+
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), "BLABLABLA", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);//
@@ -85,8 +115,8 @@ public class ProfileFragment extends Fragment {
             }
 
         });*/
-
-        ((DrawerActivity) getActivity()).setActionBarTitle("Nome de Utilizador");
+        if(user!=null)
+            ((DrawerActivity) getActivity()).setActionBarTitle("Perfil de " + user.getFirstName());
 
         return rootView;
     }
@@ -244,6 +274,50 @@ public class ProfileFragment extends Fragment {
         }
         return strMyImagePath;
 
+    }
+
+    private class DownloadImageTask extends AsyncTask<URL, Void, Bitmap> {
+        Bitmap bitmap = null;
+
+        protected Bitmap doInBackground(URL... url) {
+            try {
+                bitmap = BitmapFactory.decodeStream(url[0].openConnection().getInputStream());
+                int sizevar=new EnumDatabase().getScreenDensity(getActivity());
+                int size;
+                switch (sizevar){
+                    case 1:size=150;break;//150
+                    case 2:size=100;break;//100
+                    case 3:size=200;break;//200
+                    case 4:size=200;break;//238
+                    case 5:size=400;break;//400
+                    default: size=400;break;//400
+                }
+                bitmap = scaleBitmap(bitmap, size, size);
+            } catch (Exception e) {
+                Log.e("Error", "image download error");
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        private Bitmap scaleBitmap(Bitmap bitmap, int wantedWidth, int wantedHeight) {
+            Bitmap output = Bitmap.createBitmap(wantedWidth, wantedHeight, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(output);
+            Matrix m = new Matrix();
+            m.setScale((float) wantedWidth / bitmap.getWidth(), (float) wantedHeight / bitmap.getHeight());
+            canvas.drawBitmap(bitmap, m, new Paint());
+            return output;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            //user.setPicture(result);
+            //System.out.println("ueueu" + user.getPicture());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                image.setBackground(new BitmapDrawable(getContext().getResources(), result));
+            }else
+                image.setBackgroundDrawable(new BitmapDrawable(getResources(), user.getPicture()));
+        }
     }
 }
 

@@ -86,9 +86,9 @@ public class EventDetailsFragment extends Fragment{
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(11);
                     googleMap.moveCamera(center);
                     googleMap.animateCamera(zoom);
-                }else{
+                }/*else{
                     System.out.println("Este evento nao tem gps");
-                }
+                }*/
             }
         });
 

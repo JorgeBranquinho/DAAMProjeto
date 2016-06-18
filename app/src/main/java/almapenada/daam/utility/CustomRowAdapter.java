@@ -30,6 +30,7 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
     private String[] names;
     private Drawable[] images;
     private CustomRowAdapter self = this;
+    private User[] users;
 
 
     public CustomRowAdapter(Activity context, String[] names, Drawable[] images, boolean friend_group, FragmentActivity activity) {
@@ -41,6 +42,19 @@ public class CustomRowAdapter extends ArrayAdapter<String> {
         this.activity = activity;
 
     }
+
+    /*public CustomRowAdapter(Activity context, User[] users, Drawable[] images, boolean friend_group, FragmentActivity activity) {
+        for(int i=0; i<users.length;i++){
+            names[i]=users[i].getFirstName();
+        }
+        super(context, R.layout.general_row_tab,names);
+        this.context = context;
+        this.users = users;
+        this.images = images;
+        this.friend_group = friend_group;
+        this.activity = activity;
+
+    }*/
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {

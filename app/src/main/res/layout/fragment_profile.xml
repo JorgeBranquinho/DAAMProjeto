@@ -44,7 +44,8 @@
                 android:layout_alignParentRight="false"
                 android:layout_marginLeft="10dp"
                 android:hint="@string/NOME"
-                android:enabled="true" />
+                android:enabled="true"
+                android:editable="false" />
 
             <EditText
                 android:layout_width="210dp"

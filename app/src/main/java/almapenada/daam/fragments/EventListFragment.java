@@ -1,15 +1,19 @@
 package almapenada.daam.fragments;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -17,7 +21,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -46,6 +49,10 @@ public class EventListFragment extends Fragment {
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     private ListView event_list;
     private EventsDatabase database;
+    private LocationManager locationMangaer = null;
+    private MyLocationListener locationListener;
+    private boolean track = false;
+    private Location userLocation = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,7 +116,6 @@ public class EventListFragment extends Fragment {
                     database = new EventsDatabase(getActivity());
                     for (int i = 0; i < poi.length(); i++) {
                         JSONObject t_poi = poi.getJSONObject(i);
-                        System.out.println("ueueue aqui");
                         if (!owned_events.contains(Integer.parseInt(t_poi.getString("id")))) {
                             SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd");
                             SimpleDateFormat  format2 = new SimpleDateFormat("dd/MM/yyyy");
@@ -117,7 +123,6 @@ public class EventListFragment extends Fragment {
                             String dataevento = format2.format(date);
                             Event x = new Event(Integer.parseInt(t_poi.getString("id")), t_poi.getString("eventName"), Integer.parseInt(t_poi.getString("isPublic")) == 1 ? true : false, t_poi.getString("weekDay"), dataevento, Integer.parseInt(t_poi.getString("isEndDate")) == 1 ? true : false, t_poi.getString("endDate"), Integer.parseInt(t_poi.getString("isPrice")) == 1 ? true : false, t_poi.getString("price"), t_poi.getString("hours"), Integer.parseInt(t_poi.getString("isLocation")) == 1 ? true : false, t_poi.getString("location_latlng"), Integer.parseInt(t_poi.getString("isFriendsInvitable")) == 1 ? true : false, false, false);
                             database.insertEvent(x);
-                            System.out.println("ueueue deu");
                             full_event_list.add(x);
                         }
                     }
@@ -144,6 +149,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByRecent() {
+        refresh();
         events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
         if (events_to_display.size() == 0) return;
         Collections.sort(events_to_display, new Comparator<Event>() {
@@ -163,18 +169,42 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByNear() {
-        //TODO:este é lixado xD
+        if (displayGpsStatus() && track && userLocation != null) {
+            refresh();
+            events_to_display = (ArrayList<Event>) full_event_list.clone();
+            if (events_to_display.size() == 0) return;
+            Collections.sort(events_to_display, new Comparator<Event>() {
+                @Override
+                public int compare(Event event2, Event event1) {
+                    if (!event1.isLocation()) return 1;
+                    if (!event2.isLocation()) return -1;
+
+                    Location location1 = new Location("");
+                    location1.setLatitude(event1.getLocation_latlng().latitude);
+                    location1.setLongitude(event1.getLocation_latlng().longitude);
+
+                    Location location2 = new Location("");
+                    location2.setLatitude(event2.getLocation_latlng().latitude);
+                    location2.setLongitude(event2.getLocation_latlng().longitude);
+
+                    return userLocation.distanceTo(location2) < userLocation.distanceTo(location1) ? -1 : 1;
+                }
+            });
+            adapter = new EventAdapter(getActivity(), events_to_display);
+            event_list.setAdapter(adapter);
+        } else Toast.makeText(getContext(), R.string.GPSNotFound, Toast.LENGTH_SHORT).show();
     }
 
     public void orderByCheaper() {
-        events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        refresh();
+        events_to_display = (ArrayList<Event>) full_event_list.clone();
         if (events_to_display.size() == 0) return;
         Collections.sort(events_to_display, new Comparator<Event>() {
             @Override
             public int compare(Event event2, Event event1) {
-                if (event1.getPrice().equals("")) return 1;
-                if (event2.getPrice().equals("")) return -1;
-                return Integer.parseInt(String.valueOf(event2.getPrice())) < Integer.parseInt(String.valueOf(event1.getPrice())) ? -1 : 1;
+                if (event1.getPrice().equals("") || event1.getPrice().equals(" - ")) return 1;
+                if (event2.getPrice().equals("") || event2.getPrice().equals(" - ")) return -1;
+                return Double.parseDouble(String.valueOf(event2.getPrice())) < Double.parseDouble(String.valueOf(event1.getPrice())) ? -1 : 1;
             }
         });
         adapter = new EventAdapter(getActivity(), events_to_display);
@@ -182,7 +212,8 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByGoing() {
-        events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        refresh();
+        events_to_display = (ArrayList<Event>) full_event_list.clone();
         if (events_to_display.size() == 0) return;
         ListIterator<Event> iter = events_to_display.listIterator();
         while (iter.hasNext()) {
@@ -195,7 +226,8 @@ public class EventListFragment extends Fragment {
     }
 
     public void orderByNotGoing() {
-        events_to_display = (ArrayList<Event>) full_event_list.clone();//TODO: verificar se isto ainda esta atual com a DB
+        refresh();
+        events_to_display = (ArrayList<Event>) full_event_list.clone();
         if (events_to_display.size() == 0) return;
         ListIterator<Event> iter = events_to_display.listIterator();
         while (iter.hasNext()) {
@@ -205,5 +237,52 @@ public class EventListFragment extends Fragment {
         }
         adapter = new EventAdapter(getActivity(), events_to_display);
         event_list.setAdapter(adapter);
+    }
+
+    private Boolean displayGpsStatus() {
+        ContentResolver contentResolver = getActivity().getBaseContext()
+                .getContentResolver();
+        boolean gpsStatus = Settings.Secure
+                .isLocationProviderEnabled(contentResolver,
+                        LocationManager.GPS_PROVIDER);
+        if (gpsStatus) {
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    private class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location loc) {
+            userLocation = new Location("");
+            userLocation.setLatitude(loc.getLatitude());
+            userLocation.setLongitude(loc.getLongitude());
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
+
+    private void refresh() {
+        full_event_list = new ArrayList<Event>();
+        database = new EventsDatabase(getActivity());
+        populateEventList(database.getAllEvents());
+        adapter = new EventAdapter(getActivity(), full_event_list);
+        event_list.setAdapter(adapter);
+        database.close();
     }
 }

@@ -78,8 +78,8 @@ public class EventsFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         Adapter ad = new Adapter(getFragmentManager());
         eventlistfrag = new EventListFragment();
-        ad.addFragment(eventlistfrag, "List");
-        ad.addFragment(new MapFragment(), "Map");
+        ad.addFragment(eventlistfrag, getResources().getString(R.string.List));
+        ad.addFragment(new MapFragment(), getResources().getString(R.string.Map));
         viewPager.setAdapter(ad);
     }
 

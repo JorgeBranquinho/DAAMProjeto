@@ -10,6 +10,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -96,7 +97,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private boolean logface=false;
-
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String email = "emailKey";
+    public static final String gender = "genderKey";
+    SharedPreferences sharedpreferences;
 
 
     @Override
@@ -148,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
 
        // if(logface ){
-            System.out.println("IMA HERE FAGGOTS!!!!");
+
 
             LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
             if (isNetworkAvailable()) {
@@ -159,6 +163,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     user = new User();
                     user.setFirstName(p.getFirstName());
                     user.setLastName(p.getLastName());
+                    sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                    user.setEmail(sharedpreferences.getString(email, ""));
+                    user.setGender(sharedpreferences.getString(gender, ""));
                     try {
                         Uri uriImage = Uri.parse(p.getProfilePictureUri(200, 200).toString());
                         user.setPictureURL(new URL(String.valueOf(uriImage)));
@@ -166,8 +173,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         e.printStackTrace();
                     }
                     callDrawerActivity();
-                } else
-                    System.out.println("ueueueu");
+                }
                 loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -180,12 +186,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     try {
                                         JSONObject data = response.getJSONObject();
                                         try {
+                                            sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedpreferences.edit();
                                             user = new User();
                                             user.setFacebookID(data.getString("id").toString());
                                             String fullname = data.getString("name").toString();
                                             user.setFirstName(fullname.substring(0, fullname.lastIndexOf(" ")));
                                             user.setLastName(fullname.substring(fullname.lastIndexOf(" ") + 1));
                                             user.setGender(data.getString("gender").toString());
+                                            editor.putString(gender, data.getString("gender").toString());
+                                            editor.putString(email, data.getString("email"));
+                                            user.setEmail(data.getString("email"));
                                             user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
                                         } catch (Exception e) {
                                             e.printStackTrace();
