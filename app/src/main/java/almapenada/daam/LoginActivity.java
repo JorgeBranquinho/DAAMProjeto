@@ -50,6 +50,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -472,7 +473,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     jobj = new JSONObject(response);
                     System.out.println("Resposta: " + jobj.get("status").toString());
                     if (jobj.get("status").toString().compareTo("OK") == 0) {
-                        return true;
+                        JSONArray array = jobj.getJSONArray("userLogin");
+                        for (int i = 0; i < array.length(); i++) {
+                            return true;
+                        }
+                        return false;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
