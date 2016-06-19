@@ -11,7 +11,7 @@
     android:background="@drawable/blabla">
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/signIn"
         android:id="@+id/signIn"
@@ -20,14 +20,12 @@
         android:padding="10dp"
         android:textColor="#ffffff"
         android:background="#64000000"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
         android:layout_marginRight="35dp"
         android:layout_marginLeft="35dp"
         android:textSize="20dp" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/signup"
         android:id="@+id/signUp"
@@ -37,8 +35,6 @@
         android:padding="10dp"
         android:textColor="#ffffff"
         android:background="#64000000"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
         android:layout_marginRight="35dp"
         android:layout_marginLeft="35dp"
         android:layout_marginTop="10dp"
@@ -48,16 +44,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/help"
+        android:text="@string/title_about"
         android:id="@+id/txtHelp"
-        android:layout_centerHorizontal="true"
         android:clickable="true"
         android:textSize="15dp"
-        android:layout_alignParentEnd="false"
+        android:textColor="#1a1919"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#1a1919" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp" />
 
     <ImageView
         android:layout_width="wrap_content"
