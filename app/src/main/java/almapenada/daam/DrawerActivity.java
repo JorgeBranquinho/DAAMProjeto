@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -90,8 +88,6 @@ public class DrawerActivity extends AppCompatActivity
             nav_user2.setText("");
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
             if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
-        } else {
-            //TODO:ir buscar perfil sem ser do facebook
         }
 
         // Botao que flutoa na actividade

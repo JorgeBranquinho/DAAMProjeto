@@ -200,6 +200,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                             editor.putString(email, data.getString("email"));
                                             user.setEmail(data.getString("email"));
                                             user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
+                                            user.setUserFromFB(true);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -493,6 +494,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             } else {
                                 user.setGender("");
                             }
+                            user.setUserFromFB(false);
 
                             return true;
                         }

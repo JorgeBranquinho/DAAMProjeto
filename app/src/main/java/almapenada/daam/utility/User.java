@@ -48,6 +48,8 @@ public class User implements Serializable{
 
     private Boolean infpFlag = false;
 
+    private Boolean userFromFB = false;
+
     public int getIdUser() {
         return idUser;
     }
@@ -190,5 +192,13 @@ public class User implements Serializable{
 
     public void setInfpFlag(Boolean infpFlag) {
         this.infpFlag = infpFlag;
+    }
+
+    public Boolean getUserFromFB() {
+        return userFromFB;
+    }
+
+    public void setUserFromFB(Boolean userFromFB) {
+        this.userFromFB = userFromFB;
     }
 }
