@@ -98,7 +98,10 @@ public class ProfileFriendFragment extends Fragment {
             numPerfil.setClickable(false);
             numPerfil.setFocusable(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                image.setBackground(user.getPictureDrawable());
+                if(user.getPictureDrawable()!=null)
+                    image.setBackground(user.getPictureDrawable());
+                else
+                    image.setBackground(getResources().getDrawable(R.drawable.ninja));
             }
         }
 
