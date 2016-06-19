@@ -19,8 +19,10 @@ import android.widget.Toast;
 
         import org.apache.http.HttpResponse;
         import org.apache.http.client.HttpClient;
+        import org.apache.http.client.methods.HttpDelete;
         import org.apache.http.client.methods.HttpGet;
         import org.apache.http.client.methods.HttpPost;
+        import org.apache.http.client.methods.HttpPut;
         import org.apache.http.entity.StringEntity;
         import org.apache.http.impl.client.DefaultHttpClient;
         import org.json.JSONException;
@@ -111,16 +113,18 @@ public class EventAdapter extends BaseAdapter {
                                     .setNegativeButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             Toast.makeText(activity, "Removido o evento", Toast.LENGTH_SHORT).show();
+                                            int id2=e.getId();
                                             database = new EventsDatabase(activity);
                                             database.deleteById(e.getId() + 1);
                                             database.close();//para escrever as mudanças nas DB
                                             database = new EventsDatabase(activity);//reabrir ligacao
                                             data.remove(event_position);
-
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
                                             dialog.dismiss();
                                             database.close();
+                                            DeleteEvents de = new DeleteEvents(id2);
+                                            de.execute();
                                         }
                                     });
                             builder.show();
@@ -153,8 +157,12 @@ public class EventAdapter extends BaseAdapter {
 
                 if (going.isChecked()) {
                     going.setText(activity.getString(R.string.going_event));
+                    UpdateEvents ue = new UpdateEvents(e.getId(), true);
+                    ue.execute();
                 } else {
                     going.setText(activity.getString(R.string.not_going_event));
+                    UpdateEvents ue = new UpdateEvents(e.getId(), false);
+                    ue.execute();
                 }
                 database = new EventsDatabase(activity);
                 ContentValues values = new ContentValues();
@@ -201,14 +209,51 @@ public class EventAdapter extends BaseAdapter {
         return vi;
     }
 
-    private class DownloadFriendsTask extends AsyncTask<URL, Void, Void> {
+    private class DeleteEvents extends AsyncTask<URL, Void, Void> {
+
+        private int id;
+
+        public DeleteEvents(int id) {
+            this.id=id;
+        }
 
         protected Void doInBackground(URL... url) {
             String response = "";
             //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/delete/event/" + u.getIdUser()));
+                HttpResponse httpResponse = httpclient.execute(new HttpDelete("https://eventservice-daam.rhcloud.com/delete/event/" + id + "/" + u.getIdUser()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private class UpdateEvents extends AsyncTask<URL, Void, Void> {
+
+        private boolean going;
+        private int id;
+
+        public UpdateEvents(int id, boolean going) {
+            this.id=id;
+            this.going=going;
+        }
+
+        protected Void doInBackground(URL... url) {
+            String response = "";
+            //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
+            try {
+                int g=going?1:0;
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpPut("https://eventservice-daam.rhcloud.com/update/event/going/" + u.getIdUser() + "/" + id +"/" + g ));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
                 response = reader.readLine();
             } catch (Exception e) {

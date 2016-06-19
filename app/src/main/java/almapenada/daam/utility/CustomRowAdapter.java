@@ -94,6 +94,7 @@ public class CustomRowAdapter extends ArrayAdapter<User> {
                     x2 = event.getX();
                     float deltaX = x2 - x1;
                     if (Math.abs(deltaX) > MIN_DISTANCE && !avoid_double_click) {
+                        if ((friend_group && x2 > x1) || (!friend_group && x2 < x1)) {
                         avoid_double_click = true;
                         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setMessage("Tem a certeza que quer remover "+ names[pos] + "?")
@@ -112,7 +113,7 @@ public class CustomRowAdapter extends ArrayAdapter<User> {
                                             database = new EventsDatabase(activity);//reabrir ligacao
                                             database.close();*/
                                         names[list_position] = "";
-                                        images[list_position] = null;
+                                        //images[list_position] = null;
                                         self.notifyDataSetChanged();
                                         avoid_double_click = false;
                                         dialog.dismiss();
@@ -122,7 +123,7 @@ public class CustomRowAdapter extends ArrayAdapter<User> {
                     } else {
                         //user fez tap
                     }
-                }
+                }}
                 return false;
             }
         });
