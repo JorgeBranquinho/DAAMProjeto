@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import almapenada.daam.R;
@@ -20,13 +18,15 @@ public class EventFeedAdapter extends BaseAdapter{
     private EventFeedAdapter self;
     private Activity activity;
     private ArrayList<Event> data;
+    private ArrayList<String> message;
     private static LayoutInflater inflater=null;
 
 
-    public EventFeedAdapter(Activity a, ArrayList<Event> d) {
+    public EventFeedAdapter(Activity a, ArrayList<Event> d, ArrayList<String> message) {
         self = this;
         activity = a;
         data = d;
+        this.message = message;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -53,7 +53,9 @@ public class EventFeedAdapter extends BaseAdapter{
         if(convertView==null)
             v = inflater.inflate(R.layout.feed_event_tab, null);
 
+        TextView desc = (TextView) v.findViewById(R.id.feed_event_desc);
 
+        desc.setText(message.get(position));
 
         return v;
     }

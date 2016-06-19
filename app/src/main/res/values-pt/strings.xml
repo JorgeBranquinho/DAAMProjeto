@@ -67,7 +67,7 @@
     <string name="ViewComments">Ver comentários</string>
     <string name="WhosGoing">Quem vai?</string>
     <string name="CreateNewEvent">Criar Novo Evento</string>
-    <string name="LOCALIZAÇÃO" translatable="false">Localização</string>
+    <string name="LOCALIZAÇÃO" translatable="false">Localizacao</string>
     <string name="NOME">Nome</string>
     <string name="title_profile">Perfil</string>
     <string name="title_settings">Definições</string>
@@ -116,4 +116,5 @@
     <string name="criargrupo">Criar Grupo</string>
     <string name="createnevent">Criar novo evento</string>
     <string name="Createngroup">Criar novo grupo</string>
+    <string name="usercreate">Criou</string>
 </resources>

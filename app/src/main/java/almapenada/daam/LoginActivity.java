@@ -303,9 +303,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            if ( isNetworkAvailable() ) {
+                showProgress(true);
+                mAuthTask = new UserLoginTask(email, password);
+                mAuthTask.execute((Void) null);
+            } else {
+                showDialogMessage("Wifi Offline");
+            }
         }
     }
 
@@ -423,7 +427,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return hexString.toString();
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return "";
     }
