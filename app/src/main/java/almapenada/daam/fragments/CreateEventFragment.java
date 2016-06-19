@@ -67,14 +67,15 @@ import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
 import almapenada.daam.utility.ScalingUtilies;
+import almapenada.daam.utility.User;
 
 public class CreateEventFragment extends Fragment {
 
-    private CreateEventFragment self= this;
+    private CreateEventFragment self = this;
     public static Button date_picker;
     public static Button date_end_picker;
     private static final int SELECT_IMAGE = 1;
-    private String filePath="";
+    private String filePath = "";
     private Button event_img;
     private static final int SELECT_PICTURE = 1;
 
@@ -174,7 +175,7 @@ public class CreateEventFragment extends Fragment {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //if(lat.getText().toString().trim().matches(regexStr) && lng.getText().toString().trim().matches(regexStr))
-                            event_location_input.setText(lat.getText().toString() + " " + lng.getText().toString());
+                        event_location_input.setText(lat.getText().toString() + " " + lng.getText().toString());
                         //else event_location_input.setText("invalid");
                     }
                 });
@@ -202,31 +203,33 @@ public class CreateEventFragment extends Fragment {
             }
         });
         event_price.setOnClickListener(new View.OnClickListener() {
-            private boolean checked=false;
+            private boolean checked = false;
+
             @Override
             public void onClick(View v) {
                 if (!checked) {
                     event_price.setChecked(true);
                     event_price_input.setEnabled(true);
-                }else {
+                } else {
                     event_price.setChecked(false);
                     event_price_input.setEnabled(false);
                 }
-                checked=!checked;
+                checked = !checked;
             }
         });
         event_location.setOnClickListener(new View.OnClickListener() {
-            private boolean checked=false;
+            private boolean checked = false;
+
             @Override
             public void onClick(View v) {
                 if (!checked) {
                     event_location.setChecked(true);
                     event_location_input.setEnabled(true);
-                }else {
+                } else {
                     event_location.setChecked(false);
                     event_location_input.setEnabled(false);
                 }
-                checked=!checked;
+                checked = !checked;
             }
         });
         date_picker.setOnClickListener(new View.OnClickListener() {
@@ -259,13 +262,13 @@ public class CreateEventFragment extends Fragment {
         event_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!event_name.getText().toString().equals("")) {
+                if (!event_name.getText().toString().equals("")) {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
-                    String dayOfTheWeek="";
-                    String date="";
-                    String hours="";
-                    if(!date_picker.getText().toString().equals("Pick Date")) {
+                    String dayOfTheWeek = "";
+                    String date = "";
+                    String hours = "";
+                    if (!date_picker.getText().toString().equals("Pick Date")) {
                         String[] datetime = date_picker.getText().toString().split(" ");
 
                         if (datetime.length >= 2)
@@ -274,26 +277,28 @@ public class CreateEventFragment extends Fragment {
                             hours = " - ";
 
                         dayOfTheWeek = getDayOfTheWeek(datetime[0]);
-                        date=datetime[0];
+                        date = datetime[0];
                     }
                     String dateEnd;
-                    if(!date_end_picker.getText().toString().equals("Pick Date") || switch1.isChecked())
-                        dateEnd=date_end_picker.getText().toString();
+                    if (!date_end_picker.getText().toString().equals("Pick Date") || switch1.isChecked())
+                        dateEnd = date_end_picker.getText().toString();
                     else
-                        dateEnd=" - ";
+                        dateEnd = " - ";
 
                     String price;
-                    if(!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
-                        price=event_price_input.getText().toString();
+                    if (!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
+                        price = event_price_input.getText().toString();
                     else
-                        price=" - ";
+                        price = " - ";
 
-                    Event e=new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
+                    Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
+                    CreateEventTask cet = new CreateEventTask(e, event_location_input.getText().toString());
+                    cet.execute((Void) null);
                     database.close();
                     ((DrawerActivity) getActivity()).viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Event name is Empty", Toast.LENGTH_SHORT);
                 }
             }
@@ -324,17 +329,17 @@ public class CreateEventFragment extends Fragment {
     }
 
     private String getDayOfTheWeek(String string) {
-        String dayOfTheWeek="";
+        String dayOfTheWeek = "";
         try {
-            SimpleDateFormat dmy=new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat mdy=new SimpleDateFormat("MM/dd/yyyy");
-            Date date=dmy.parse(string);
+            SimpleDateFormat dmy = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat mdy = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = dmy.parse(string);
             String outputDateStr = mdy.format(date);
             Date d = mdy.parse(outputDateStr);//new Date(outputDateStr);
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
             dayOfTheWeek = sdf.format(d);
         } catch (ParseException e) {
-            dayOfTheWeek=" - ";
+            dayOfTheWeek = " - ";
         }
         return dayOfTheWeek;
     }
@@ -342,12 +347,15 @@ public class CreateEventFragment extends Fragment {
 
     public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-        private int type=-1;
+        private int type = -1;
 
-        public DatePickerFragment2(){};
+        public DatePickerFragment2() {
+        }
+
+        ;
 
         public DatePickerFragment2(int i) {
-            this.type=i;
+            this.type = i;
         }
 
         @Override
@@ -368,19 +376,19 @@ public class CreateEventFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//"yyyy-MM-dd");
             final String formattedDate = sdf.format(c.getTime());
 
-            if(type==0) date_picker.setText(formattedDate);
-            if(type==1) date_end_picker.setText(formattedDate);
+            if (type == 0) date_picker.setText(formattedDate);
+            if (type == 1) date_end_picker.setText(formattedDate);
 
             Calendar mcurrentTime = Calendar.getInstance();
             int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
             int minute = mcurrentTime.get(Calendar.MINUTE);
             TimePickerDialog mTimePicker;
             mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                 @Override
+                @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                     String datetime=formattedDate + " " + selectedHour + ":" + selectedMinute;
-                     if(type==0) date_picker.setText(datetime);
-                     if(type==1) date_end_picker.setText(datetime);
+                    String datetime = formattedDate + " " + selectedHour + ":" + selectedMinute;
+                    if (type == 0) date_picker.setText(datetime);
+                    if (type == 1) date_end_picker.setText(datetime);
                 }
             }, hour, minute, true);
             mTimePicker.setTitle("Select Time");
@@ -419,7 +427,7 @@ public class CreateEventFragment extends Fragment {
                 Uri selectedImageUri = data.getData();
                 if (data != null) {
                     filePath = getPath(selectedImageUri);
-                    filePath = decodeFile(filePath,125,125);
+                    filePath = decodeFile(filePath, 125, 125);
                     Bitmap yourSelectedImage = getImageBitmap(filePath);
                     //Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -433,23 +441,23 @@ public class CreateEventFragment extends Fragment {
     public String getPath(Uri uri) {
         // just some safety built in
         Cursor cursor;
-        if( uri == null ) {
+        if (uri == null) {
             // TODO perform some logging or show user feedback
             return null;
         }
         // try to retrieve the image from the media store first
         // this will only work for images selected from gallery
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String wholeID = DocumentsContract.getDocumentId(uri);
             String id = wholeID.split(":")[1];
             String sel = MediaStore.Images.Media._ID + "=?";
             cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, sel, new String[]{id}, null);
-        }else{
+        } else {
             cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
         }
         //Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if( cursor != null ){
+        if (cursor != null) {
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
@@ -466,7 +474,7 @@ public class CreateEventFragment extends Fragment {
         return bm;
     }
 
-    private String decodeFile(String path,int DESIREDWIDTH, int DESIREDHEIGHT) {
+    private String decodeFile(String path, int DESIREDWIDTH, int DESIREDHEIGHT) {
         String strMyImagePath = null;
         Bitmap scaledBitmap = null;
 
@@ -478,7 +486,7 @@ public class CreateEventFragment extends Fragment {
                 // Part 2: Scale image
                 scaledBitmap = almapenada.daam.utility.ScalingUtilies.createScaledBitmap(unscaledBitmap, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
             } else {
-               if (unscaledBitmap != null && !unscaledBitmap.isRecycled()) {
+                if (unscaledBitmap != null && !unscaledBitmap.isRecycled()) {
                     unscaledBitmap.recycle();
                 }
                 return path;
@@ -511,7 +519,7 @@ public class CreateEventFragment extends Fragment {
                 e.printStackTrace();
             }
             if (scaledBitmap != null && !scaledBitmap.isRecycled()) {
-               scaledBitmap.recycle();
+                scaledBitmap.recycle();
             }
         } catch (Throwable e) {
         }
@@ -525,20 +533,48 @@ public class CreateEventFragment extends Fragment {
 
     class CreateEventTask extends AsyncTask<Void, String, String> {
 
+        private int isFriendsInvitable;
         private String name;
-        private String email;
-        private String password;
-        private String telefone;
-        private String image;
+        private int isPublic;
+        private String WeekDay;
+        private int isPrice;
+        private String Date;
+        private int isEndDate;
+        private int isLocation;
+        private String event_location_input;
+        private String description;
+        private String Price;
+        private String EndDate;
+        private String Hours;
         private String host = "https://eventservice-daam.rhcloud.com";
         private String methodInsert = "/insert/event/";
 
-        public CreateEventTask(String name, String email, String password, String telefone, String image) {
-            this.name = name;
-            this.email = email;
-            this.password = password;
-            this.telefone = telefone;
-            this.image = image;
+        public CreateEventTask(Event e, String event_location_input) {
+            this.name = e.getEventName();
+            this.isPublic = e.isPublic()?1:0;
+            this.WeekDay = e.getWeekDay().toLowerCase();
+            SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat  format2 = new SimpleDateFormat("dd/MM/yyyy");
+            String dataevento="";
+            String dataevento2="";
+            try {
+                Date date = format2.parse(e.getDate());
+                dataevento = format.format(date);
+                Date date2 = format2.parse(e.getEnddate());
+                dataevento2 = format.format(date2);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            this.Date = dataevento;
+            this.isPrice=e.isPrice()?1:0;
+            isEndDate=e.isEndDate()?1:0;
+            isLocation=e.isLocation()?1:0;
+            this.event_location_input=event_location_input;
+            description=e.getDescription();
+            EndDate=dataevento2;
+            isFriendsInvitable=e.isFriendsInvitable()?1:0;
+            Price=e.getPrice();
+            Hours=e.getHours();
         }
 
         @Override
@@ -554,14 +590,29 @@ public class CreateEventFragment extends Fragment {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost post = new HttpPost(host + methodInsert);
 
+                Bundle b = getActivity().getIntent().getExtras();
+                User user = (User) b.getSerializable("User");
+                int id=1;
+                if (user != null) {
+                    id=user.getIdUser();
+                }
+
                 JSONObject json = new JSONObject();
                 json.put("name", name);
-                json.put("email", email);
-                json.put("password", password);
-                json.put("telephone", telefone);
-                json.put("image", image);
-
-                
+                json.put("ispublic", isPublic);
+                json.put("weekday", WeekDay);
+                json.put("date", Date);
+                json.put("isprice", isPrice);
+                json.put("isenddate", isEndDate);
+                json.put("enddate", EndDate);
+                json.put("islocation", isLocation);
+                json.put("location_latlong", event_location_input);
+                json.put("description", description);
+                json.put("isfriendsinvitable", isFriendsInvitable);
+                json.put("imgEvent", "22");
+                json.put("usercreator", id);
+                json.put("price", Price);
+                json.put("hours", Hours);
 
                 String message = json.toString();
 
@@ -590,7 +641,7 @@ public class CreateEventFragment extends Fragment {
                     System.out.println("Resposta: " + jobj.get("status").toString());
 
                     if (jobj.get("status").toString().compareTo("OK") == 0) {
-                        //showDialogMessage("Utilizador criado com sucesso!", true);
+                        System.out.println("evento criado com sucesso!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
