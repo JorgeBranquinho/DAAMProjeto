@@ -51,7 +51,7 @@
     <string name="title_activity_map">Map</string>
     <string name="NOME">Name</string>
     <string name="LOCALIZAÇÃO">Location</string>
-    <string name="site" translatable="false">www.site.org</string>
+    <string name="site" translatable="false">Website</string>
     <string name="p" translatable="false">p</string>
     <string name="email" translatable="false">E-Mail</string>
     <string name="price">"Price: "</string>
@@ -120,4 +120,21 @@
     <string name="DadosLimpos">Data has been cleaned!</string>
     <string name="opcao1">Add new friend</string>
     <string name="opcao2">Create new group</string>
+    <string name="addPeople">Add People</string>
+    <string name="InvitePeople">Friends can invite?</string>
+    <string name="Create2">Create</string>
+    <string name="descricao2">Description</string>
+    <string name="price2">Price</string>
+    <string name="price3">Price:</string>
+    <string name="loc">Location:</string>
+    <string name="loc2">Location</string>
+    <string name="datafim">End Date:</string>
+    <string name="temdatafim">Has end date?</string>
+    <string name="DataInit">Event Date:</string>
+    <string name="pub">Public</string>
+    <string name="nomeevento">Name</string>
+    <string name="descrip">Description:</string>
+    <string name="InsertDescrip">Insert a description</string>
+    <string name="IserLatLng">Insert latitude and longitude</string>
+    <string name="name">Name</string>
 </resources>

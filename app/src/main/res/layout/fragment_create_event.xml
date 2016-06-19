@@ -15,61 +15,67 @@
         android:layout_weight=".16">
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Name"
+            android:text="@string/name"
             android:id="@+id/event_name"
-            android:layout_marginRight="63dp"
-            android:layout_marginEnd="63dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:maxLength="20"
-            android:layout_alignParentEnd="true"
             android:ems="4"
-            android:background="@drawable/edit_text_custom"/>
+            android:background="@drawable/edit_text_custom"
+            android:layout_alignTop="@+id/event_img"
+            android:layout_toRightOf="@+id/event_img"
+            android:layout_toEndOf="@+id/event_img"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:padding="4dp" />
 
         <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/event_img"
-            android:layout_marginLeft="63dp"
-            android:layout_marginStart="63dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="21dp"
             android:background="@drawable/add_img"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </RelativeLayout>
-
-    <TableRow android:layout_width="fill_parent"
-    android:layout_height="wrap_content" android:gravity="center">
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight=".08">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Private"
-            android:id="@+id/eventPrivate"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:checked="true" />
+            android:layout_marginTop="20dp" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
+        <TableRow android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:gravity="center"
+            android:layout_below="@+id/event_name"
+            android:layout_alignLeft="@+id/event_name"
+            android:layout_alignRight="@+id/event_name">
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Public"
-            android:id="@+id/eventPublic"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:checked="false" />
-    </TableRow>
+            android:layout_gravity="center_horizontal"
+            android:layout_weight=".08">
 
-    <RelativeLayout
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/EventPrivate"
+                android:id="@+id/eventPrivate"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:checked="true" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pub"
+                android:id="@+id/eventPublic"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:checked="false" />
+        </TableRow>
+    </RelativeLayout>
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:gravity="center">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -79,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Event Date:"
+            android:text="@string/DataInit"
             android:id="@+id/event_date"
             android:layout_marginLeft="55dp"
             android:layout_centerVertical="true"
@@ -98,12 +104,12 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+    </TableRow>
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Has end date?"
+        android:text="@string/temdatafim"
         android:id="@+id/switch1"
         android:layout_gravity="center_horizontal"
         android:layout_weight=".08"
@@ -119,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="End Date:"
+            android:text="@string/datafim"
             android:id="@+id/event_end"
             android:layout_marginLeft="56dp"
             android:layout_centerVertical="true"
@@ -154,7 +160,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Location:"
+            android:text="@string/loc"
             android:id="@+id/event_location"
             android:layout_toLeftOf="@+id/event_location_input"
             android:layout_toStartOf="@+id/event_location_input"
@@ -175,7 +181,7 @@
             android:maxLength="20"
             android:enabled="false"
             android:layout_weight="1.0"
-            android:text="Location"
+            android:text="@string/loc2"
             android:ems="4"
             android:layout_alignTop="@+id/event_location"
             android:textSize="11dp"
@@ -193,7 +199,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Price:"
+            android:text="@string/price3"
             android:id="@+id/event_price"
             android:layout_marginLeft="55dp"
             android:layout_centerVertical="true"
@@ -212,7 +218,6 @@
             android:layout_alignParentEnd="true"
             android:maxLength="20"
             android:layout_weight="1.0"
-            android:text="Price"
             android:enabled="false"
             android:ems="4"
             android:background="@drawable/edit_text_custom"/>
@@ -228,7 +233,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Description:"
+            android:text="@string/descrip"
             android:id="@+id/event_description"
             android:layout_marginLeft="55dp"
             android:layout_centerVertical="true"
@@ -245,7 +250,6 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:text="Description"
             android:ems="4"
             android:singleLine="true"
             android:background="@drawable/edit_text_custom"/>
@@ -254,15 +258,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add People"
+        android:text="@string/addPeople"
         android:id="@+id/event_people"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/myyellowbutton"
         android:layout_weight=".04"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Friends can invite?"
+        android:text="@string/InvitePeople"
         android:id="@+id/event_invitable_friends"
         android:layout_gravity="center_horizontal"
         android:checked="true"
@@ -271,8 +276,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create"
+        android:text="@string/Create2"
         android:id="@+id/event_done"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/myyellowbutton"
         android:layout_weight=".04"/>
 </LinearLayout>

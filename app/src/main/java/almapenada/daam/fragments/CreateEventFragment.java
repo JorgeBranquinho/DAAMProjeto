@@ -34,6 +34,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -117,7 +118,7 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 final EditText edittext = new EditText(getContext());
-                alert.setTitle("Insert a description");
+                alert.setTitle(R.string.InsertDescrip);
                 alert.setView(edittext);
                 edittext.setText(event_description_input.getText());
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -154,7 +155,7 @@ public class CreateEventFragment extends Fragment {
         event_price_input.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_price_input.setText("");
+                pricePicker(event_price_input);
             }
         });
         event_location_input.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +169,7 @@ public class CreateEventFragment extends Fragment {
                 lng.setText("longitude");
                 LinearLayout layout = new LinearLayout(getContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
-                alert.setTitle("Insert latitude and longitude");
+                alert.setTitle(R.string.IserLatLng);
                 layout.addView(lat);
                 layout.addView(lng);
                 alert.setView(layout);
@@ -648,5 +649,40 @@ public class CreateEventFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void pricePicker(final TextView event_price_input){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View theView = inflater.inflate(R.layout.number_picker_dialog, null);
+        final NumberPicker unit_euro = (NumberPicker) theView.findViewById(R.id.euro_picker);
+        final NumberPicker cent = (NumberPicker) theView.findViewById(R.id.cent_picker);
+        builder.setView(theView)
+                .setPositiveButton(R.string.aceitar,new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        event_price_input.setText(unit_euro.getValue() + "."+cent.getValue()*5);
+                    }
+                }).setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                event_price_input.setText(R.string.PickPrice);
+                dialog.dismiss();
+            }
+        });
+        unit_euro.setMinValue(0);
+        unit_euro.setMaxValue(99);
+        String cents[] = new String[20];
+        for(int i = 0;i < 100; i+=5) {
+            if( i < 10 )
+                cents[i/5] = "0"+i;
+            else
+                cents[i/5] = ""+i;
+        }
+        cent.setDisplayedValues(cents);
+        cent.setMinValue(0);
+        cent.setMaxValue(19);
+        cent.setValue(0);
+        builder.show();
     }
 }

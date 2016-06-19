@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
             email.setText(user.getEmail());
             email.setClickable(false);
             email.setFocusable(false);
-            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
+            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL()); else defaultimg();
         }
 
 
@@ -121,7 +121,11 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
-
+    private void defaultimg() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            image.setBackground(getResources().getDrawable(R.drawable.ninja));
+        }
+    }
 
 
     //Galeria de fotos

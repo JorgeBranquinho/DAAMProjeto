@@ -87,4 +87,21 @@
     <string name="DadosLimpos">Dados limpos com sucesso!</string>
     <string name="opcao1">Adicionar novo amigo</string>
     <string name="opcao2">Criar novo grupo</string>
+    <string name="addPeople">Adicionar Pessoas</string>
+    <string name="InvitePeople">Amigos convidam?</string>
+    <string name="Create2">Criar</string>
+    <string name="descricao2">Descrição</string>
+    <string name="price2">Preço</string>
+    <string name="price3">Preço:</string>
+    <string name="loc">Localização:</string>
+    <string name="loc2">Localização</string>
+    <string name="temdatafim">Tem data de fim?</string>
+    <string name="datafim">Data Fim:</string>
+    <string name="DataInit">Data Inicio:</string>
+    <string name="pub">Publico</string>
+    <string name="nomeevento">Nome</string>
+    <string name="descrip">Descrição:</string>
+    <string name="InsertDescrip">Insert a description</string>
+    <string name="IserLatLng">Insert latitude and longitude</string>
+    <string name="name">Nome</string>
 </resources>

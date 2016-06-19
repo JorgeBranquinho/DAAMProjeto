@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="www....blogspot.com"
+                android:text="@string/site"
                 android:id="@+id/textView2"
                 android:textAlignment="center"
                 android:textSize="20dp" />
