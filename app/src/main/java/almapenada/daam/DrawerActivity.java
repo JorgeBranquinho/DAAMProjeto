@@ -40,6 +40,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.net.URL;
 
+import almapenada.daam.fragments.AboutFragment;
 import almapenada.daam.fragments.CreateEventFragment;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
@@ -248,8 +249,7 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id_menuItem == R.id.nav_settings) {
             viewSettings(user);
         } else if (id_menuItem == R.id.nav_about) {
-            Intent intent = new Intent(this, HelpActivity.class);
-            startActivity(intent);
+            viewFragment(new AboutFragment(), getResources().getString(R.string.title_about), false, -1);
         } else if (id_menuItem == R.id.log_out) {
             LoginManager.getInstance().logOut();
             finish();

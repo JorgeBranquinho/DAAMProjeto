@@ -116,4 +116,6 @@
     <string name="push">Notificações Push</string>
     <string name="infp">Mostrar Informação Privada</string>
     <string name="reset">Reset Dados</string>
+    <string name="notificacaoTitulo">New follower!</string>
+    <string name="DadosLimpos">Data has been cleaned!</string>
 </resources>
