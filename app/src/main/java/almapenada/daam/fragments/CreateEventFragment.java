@@ -45,9 +45,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,10 +59,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
@@ -68,6 +73,7 @@ import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
 import almapenada.daam.utility.ScalingUtilies;
+import almapenada.daam.utility.SuggestionsDatabase;
 import almapenada.daam.utility.User;
 
 public class CreateEventFragment extends Fragment {
@@ -79,6 +85,10 @@ public class CreateEventFragment extends Fragment {
     private String filePath = "";
     private Button event_img;
     private static final int SELECT_PICTURE = 1;
+    private List<User> friends = new ArrayList<User>();
+    private boolean[] friendsarray_going;
+    private String[] friendsarray;
+    private boolean sync=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,6 +112,41 @@ public class CreateEventFragment extends Fragment {
         final CheckBox event_invitable_friends = (CheckBox) v.findViewById(R.id.event_invitable_friends);
         Button event_done = (Button) v.findViewById(R.id.event_done);
 
+        new DownloadFriendsTask().execute();
+
+        event_people.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sync) {
+                    new AlertDialog.Builder(getActivity())
+                            .setMultiChoiceItems(friendsarray,
+                                    friendsarray_going,
+                                    new DialogInterface.OnMultiChoiceClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton,
+                                                            boolean isChecked) {
+
+                                            if (isChecked) friendsarray_going[whichButton] = true;
+                                            else friendsarray_going[whichButton] = false;
+                                        }
+                                    })
+                            .setPositiveButton(R.string.aceitar,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                    /* User clicked Yes so do some stuff */
+                                        }
+                                    })
+                            .setNegativeButton(R.string.cancelar,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                    /* User clicked No so do some stuff */
+                                        }
+                                    })
+                            .show();
+                }
+            }
+        });
 
         event_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -552,12 +597,12 @@ public class CreateEventFragment extends Fragment {
 
         public CreateEventTask(Event e, String event_location_input) {
             this.name = e.getEventName();
-            this.isPublic = e.isPublic()?1:0;
+            this.isPublic = e.isPublic() ? 1 : 0;
             this.WeekDay = e.getWeekDay().toLowerCase();
-            SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat  format2 = new SimpleDateFormat("dd/MM/yyyy");
-            String dataevento="";
-            String dataevento2="";
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
+            String dataevento = "";
+            String dataevento2 = "";
             try {
                 Date date = format2.parse(e.getDate());
                 dataevento = format.format(date);
@@ -567,15 +612,15 @@ public class CreateEventFragment extends Fragment {
                 e1.printStackTrace();
             }
             this.Date = dataevento;
-            this.isPrice=e.isPrice()?1:0;
-            isEndDate=e.isEndDate()?1:0;
-            isLocation=e.isLocation()?1:0;
-            this.event_location_input=event_location_input;
-            description=e.getDescription();
-            EndDate=dataevento2;
-            isFriendsInvitable=e.isFriendsInvitable()?1:0;
-            Price=e.getPrice();
-            Hours=e.getHours();
+            this.isPrice = e.isPrice() ? 1 : 0;
+            isEndDate = e.isEndDate() ? 1 : 0;
+            isLocation = e.isLocation() ? 1 : 0;
+            this.event_location_input = event_location_input;
+            description = e.getDescription();
+            EndDate = dataevento2;
+            isFriendsInvitable = e.isFriendsInvitable() ? 1 : 0;
+            Price = e.getPrice();
+            Hours = e.getHours();
         }
 
         @Override
@@ -593,9 +638,9 @@ public class CreateEventFragment extends Fragment {
 
                 Bundle b = getActivity().getIntent().getExtras();
                 User user = (User) b.getSerializable("User");
-                int id=1;
+                int id = 1;
                 if (user != null) {
-                    id=user.getIdUser();
+                    id = user.getIdUser();
                 }
 
                 JSONObject json = new JSONObject();
@@ -651,17 +696,17 @@ public class CreateEventFragment extends Fragment {
         }
     }
 
-    private void pricePicker(final TextView event_price_input){
+    private void pricePicker(final TextView event_price_input) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View theView = inflater.inflate(R.layout.number_picker_dialog, null);
         final NumberPicker unit_euro = (NumberPicker) theView.findViewById(R.id.euro_picker);
         final NumberPicker cent = (NumberPicker) theView.findViewById(R.id.cent_picker);
         builder.setView(theView)
-                .setPositiveButton(R.string.aceitar,new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.aceitar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        event_price_input.setText(unit_euro.getValue() + "."+cent.getValue()*5);
+                        event_price_input.setText(unit_euro.getValue() + "." + cent.getValue() * 5);
                     }
                 }).setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
             @Override
@@ -673,16 +718,76 @@ public class CreateEventFragment extends Fragment {
         unit_euro.setMinValue(0);
         unit_euro.setMaxValue(99);
         String cents[] = new String[20];
-        for(int i = 0;i < 100; i+=5) {
-            if( i < 10 )
-                cents[i/5] = "0"+i;
+        for (int i = 0; i < 100; i += 5) {
+            if (i < 10)
+                cents[i / 5] = "0" + i;
             else
-                cents[i/5] = ""+i;
+                cents[i / 5] = "" + i;
         }
         cent.setDisplayedValues(cents);
         cent.setMinValue(0);
         cent.setMaxValue(19);
         cent.setValue(0);
         builder.show();
+    }
+
+    private class DownloadFriendsTask extends AsyncTask<URL, Void, Void> {
+
+        protected Void doInBackground(URL... url) {
+            String response = "";
+            Bundle b = getActivity().getIntent().getExtras();
+            User user = (User) b.getSerializable("User");
+            //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/friends/byUser/" + user.getIdUser()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+                jsonToUser(response);
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            friendsarray = new String[friends.size()];
+            friendsarray_going = new boolean[ friends.size()];
+            int i = 0;
+            for (User x : friends) {
+                friendsarray[i] = x.getFirstName() + " " + x.getLastName();
+                friendsarray_going[i] = false;
+                i++;
+            }
+            sync=true;
+        }
+    }
+
+    private void jsonToUser(String response) {
+        JSONObject jobj = null;
+        try {
+            jobj = new JSONObject(response);
+            if (jobj.get("status").toString().compareTo("OK") == 0) {
+                JSONArray poi = jobj.getJSONArray("teste");
+                for (int i = 0; i < poi.length(); i++) {
+                    JSONObject t_poi = poi.getJSONObject(i);
+                    User x = new User();
+                    x.setIdUser(Integer.parseInt(t_poi.getString("id")));
+                    x.setFirstName(t_poi.getString("name").substring(0, t_poi.getString("name").lastIndexOf(" ")));
+                    x.setLastName(t_poi.getString("name").substring(t_poi.getString("name").lastIndexOf(" ") + 1));
+                    x.setEmail(t_poi.getString("email"));
+                    x.setPhone(t_poi.getString("telephone"));
+                    if (t_poi.getString("description") != "null")
+                        x.setDescricao(t_poi.getString("description"));
+                    x.setGender(t_poi.getString("gender"));
+                    friends.add(x);
+                }
+            }
+            //dummy_users = (User[]) friends.toArray();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

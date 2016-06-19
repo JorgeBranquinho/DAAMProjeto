@@ -61,6 +61,7 @@ import java.util.List;
 
 import almapenada.daam.fragments.AboutFragment;
 import almapenada.daam.fragments.CreateEventFragment;
+import almapenada.daam.fragments.CreateNewGroup;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
@@ -120,18 +121,22 @@ public class DrawerActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (getTitle().equals(getString(R.string.title_friends))) {
-                    String[] opcoes = {getString(R.string.opcao1), getString(R.string.opcao2)};
+                    final String[] opcoes = {getString(R.string.opcao1), getString(R.string.opcao2)};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setItems(opcoes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            if(which==0){
+                                viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
+                            }else{
+                                viewFragment(new CreateNewGroup(), getString(R.string.Createngroup), false, -1);
+                            }
                         }
                     });
                     builder.show();
                 }else
-                    viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
+                    viewFragment(new CreateEventFragment(), getString(R.string.createnevent), false, -1);
             }
         });
 
