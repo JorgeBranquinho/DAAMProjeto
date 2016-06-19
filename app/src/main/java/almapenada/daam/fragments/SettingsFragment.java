@@ -28,12 +28,14 @@ public class SettingsFragment extends Fragment {
     private Switch push;
     private Switch infp;
     private Button btn;
-    private String title = getResources().getString(R.string.notificacaoTitulo);
+    private String title = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        title=rootView.getResources().getString(R.string.notificacaoTitulo);
 
         Bundle b = getActivity().getIntent().getExtras();
         user = (User) b.getSerializable("User");
@@ -57,7 +59,10 @@ public class SettingsFragment extends Fragment {
                 mp = (NotificationManager) getActivity().getSystemService(getContext().NOTIFICATION_SERVICE);
 
                 PendingIntent pending = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, new Intent(), 0);
-                Notification notify = new Notification.Builder(getActivity().getApplicationContext()).setContentTitle(title).setContentText("Event Me").setSmallIcon(R.drawable.logoo).setWhen(System.currentTimeMillis()).setContentIntent(pending).build();
+                Notification notify = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    notify = new Notification.Builder(getActivity().getApplicationContext()).setContentTitle(title).setContentText("Event Me").setSmallIcon(R.drawable.logoo).setWhen(System.currentTimeMillis()).setContentIntent(pending).build();
+                }
 
                 mp.notify(0, notify);
             }

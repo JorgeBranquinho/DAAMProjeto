@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,8 @@ public class ProfileFragment extends Fragment {
     private View rootView;
     private EditText username;
     private EditText email;
+    private EditText telele;
+    private String imei;
 
 
     @Override
@@ -68,6 +71,7 @@ public class ProfileFragment extends Fragment {
         username = (EditText) rootView.findViewById(R.id.txtName);
         email = (EditText) rootView.findViewById(R.id.email);
         image = (Button) rootView.findViewById(R.id.image);
+        telele = (EditText) rootView.findViewById(R.id.txtNumber);
 
         Bundle b = getActivity().getIntent().getExtras();
         user = (User) b.getSerializable("User");
@@ -78,6 +82,9 @@ public class ProfileFragment extends Fragment {
             email.setText(user.getEmail());
             email.setClickable(false);
             email.setFocusable(false);
+            TelephonyManager tm = (TelephonyManager)getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
+            imei = tm.getDeviceId();
+            telele.setText(tm.getLine1Number());
             if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL()); else defaultimg();
         }
 

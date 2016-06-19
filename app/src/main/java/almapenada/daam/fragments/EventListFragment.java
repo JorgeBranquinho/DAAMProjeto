@@ -54,6 +54,7 @@ public class EventListFragment extends Fragment {
     private MyLocationListener locationListener;
     private boolean track = false;
     private Location userLocation = null;
+    private User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +67,9 @@ public class EventListFragment extends Fragment {
         populateEventList(database.getAllEvents());
         populateEventListRemote();
 
-        adapter = new EventAdapter(getActivity(), full_event_list);
+        Bundle b = getActivity().getIntent().getExtras();
+        user = (User) b.getSerializable("User");
+        adapter = new EventAdapter(getActivity(), full_event_list, user);
 
         event_list = (ListView) rootView.findViewById(R.id.event_list);
         event_list.setAdapter(adapter);
@@ -166,7 +169,7 @@ public class EventListFragment extends Fragment {
                 return -1;
             }
         });
-        if (adapter == null) adapter = new EventAdapter(getActivity(), events_to_display);
+        if (adapter == null) adapter = new EventAdapter(getActivity(), events_to_display, user);
         event_list.setAdapter(adapter);
     }
 
@@ -192,7 +195,7 @@ public class EventListFragment extends Fragment {
                     return userLocation.distanceTo(location2) < userLocation.distanceTo(location1) ? -1 : 1;
                 }
             });
-            adapter = new EventAdapter(getActivity(), events_to_display);
+            adapter = new EventAdapter(getActivity(), events_to_display, user);
             event_list.setAdapter(adapter);
         } else Toast.makeText(getContext(), R.string.GPSNotFound, Toast.LENGTH_SHORT).show();
     }
@@ -208,7 +211,7 @@ public class EventListFragment extends Fragment {
                 return Integer.parseInt(String.valueOf(event2.getPrice())) < Integer.parseInt(String.valueOf(event1.getPrice())) ? -1 : 1;
             }
         });
-        adapter = new EventAdapter(getActivity(), events_to_display);
+        adapter = new EventAdapter(getActivity(), events_to_display, user);
         event_list.setAdapter(adapter);
     }
 
@@ -221,7 +224,7 @@ public class EventListFragment extends Fragment {
                 iter.remove();
             }
         }
-        adapter = new EventAdapter(getActivity(), events_to_display);
+        adapter = new EventAdapter(getActivity(), events_to_display, user);
         event_list.setAdapter(adapter);
     }
 
@@ -234,7 +237,7 @@ public class EventListFragment extends Fragment {
                 iter.remove();
             }
         }
-        adapter = new EventAdapter(getActivity(), events_to_display);
+        adapter = new EventAdapter(getActivity(), events_to_display, user);
         event_list.setAdapter(adapter);
     }
 
@@ -280,7 +283,7 @@ public class EventListFragment extends Fragment {
         full_event_list = new ArrayList<Event>();
         database = new EventsDatabase(getActivity());
         populateEventList(database.getAllEvents());
-        adapter = new EventAdapter(getActivity(), full_event_list);
+        adapter = new EventAdapter(getActivity(), full_event_list, user);
         event_list.setAdapter(adapter);
         database.close();
     }

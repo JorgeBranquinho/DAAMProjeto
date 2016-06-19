@@ -5,32 +5,52 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.LayoutInflater;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.TextView;
+        import android.widget.ListView;
+        import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+        import org.apache.http.HttpResponse;
+        import org.apache.http.client.HttpClient;
+        import org.apache.http.client.methods.HttpGet;
+        import org.apache.http.client.methods.HttpPost;
+        import org.apache.http.entity.StringEntity;
+        import org.apache.http.impl.client.DefaultHttpClient;
+        import org.json.JSONException;
+        import org.json.JSONObject;
 
-import almapenada.daam.DrawerActivity;
+        import java.io.BufferedReader;
+        import java.io.InputStreamReader;
+        import java.net.URL;
+        import java.text.ParseException;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Date;
+
+        import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 
 public class EventAdapter extends BaseAdapter {
 
+    private User u;
     private EventsDatabase database;
     private EventAdapter self;
     private Activity activity;
     private ArrayList<Event> data;
     private static LayoutInflater inflater=null;
 
-    public EventAdapter(Activity a, ArrayList<Event> d) {
+    public EventAdapter(Activity a, ArrayList<Event> d, User u) {
         self=this;
         activity = a;
         data=d;
+        this.u=u;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //database = new EventsDatabase(activity);
     }
@@ -96,6 +116,7 @@ public class EventAdapter extends BaseAdapter {
                                             database.close();//para escrever as mudanças nas DB
                                             database = new EventsDatabase(activity);//reabrir ligacao
                                             data.remove(event_position);
+
                                             self.notifyDataSetChanged();
                                             avoid_double_click = false;
                                             dialog.dismiss();
@@ -178,5 +199,27 @@ public class EventAdapter extends BaseAdapter {
         data.get(position).setId(position);
 
         return vi;
+    }
+
+    private class DownloadFriendsTask extends AsyncTask<URL, Void, Void> {
+
+        protected Void doInBackground(URL... url) {
+            String response = "";
+            //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/delete/event/" + u.getIdUser()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 }
