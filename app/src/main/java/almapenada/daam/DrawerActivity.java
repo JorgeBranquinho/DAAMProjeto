@@ -110,7 +110,7 @@ public class DrawerActivity extends AppCompatActivity
             TextView nav_user2 = (TextView) hView.findViewById(R.id.nomepqueno);
             nav_user2.setText("");
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
-            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
+            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL()); else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) nav_img.setBackground(getResources().getDrawable(R.drawable.ninja));
         }
 
         // Botao que flutoa na actividade
