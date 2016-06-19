@@ -118,4 +118,6 @@
     <string name="reset">Reset Dados</string>
     <string name="notificacaoTitulo">New follower!</string>
     <string name="DadosLimpos">Data has been cleaned!</string>
+    <string name="opcao1">Add new friend</string>
+    <string name="opcao2">Create new group</string>
 </resources>

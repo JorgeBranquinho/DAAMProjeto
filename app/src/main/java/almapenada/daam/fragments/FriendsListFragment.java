@@ -80,25 +80,6 @@ public class FriendsListFragment extends Fragment {
         //createDummys();
         new DownloadFriendsTask().execute();
 
-
-
-        /*for ( int i = 0 ; i < dummy_users.length ; i++ ) {
-            friends_list_images[i] = rootView.getResources().getDrawable(R.drawable.user);
-        }*/
-
-        //adapter = new CustomRowAdapter(getActivity(), dummy_users, true, getActivity());
-        //list_friends.setAdapter(adapter);
-
-        /*list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((DrawerActivity)(getActivity())).viewMyProfile(adapter.getItem(position));
-                //Toast.makeText(getContext(), "Hello " + friends_list_names[position], Toast.LENGTH_LONG).show();
-            }
-        });*/
-
-
         return rootView;
     }
 
