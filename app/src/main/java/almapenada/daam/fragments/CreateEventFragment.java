@@ -1,5 +1,6 @@
 package almapenada.daam.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -33,6 +34,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
@@ -79,8 +81,8 @@ import almapenada.daam.utility.User;
 public class CreateEventFragment extends Fragment {
 
     private CreateEventFragment self = this;
-    public static Button date_picker;
-    public static Button date_end_picker;
+    public static ImageButton date_picker;
+    public static ImageButton date_end_picker;
     private static final int SELECT_IMAGE = 1;
     private String filePath = "";
     private Button event_img;
@@ -89,6 +91,9 @@ public class CreateEventFragment extends Fragment {
     private boolean[] friendsarray_going;
     private String[] friendsarray;
     private boolean sync=false;
+    private String date="";
+    private String date_end="";
+    public Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,10 +106,10 @@ public class CreateEventFragment extends Fragment {
         final RadioButton eventPublic = (RadioButton) v.findViewById(R.id.eventPublic);
         final RadioButton event_price = (RadioButton) v.findViewById(R.id.event_price);
         final RadioButton event_location = (RadioButton) v.findViewById(R.id.event_location);
-        date_picker = (Button) v.findViewById(R.id.date_picker);
+        date_picker = (ImageButton) v.findViewById(R.id.date_picker);
         final Switch switch1 = (Switch) v.findViewById(R.id.switch1);
         final TextView event_end = (TextView) v.findViewById(R.id.event_end);
-        date_end_picker = (Button) v.findViewById(R.id.date_end_picker);
+        date_end_picker = (ImageButton) v.findViewById(R.id.date_end_picker);
         final Button event_location_input = (Button) v.findViewById(R.id.event_location_input);
         final EditText event_price_input = (EditText) v.findViewById(R.id.event_price_input);
         final EditText event_description_input = (EditText) v.findViewById(R.id.event_description_input);
@@ -112,6 +117,7 @@ public class CreateEventFragment extends Fragment {
         final CheckBox event_invitable_friends = (CheckBox) v.findViewById(R.id.event_invitable_friends);
         Button event_done = (Button) v.findViewById(R.id.event_done);
 
+        activity=getActivity();
         new DownloadFriendsTask().execute();
 
         event_people.setOnClickListener(new View.OnClickListener() {
@@ -281,7 +287,7 @@ public class CreateEventFragment extends Fragment {
         date_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment picker = new DatePickerFragment2(0);
+                DialogFragment picker = new DatePickerFragment2(0, activity);
                 picker.show(getFragmentManager(), "datePicker");
             }
         });
@@ -300,7 +306,7 @@ public class CreateEventFragment extends Fragment {
         date_end_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment picker = new DatePickerFragment2(1);
+                DialogFragment picker = new DatePickerFragment2(1,activity);
                 picker.show(getFragmentManager(), "datePicker");
             }
         });
@@ -312,10 +318,12 @@ public class CreateEventFragment extends Fragment {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
                     String dayOfTheWeek = "";
-                    String date = "";
-                    String hours = "";
-                    if (!date_picker.getText().toString().equals("Pick Date")) {
-                        String[] datetime = date_picker.getText().toString().split(" ");
+                    Bundle b = getActivity().getIntent().getExtras();
+                    String date = b.getString("date");
+                    String hours = b.getString("dateend");
+                    if (date!="" && date!=null) {
+                        //System.out.println("ueueue" + date);
+                        String[] datetime = date.toString().split(" ");
 
                         if (datetime.length >= 2)
                             hours = datetime[1];
@@ -325,11 +333,6 @@ public class CreateEventFragment extends Fragment {
                         dayOfTheWeek = getDayOfTheWeek(datetime[0]);
                         date = datetime[0];
                     }
-                    String dateEnd;
-                    if (!date_end_picker.getText().toString().equals("Pick Date") || switch1.isChecked())
-                        dateEnd = date_end_picker.getText().toString();
-                    else
-                        dateEnd = " - ";
 
                     String price;
                     if (!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
@@ -337,7 +340,8 @@ public class CreateEventFragment extends Fragment {
                     else
                         price = " - ";
 
-                    Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
+
+                    Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), date_end, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
                     CreateEventTask cet = new CreateEventTask(e, event_location_input.getText().toString());
@@ -390,19 +394,40 @@ public class CreateEventFragment extends Fragment {
         return dayOfTheWeek;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getDate_end() {
+        return date_end;
+    }
+
+    public void setDate_end(String date_end) {
+        this.date_end = date_end;
+    }
+
 
     public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+        private final Activity activity;
         private int type = -1;
+        private String date;
+        private String date_end;
 
-        public DatePickerFragment2() {
+        public DatePickerFragment2(int i, Activity activity) {
+            this.type = i;
+            this.activity=activity;
         }
 
         ;
 
-        public DatePickerFragment2(int i) {
-            this.type = i;
-        }
+        //public DatePickerFragment2(int i) {
+            //this.type = i;
+        //}
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -415,15 +440,17 @@ public class CreateEventFragment extends Fragment {
         }
 
         @Override
-        public void onDateSet(DatePicker view, int year, int month, int day) {
+        public void onDateSet(final DatePicker view, int year, int month, int day) {
             Calendar c = Calendar.getInstance();
             c.set(year, month, day);
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");//"yyyy-MM-dd");
             final String formattedDate = sdf.format(c.getTime());
 
-            if (type == 0) date_picker.setText(formattedDate);
-            if (type == 1) date_end_picker.setText(formattedDate);
+            Bundle b = activity.getIntent().getExtras();
+            if (view.getId() == R.id.event_date) b.putString("date", formattedDate);//date=formattedDate;//date_picker.setText(formattedDate);
+            if (view.getId() == R.id.event_end) b.putString("dateend", formattedDate);//date_end=formattedDate;
+
 
             Calendar mcurrentTime = Calendar.getInstance();
             int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
@@ -433,8 +460,9 @@ public class CreateEventFragment extends Fragment {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     String datetime = formattedDate + " " + selectedHour + ":" + selectedMinute;
-                    if (type == 0) date_picker.setText(datetime);
-                    if (type == 1) date_end_picker.setText(datetime);
+                    Bundle b = activity.getIntent().getExtras();
+                    if (view.getId() == R.id.event_date) b.putString("date", datetime);
+                    if (view.getId() == R.id.event_end) b.putString("dateend", datetime);
                 }
             }, hour, minute, true);
             mTimePicker.setTitle("Select Time");

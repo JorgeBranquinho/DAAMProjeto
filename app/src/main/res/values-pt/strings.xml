@@ -87,7 +87,7 @@
     <string name="DadosLimpos">Dados limpos com sucesso!</string>
     <string name="opcao1">Adicionar novo amigo</string>
     <string name="opcao2">Criar novo grupo</string>
-    <string name="addPeople">Adicionar Pessoas</string>
+    <string name="addPeople">  Adicionar Pessoas  </string>
     <string name="InvitePeople">Amigos convidam?</string>
     <string name="Create2">Criar</string>
     <string name="descricao2">Descrição</string>
@@ -114,6 +114,6 @@
     <string name="cell">Telemóvel:</string>
     <string name="submit">Submeter</string>
     <string name="criargrupo">Criar Grupo</string>
-    <string name="createnevent">Create New Event</string>
-    <string name="Createngroup">Create New Group</string>
+    <string name="createnevent">Criar novo evento</string>
+    <string name="Createngroup">Criar novo grupo</string>
 </resources>

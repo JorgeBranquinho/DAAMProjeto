@@ -4,25 +4,23 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CreateEventFragment"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="#fffaea">
 
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="114dp"
         android:layout_gravity="center_horizontal"
-        android:layout_weight=".16">
+        android:layout_weight="0.02">
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/name"
             android:id="@+id/event_name"
             android:maxLength="20"
             android:ems="4"
-            android:background="@drawable/edit_text_custom"
             android:layout_alignTop="@+id/event_img"
             android:layout_toRightOf="@+id/event_img"
             android:layout_toEndOf="@+id/event_img"
@@ -35,19 +33,18 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/event_img"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="21dp"
-            android:background="@drawable/add_img"
+            android:background="@drawable/add_file"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="20dp" />
+            android:layout_marginLeft="20dp" />
 
         <TableRow android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:gravity="center"
             android:layout_below="@+id/event_name"
             android:layout_alignLeft="@+id/event_name"
-            android:layout_alignRight="@+id/event_name">
+            android:layout_alignRight="@+id/event_name"
+            android:layout_marginTop="5dp">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -73,13 +70,14 @@
                 android:layout_alignParentEnd="true"
                 android:checked="false" />
         </TableRow>
+
     </RelativeLayout>
-    <TableRow android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:gravity="center">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight=".08">
+        android:layout_height="60dp"
+        android:layout_below="@+id/event_img"
+        android:layout_weight="0.01">
 
         <TextView
             android:layout_width="wrap_content"
@@ -87,39 +85,20 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/DataInit"
             android:id="@+id/event_date"
-            android:layout_marginLeft="55dp"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="55dp" />
+            android:layout_marginLeft="20dp" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pick Date"
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:id="@+id/date_picker"
-            android:layout_marginRight="58dp"
-            android:layout_marginEnd="58dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-    </TableRow>
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/temdatafim"
-        android:id="@+id/switch1"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight=".08"
-        android:checked="false" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight=".08">
+            android:layout_toRightOf="@+id/event_date"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/events"
+            android:adjustViewBounds="false"
+            android:baselineAlignBottom="false" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -127,34 +106,35 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/datafim"
             android:id="@+id/event_end"
-            android:layout_marginLeft="56dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="56dp"
             android:layout_weight="1.0"
-            android:enabled="false" />
+            android:enabled="false"
+            android:layout_toRightOf="@+id/event_date"
+            android:layout_marginLeft="55dp" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/date_end_picker"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/event_end"
+            android:background="@drawable/events" />
+
+        <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick Date"
-            android:id="@+id/date_end_picker"
-            android:layout_marginRight="49dp"
-            android:layout_marginEnd="49dp"
-            android:enabled="false"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_weight="1.0"
-            android:layout_alignParentEnd="true" />
+            android:id="@+id/switch1"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight=".08"
+            android:checked="false"
+            android:layout_below="@+id/event_date"
+            android:layout_marginTop="5dp"
+            android:layout_alignLeft="@+id/event_end" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_weight=".08">
+        android:layout_weight="0.09">
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -162,38 +142,21 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/loc"
             android:id="@+id/event_location"
-            android:layout_toLeftOf="@+id/event_location_input"
-            android:layout_toStartOf="@+id/event_location_input"
-            android:layout_marginLeft="55dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="55dp"/>
+            android:layout_marginLeft="20dp" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/event_location_input"
-            android:layout_marginRight="58dp"
-            android:layout_marginEnd="58dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:maxLength="20"
             android:enabled="false"
             android:layout_weight="1.0"
             android:text="@string/loc2"
             android:ems="4"
-            android:layout_alignTop="@+id/event_location"
             android:textSize="11dp"
-            android:layout_alignBottom="@+id/event_location" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight=".08">
+            android:layout_toRightOf="@+id/event_location"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="60dp" />
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -201,33 +164,18 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/price3"
             android:id="@+id/event_price"
-            android:layout_marginLeft="55dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="55dp"/>
+            android:layout_below="@+id/event_location"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/event_price_input"
-            android:layout_marginRight="58dp"
-            android:layout_marginEnd="58dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:maxLength="20"
-            android:layout_weight="1.0"
-            android:enabled="false"
-            android:ems="4"
-            android:background="@drawable/edit_text_custom"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight=".08">
+            android:layout_toRightOf="@+id/event_price"
+            android:layout_marginRight="20dp"
+            android:layout_alignBottom="@+id/event_price"
+            android:layout_alignLeft="@+id/event_description_input" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -235,50 +183,60 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/descrip"
             android:id="@+id/event_description"
-            android:layout_marginLeft="55dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="55dp" />
+            android:layout_below="@+id/event_price"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/event_description_input"
-            android:layout_marginRight="58dp"
-            android:layout_marginEnd="58dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:ems="4"
-            android:singleLine="true"
-            android:background="@drawable/edit_text_custom"/>
+            android:singleLine="false"
+            android:layout_alignBottom="@+id/event_description"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/addPeople"
-        android:id="@+id/event_people"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/myyellowbutton"
-        android:layout_weight=".04"/>
+        android:gravity="center"
+        android:layout_weight="0.04">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/InvitePeople"
-        android:id="@+id/event_invitable_friends"
-        android:layout_gravity="center_horizontal"
-        android:checked="true"
-        android:layout_weight=".08"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"
+            android:text="@string/addPeople"
+            android:id="@+id/event_people"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/myyellowbutton" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Create2"
-        android:id="@+id/event_done"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/myyellowbutton"
-        android:layout_weight=".04"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/InvitePeople"
+            android:id="@+id/event_invitable_friends"
+            android:layout_gravity="center_horizontal"
+            android:checked="true"
+            android:layout_weight=".08"
+            android:layout_toRightOf="@+id/event_people"
+            android:layout_marginLeft="40dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"
+            android:text="@string/Create2"
+            android:id="@+id/event_done"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/myyellowbutton"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 </LinearLayout>

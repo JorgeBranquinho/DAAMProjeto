@@ -22,6 +22,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_help, container, false);
 
+        getActivity().setTitle(getResources().getString(R.string.title_about));
         sliderShow = (SliderLayout) rootView.findViewById(R.id.slider);
 
         TextSliderView textSliderView = new TextSliderView(rootView.getContext());
