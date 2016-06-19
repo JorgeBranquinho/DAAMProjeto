@@ -137,4 +137,16 @@
     <string name="InsertDescrip">Insert a description</string>
     <string name="IserLatLng">Insert latitude and longitude</string>
     <string name="name">Name</string>
+    <string name="NomeGrupo">Nome do Grupo:</string>
+    <string name="EscolherImg">Escolher Imagem</string>
+    <string name="EscolherAmigos">Escolher Amigos</string>
+    <string name="PrimNome">First Name:</string>
+    <string name="ultimoNome">Last Name:</string>
+    <string name="email2">Email:</string>
+    <string name="pass">Password:</string>
+    <string name="cell">Telemóvel:</string>
+    <string name="submit">Submeter</string>
+    <string name="criargrupo">Criar Grupo</string>
+    <string name="createnevent">Create New Event</string>
+    <string name="Createngroup">Create New Group</string>
 </resources>
