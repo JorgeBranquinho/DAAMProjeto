@@ -71,6 +71,7 @@ import java.util.List;
 
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
+import almapenada.daam.utility.DatePickerFragment2;
 import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
@@ -94,6 +95,8 @@ public class CreateEventFragment extends Fragment {
     private String date="";
     private String date_end="";
     public Activity activity;
+    private DatePickerFragment2 picker;
+    private DatePickerFragment2 picker_end;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -287,7 +290,7 @@ public class CreateEventFragment extends Fragment {
         date_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment picker = new DatePickerFragment2(0, activity);
+                picker = new DatePickerFragment2(0, activity, true);
                 picker.show(getFragmentManager(), "datePicker");
             }
         });
@@ -306,8 +309,8 @@ public class CreateEventFragment extends Fragment {
         date_end_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment picker = new DatePickerFragment2(1,activity);
-                picker.show(getFragmentManager(), "datePicker");
+                picker_end = new DatePickerFragment2(1,activity, false);
+                picker_end.show(getFragmentManager(), "datePicker");
             }
         });
 
@@ -318,12 +321,11 @@ public class CreateEventFragment extends Fragment {
                     EventsDatabase database = new EventsDatabase(getActivity().getBaseContext());
 
                     String dayOfTheWeek = "";
-                    Bundle b = getActivity().getIntent().getExtras();
-                    String date = b.getString("date");
-                    String hours = b.getString("dateend");
-                    if (date!="" && date!=null) {
+                    String date = "";
+                    String hours = "";
+                    if (picker!=null) {
                         //System.out.println("ueueue" + date);
-                        String[] datetime = date.toString().split(" ");
+                        String[] datetime = picker.getDate().toString().split(" ");
 
                         if (datetime.length >= 2)
                             hours = datetime[1];
@@ -333,7 +335,11 @@ public class CreateEventFragment extends Fragment {
                         dayOfTheWeek = getDayOfTheWeek(datetime[0]);
                         date = datetime[0];
                     }
-
+                    String dateEnd;
+                    if (picker_end!=null && switch1.isChecked())
+                        dateEnd = picker_end.getDate_end();
+                    else
+                        dateEnd = " - ";
                     String price;
                     if (!event_price_input.getText().toString().equals("Price") || event_price.isChecked())
                         price = event_price_input.getText().toString();
@@ -341,7 +347,7 @@ public class CreateEventFragment extends Fragment {
                         price = " - ";
 
 
-                    Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), date_end, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
+                    Event e = new Event(0, event_name.getText().toString(), eventPublic.isChecked(), dayOfTheWeek, date, switch1.isActivated(), dateEnd, event_price.isChecked(), price, hours, event_location.isChecked(), event_location_input.getText().toString(), event_invitable_friends.isChecked(), true, false, filePath, event_description_input.getText().toString());
                     long id = database.insertEvent(e);
                     EventAddID(database, e, (int) id, event_location_input.getText().toString());
                     CreateEventTask cet = new CreateEventTask(e, event_location_input.getText().toString());
@@ -411,7 +417,7 @@ public class CreateEventFragment extends Fragment {
     }
 
 
-    public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    /*public static class DatePickerFragment2 extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         private final Activity activity;
         private int type = -1;
@@ -469,7 +475,7 @@ public class CreateEventFragment extends Fragment {
             mTimePicker.show();
         }
 
-    }
+    }*/
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 

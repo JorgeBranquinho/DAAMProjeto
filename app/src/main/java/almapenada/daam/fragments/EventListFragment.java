@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -21,6 +22,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.ParseException;
@@ -62,7 +64,7 @@ public class EventListFragment extends Fragment {
 
         database = new EventsDatabase(getActivity());
         //if (database.isEmpty())
-            //database.populateWithExample();
+        //database.populateWithExample();
 
         populateEventList(database.getAllEvents());
         populateEventListRemote();
@@ -123,9 +125,9 @@ public class EventListFragment extends Fragment {
                     for (int i = 0; i < poi.length(); i++) {
                         JSONObject t_poi = poi.getJSONObject(i);
                         if (!owned_events.contains(Integer.parseInt(t_poi.getString("id")))) {
-                            SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd");
-                            SimpleDateFormat  format2 = new SimpleDateFormat("dd/MM/yyyy");
-                            Date date = format.parse(t_poi.getString("date").substring(0,10));
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
+                            Date date = format.parse(t_poi.getString("date").substring(0, 10));
                             String dataevento = format2.format(date);
                             Event x = new Event(Integer.parseInt(t_poi.getString("id")), t_poi.getString("eventName"), Integer.parseInt(t_poi.getString("isPublic")) == 1 ? true : false, t_poi.getString("weekDay"), dataevento, Integer.parseInt(t_poi.getString("isEndDate")) == 1 ? true : false, t_poi.getString("endDate"), Integer.parseInt(t_poi.getString("isPrice")) == 1 ? true : false, t_poi.getString("price"), t_poi.getString("hours"), Integer.parseInt(t_poi.getString("isLocation")) == 1 ? true : false, t_poi.getString("location_latlng"), Integer.parseInt(t_poi.getString("isFriendsInvitable")) == 1 ? true : false, false, false);
                             database.insertEvent(x);
@@ -164,6 +166,8 @@ public class EventListFragment extends Fragment {
                     return format.parse(event1.getDate()).before(format.parse(event2.getDate())) ? 1 : -1;
                 } catch (ParseException e) {
                     e.printStackTrace();
+                } catch (NullPointerException e2) {
+                    e2.printStackTrace();
                 }
                 System.out.println("[error] erro a ordernar por recente");
                 return -1;
