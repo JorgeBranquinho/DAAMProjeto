@@ -83,4 +83,6 @@
     <string name="telemovel">Telemóvel:</string>
     <string name="navigation_drawer_close" translatable="false"></string>
     <string name="permission_rationale" translatable="false">É necessária a permissão dos contactos</string>
+    <string name="notificacaoTitulo">Um novo seguidor!</string>
+    <string name="DadosLimpos">Dados limpos com sucesso!</string>
 </resources>

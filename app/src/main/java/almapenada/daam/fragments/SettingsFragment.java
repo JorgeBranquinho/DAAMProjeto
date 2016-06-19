@@ -28,7 +28,7 @@ public class SettingsFragment extends Fragment {
     private Switch push;
     private Switch infp;
     private Button btn;
-    private String title = "Um novo seguidor!";
+    private String title = getResources().getString(R.string.notificacaoTitulo);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Dados limpos com sucesso!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.DadosLimpos, Toast.LENGTH_SHORT).show();
             }
         });
 

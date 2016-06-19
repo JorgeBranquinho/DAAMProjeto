@@ -561,6 +561,8 @@ public class CreateEventFragment extends Fragment {
                 json.put("telephone", telefone);
                 json.put("image", image);
 
+                
+
                 String message = json.toString();
 
                 post.setEntity(new StringEntity(message, "UTF8"));
