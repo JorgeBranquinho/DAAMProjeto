@@ -49,6 +49,8 @@ import com.facebook.login.widget.LoginButton;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -200,11 +202,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                             editor.putString(email, data.getString("email"));
                                             user.setEmail(data.getString("email"));
                                             user.setPictureURL(new URL(data.getJSONObject("picture").getJSONObject("data").getString("url")));
-                                            user.setUserFromFB(true);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        callDrawerActivity();
+                                        new getFBUser(user.getEmail()).execute();
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -463,7 +465,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String method = "/login/";
             String response = "";
             String pass = md5(mPassword) + md5("event");
-            System.out.println(host + method + mEmail + pass );
             try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse httpResponse = httpclient.execute(new HttpGet(host + method + mEmail + "/" + pass ));
@@ -476,10 +477,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (jobj.get("status").toString().compareTo("OK") == 0) {
                         JSONArray array = jobj.getJSONArray("userLogin");
                         System.out.println("Array: " + array );
-                        System.out.println("Teste - " + array.length() );
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject t_user = array.getJSONObject(i);
                             user = new User();
+                            user.setIdUser(Integer.parseInt(t_user.getString("id")));
                             user.setFirstName(t_user.getString("name"));
                             user.setLastName("");
                             user.setEmail(t_user.getString("email"));
@@ -530,6 +531,211 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+    public class getFBUser extends AsyncTask<Void, Void, Boolean> {
+        private final String mEmail;
+        private String host = "https://eventservice-daam.rhcloud.com";
+        private String method = "/check/email/";
+        private String response = "";
+
+        getFBUser(String email) {
+            mEmail = email;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpGet(host + method + mEmail));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+                JSONObject jobj = null;
+                try {
+                    jobj = new JSONObject(response);
+                    System.out.println("Resposta: " + jobj.get("status").toString());
+                    if (jobj.get("status").toString().compareTo("OK") == 0) {
+                        JSONArray array = jobj.getJSONArray("result");
+                        System.out.println("Array: " + array);
+                        if ( array.length() > 0 ) {
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject t_user = array.getJSONObject(i);
+                                user = new User();
+                                user.setIdUser(Integer.parseInt(t_user.getString("id")));
+                                user.setTelefone(t_user.getString("telephone"));
+                                if (t_user.getString("description") != null) {
+                                    user.setDescricao(t_user.getString("description"));
+                                } else {
+                                    user.setDescricao("");
+                                }
+                                if (t_user.getString("gender") != null) {
+                                    user.setGender(t_user.getString("gender"));
+                                } else {
+                                    user.setGender("");
+                                }
+
+                                return true;
+                            }
+                        } else {
+                            criarUtilizador();
+                            return true;
+                        }
+                        return false;
+                    }
+                } catch (JSONException e) {
+                    //e.printStackTrace();
+                    showDialogMessage("Erro na resposta JSON");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                showDialogMessage("Erro na ligação ao servidor");
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (success) {
+                callDrawerActivity();
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
+        }
+    }
+
+    public boolean criarUtilizador() {
+        String name = user.getFirstName() + " " + user.getLastName();
+        String email = user.getEmail();
+        String password = "";
+        String telefone = "";
+        String image = "";
+        String host = "https://eventservice-daam.rhcloud.com";
+        String methodInsert = "/insert/user/";
+        try {
+            String response = "";
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost post = new HttpPost(host + methodInsert);
+
+            JSONObject json = new JSONObject();
+            json.put("name", name);
+            json.put("email", email);
+            json.put("password", password);
+            json.put("telephone", telefone);
+            json.put("image", image);
+
+            String message = json.toString();
+
+            post.setEntity(new StringEntity(message, "UTF8"));
+            post.setHeader("Content-type", "application/json");
+
+            HttpResponse httpResponse = httpclient.execute(post);
+            if ( httpResponse != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+                JSONObject jobj = null;
+                try {
+                    jobj = new JSONObject(response);
+                    System.out.println("Resposta: " + jobj.get("status").toString());
+
+                    if (jobj.get("status").toString().compareTo("OK") == 0) {
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (Exception e) {
+            showDialogMessage("Erro na ligação a base de dados");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public class CreateUserTask  extends AsyncTask<Void, String, String> {
+
+        private String name;
+        private String email;
+        private String password;
+        private String telefone;
+        private String image;
+        private String host = "https://eventservice-daam.rhcloud.com";
+        private String methodInsert = "/insert/user/";
+        private String methodCheckEmail = "/check/email/";
+
+        public CreateUserTask(String name, String email, String password, String telefone, String image ) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+            this.telefone = telefone;
+            this.image = image;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... arg0) {
+            String response = "";
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost post = new HttpPost(host + methodInsert);
+
+                JSONObject json = new JSONObject();
+                json.put("name", name);
+                json.put("email", email);
+                json.put("password", password);
+                json.put("telephone", telefone);
+                json.put("image", image);
+
+                String message = json.toString();
+
+                post.setEntity(new StringEntity(message, "UTF8"));
+                post.setHeader("Content-type", "application/json");
+
+                HttpResponse httpResponse = httpclient.execute(post);
+                if ( httpResponse != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                    response = reader.readLine();
+                }
+
+            } catch (Exception e) {
+                showDialogMessage("Erro na ligação a base de dados");
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            showProgress(false);
+            if (result != "" ) {
+                JSONObject jobj = null;
+                try {
+                    jobj = new JSONObject(result);
+                    System.out.println("Resposta: " + jobj.get("status").toString());
+
+                    if (jobj.get("status").toString().compareTo("OK") == 0) {
+                        showDialogMessage("Utilizador criado com sucesso!");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            showProgress(false);
+        }
+    }
+
 
     private void callDrawerActivity(){
         Intent intent =new Intent(LoginActivity.this,DrawerActivity.class);
