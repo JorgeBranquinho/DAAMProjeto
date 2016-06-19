@@ -13,8 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
         android:maxLines="1"
         android:maxLength="20"/>
 
@@ -38,7 +38,7 @@
         android:layout_below="@+id/goingOpt"
         android:layout_alignLeft="@+id/nomeEvento"
         android:layout_alignStart="@+id/nomeEvento"
-        android:layout_marginLeft="30dp" />
+        android:layout_marginLeft="20dp" />
 
     <TextView
         android:layout_width="wrap_content"

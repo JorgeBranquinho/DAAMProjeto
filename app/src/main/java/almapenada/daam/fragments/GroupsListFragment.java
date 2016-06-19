@@ -22,9 +22,6 @@ public class GroupsListFragment extends Fragment  {
     private ListView list_groups;
     private CustomRowAdapter adapter;
     private View rootView;
-    //private String[] groups_list_names = new String[3];
-    //private Drawable[] groups_list_images = new Drawable[3];
-    //private String[] dummy_groups = { "Família", "Amigos", "Faculdade"};
     private User[] dummy_users;
 
     public GroupsListFragment() {
@@ -45,30 +42,22 @@ public class GroupsListFragment extends Fragment  {
         adapter = new CustomRowAdapter(getActivity(), dummy_users, false, getActivity());
         list_groups.setAdapter(adapter);
 
-        /*list_groups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((DrawerActivity)(getActivity())).viewMyProfile(adapter.getItem(position));
-                //Toast.makeText(getContext(), groups_list_names[position], Toast.LENGTH_LONG).show();
-            }
-        });*/
-
-
         return rootView;
-
     }
 
     private void createDummys(){
         dummy_users=new User[3];
         dummy_users[0]=new User();
         dummy_users[0].setFirstName("Família");
+        dummy_users[0].setLastName("");
         dummy_users[0].setPictureDrawable(rootView.getResources().getDrawable(R.drawable.user));
         dummy_users[1]=new User();
         dummy_users[1].setFirstName("Amigos");
+        dummy_users[1].setLastName("");
         dummy_users[1].setPictureDrawable(rootView.getResources().getDrawable(R.drawable.user));
         dummy_users[2]=new User();
         dummy_users[2].setFirstName("Faculdade");
+        dummy_users[2].setLastName("");
         dummy_users[2].setPictureDrawable(rootView.getResources().getDrawable(R.drawable.user));
     }
 

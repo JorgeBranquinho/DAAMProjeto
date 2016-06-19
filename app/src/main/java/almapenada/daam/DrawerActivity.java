@@ -1,8 +1,12 @@
 package almapenada.daam;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,6 +16,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -22,6 +27,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,16 +45,30 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import almapenada.daam.fragments.AboutFragment;
 import almapenada.daam.fragments.CreateEventFragment;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
+import almapenada.daam.fragments.FriendsListFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.fragments.ProfileFragment;
 import almapenada.daam.fragments.SettingsFragment;
+import almapenada.daam.utility.CustomRowAdapter;
 import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
@@ -66,9 +87,9 @@ public class DrawerActivity extends AppCompatActivity
     private ImageView nav_img;
     private int id_menuItem;
     private GoogleApiClient client;
-    private Activity activity=this;
-    private User user=null;
-
+    private Activity activity = this;
+    private User user = null;
+    private List<User> friends = new ArrayList<User>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +102,7 @@ public class DrawerActivity extends AppCompatActivity
         Bundle b = getIntent().getExtras();
         user = (User) b.getSerializable("User");
         if (user != null) {
+            if (user.getIdUser() == 0) user.setIdUser(1);
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             View hView = navigationView.getHeaderView(0);
             TextView nav_user = (TextView) hView.findViewById(R.id.nomegrande);
@@ -97,6 +119,18 @@ public class DrawerActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (getTitle().equals(getString(R.string.title_friends))) {
+                    String[] opcoes = {getString(R.string.opcao1), getString(R.string.opcao2)};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setItems(opcoes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.show();
+                }else
                     viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
             }
         });
@@ -152,7 +186,7 @@ public class DrawerActivity extends AppCompatActivity
         viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
     }
 
-    private Fragment getCurrentFragment(){
+    private Fragment getCurrentFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
         Fragment currentFragment = getSupportFragmentManager()
@@ -170,13 +204,13 @@ public class DrawerActivity extends AppCompatActivity
 
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
         database.removeAll();
-        if (database.isEmpty()){
+        if (database.isEmpty()) {
             //TODO:falta add amigos e outras cenas se quiserem
             EventsDatabase database2 = new EventsDatabase(this.getBaseContext());
             Cursor cursor = database2.getAllEvents();
-            if (cursor .moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 while (cursor.isAfterLast() == false) {
-                    database.insertSuggestion(cursor.getString(cursor.getColumnIndex("event_name")), cursor.getInt(cursor.getColumnIndex("_id")));//depois aqui metesse um indicador se é evento ou outra coisa
+                    database.insertSuggestion(cursor.getString(cursor.getColumnIndex("event_name")), cursor.getInt(cursor.getColumnIndex("_id")), 1);//depois aqui metesse um indicador se é evento ou outra coisa
                     cursor.moveToNext();
                 }
             }
@@ -207,11 +241,11 @@ public class DrawerActivity extends AppCompatActivity
 
                         @Override
                         public boolean onSuggestionClick(int position) {
-                            Cursor c= (Cursor) simple.getItem(position);
-                            if(c.moveToFirst()) {
+                            Cursor c = (Cursor) simple.getItem(position);
+                            if (c.moveToFirst()) {
                                 EventsDatabase database2 = new EventsDatabase(activity);
                                 Cursor c2 = database2.getEventById(c.getInt(c.getColumnIndex(SuggestionsDatabase.FIELD_IDEXT)));
-                                if(c2.moveToFirst()) {
+                                if (c2.moveToFirst()) {
                                     Event e = EnumDatabase.cursorToEvent(c2);
                                     viewEventDetails(e);
                                 }
@@ -236,7 +270,7 @@ public class DrawerActivity extends AppCompatActivity
         id_menuItem = item.getItemId();
 
         if (id_menuItem == R.id.nav_profile) {
-            if(user!=null)
+            if (user != null)
                 viewMyProfile(user);
             else
                 viewFragment(new ProfileFragment(), getResources().getString(R.string.MyProfile), false, -1);
@@ -290,7 +324,7 @@ public class DrawerActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    public void viewMyProfile(User u){
+    public void viewMyProfile(User u) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", u);
         ProfileFragment frag = new ProfileFragment();
@@ -300,7 +334,7 @@ public class DrawerActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    public void viewSettings(User u){
+    public void viewSettings(User u) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", u);
         SettingsFragment frag = new SettingsFragment();
@@ -373,15 +407,27 @@ public class DrawerActivity extends AppCompatActivity
         protected Bitmap doInBackground(URL... url) {
             try {
                 bitmap = BitmapFactory.decodeStream(url[0].openConnection().getInputStream());
-                int sizevar=new EnumDatabase().getScreenDensity(activity);
+                int sizevar = new EnumDatabase().getScreenDensity(activity);
                 int size;
-                switch (sizevar){
-                    case 1:size=150;break;//150
-                    case 2:size=100;break;//100
-                    case 3:size=200;break;//200
-                    case 4:size=200;break;//238
-                    case 5:size=400;break;//400
-                    default: size=400;break;//400
+                switch (sizevar) {
+                    case 1:
+                        size = 150;
+                        break;//150
+                    case 2:
+                        size = 100;
+                        break;//100
+                    case 3:
+                        size = 200;
+                        break;//200
+                    case 4:
+                        size = 200;
+                        break;//238
+                    case 5:
+                        size = 400;
+                        break;//400
+                    default:
+                        size = 400;
+                        break;//400
                 }
                 bitmap = scaleBitmap(bitmap, size, size);
             } catch (Exception e) {
@@ -407,4 +453,63 @@ public class DrawerActivity extends AppCompatActivity
             nav_img.setImageBitmap(result);
         }
     }
+
+
+    private class DownloadFriendsTask extends AsyncTask<URL, Void, Void> {
+
+        protected Void doInBackground(URL... url) {
+            String response = "";
+            Bundle b = getIntent().getExtras();
+            User user = (User) b.getSerializable("User");
+            //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/friends/byUser/" + user.getIdUser()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                response = reader.readLine();
+                jsonToUser(response);
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            SuggestionsDatabase database = new SuggestionsDatabase(getBaseContext());
+            for (User x : friends) {
+                database.insertSuggestion(x.getFirstName() + " " + x.getLastName(), x.getIdUser(), 0);
+            }
+            database.close();
+        }
+    }
+
+    private void jsonToUser(String response) {
+        JSONObject jobj = null;
+        try {
+            jobj = new JSONObject(response);
+            if (jobj.get("status").toString().compareTo("OK") == 0) {
+                JSONArray poi = jobj.getJSONArray("teste");
+                for (int i = 0; i < poi.length(); i++) {
+                    JSONObject t_poi = poi.getJSONObject(i);
+                    User x = new User();
+                    x.setIdUser(Integer.parseInt(t_poi.getString("id")));
+                    x.setFirstName(t_poi.getString("name").substring(0, t_poi.getString("name").lastIndexOf(" ")));
+                    x.setLastName(t_poi.getString("name").substring(t_poi.getString("name").lastIndexOf(" ") + 1));
+                    x.setEmail(t_poi.getString("email"));
+                    x.setPhone(t_poi.getString("telephone"));
+                    if (t_poi.getString("description") != "null")
+                        x.setDescricao(t_poi.getString("description"));
+                    x.setGender(t_poi.getString("gender"));
+                    friends.add(x);
+                }
+            }
+            //dummy_users = (User[]) friends.toArray();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

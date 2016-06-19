@@ -85,4 +85,6 @@
     <string name="permission_rationale" translatable="false">É necessária a permissão dos contactos</string>
     <string name="notificacaoTitulo">Um novo seguidor!</string>
     <string name="DadosLimpos">Dados limpos com sucesso!</string>
+    <string name="opcao1">Adicionar novo amigo</string>
+    <string name="opcao2">Criar novo grupo</string>
 </resources>
