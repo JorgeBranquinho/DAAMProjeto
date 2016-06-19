@@ -57,7 +57,7 @@ public class SettingsFragment extends Fragment {
                 mp = (NotificationManager) getActivity().getSystemService(getContext().NOTIFICATION_SERVICE);
 
                 PendingIntent pending = PendingIntent.getActivity(getActivity().getApplicationContext(), 0, new Intent(), 0);
-                Notification notify = new Notification.Builder(getActivity().getApplicationContext()).setContentTitle(title).setContentText("Event Me").setSmallIcon(R.drawable.logo).setWhen(System.currentTimeMillis()).setContentIntent(pending).build();
+                Notification notify = new Notification.Builder(getActivity().getApplicationContext()).setContentTitle(title).setContentText("Event Me").setSmallIcon(R.drawable.logoo).setWhen(System.currentTimeMillis()).setContentIntent(pending).build();
 
                 mp.notify(0, notify);
             }
