@@ -1,13 +1,9 @@
 package almapenada.daam;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +12,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -36,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,11 +59,9 @@ import almapenada.daam.fragments.CreateNewGroup;
 import almapenada.daam.fragments.EventDetailsFragment;
 import almapenada.daam.fragments.EventsFragment;
 import almapenada.daam.fragments.FriendsFragment;
-import almapenada.daam.fragments.FriendsListFragment;
 import almapenada.daam.fragments.HomeFragment;
 import almapenada.daam.fragments.ProfileFragment;
 import almapenada.daam.fragments.SettingsFragment;
-import almapenada.daam.utility.CustomRowAdapter;
 import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
 import almapenada.daam.utility.EventsDatabase;
@@ -109,9 +101,9 @@ public class DrawerActivity extends AppCompatActivity
             TextView nav_user = (TextView) hView.findViewById(R.id.nomegrande);
             nav_user.setText(user.getFirstName() + " " + user.getLastName());
             TextView nav_user2 = (TextView) hView.findViewById(R.id.nomepqueno);
-            nav_user2.setText("");
+            nav_user2.setText(user.getEmail());
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
-            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL()); else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) nav_img.setBackground(getResources().getDrawable(R.drawable.ninja));
+            if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
         }
 
         // Botao que flutoa na actividade

@@ -175,7 +175,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                    callDrawerActivity();
+                    if ( !user.getEmail().isEmpty() )
+                        new getFBUser(user.getEmail()).execute();
                 }
                 loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
@@ -205,7 +206,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        new getFBUser(user.getEmail()).execute();
+                                        if ( !user.getEmail().isEmpty() )
+                                            new getFBUser(user.getEmail()).execute();
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -437,7 +439,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-                        LoginActivity.this.finish();
+                        //LoginActivity.this.finish();
                     }
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -538,8 +540,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private String method = "/check/email/";
         private String response = "";
 
-        getFBUser(String email) {
+        public getFBUser(String email) {
             mEmail = email;
+            System.out.println("TESTE - Email: " + mEmail);
         }
 
         @Override
@@ -552,14 +555,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 JSONObject jobj = null;
                 try {
                     jobj = new JSONObject(response);
-                    System.out.println("Resposta: " + jobj.get("status").toString());
+                    System.out.println("TESTE  - Resposta: " + jobj.get("status").toString());
                     if (jobj.get("status").toString().compareTo("OK") == 0) {
                         JSONArray array = jobj.getJSONArray("result");
-                        System.out.println("Array: " + array);
+                        System.out.println(" TESTE - Array: " + array);
                         if ( array.length() > 0 ) {
+
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject t_user = array.getJSONObject(i);
-                                user = new User();
                                 user.setIdUser(Integer.parseInt(t_user.getString("id")));
                                 user.setTelefone(t_user.getString("telephone"));
                                 if (t_user.getString("description") != null) {
@@ -583,11 +586,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
                 } catch (JSONException e) {
                     //e.printStackTrace();
+                    System.out.println("TESTE - Erro na resposta JSON");
                     showDialogMessage("Erro na resposta JSON");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                showDialogMessage("Erro na ligação ao servidor");
+                System.out.println("TESTE - Erro na ligação ao servidor");
+                showDialogMessage("Erro na ligação ao servidor" + "\n" + "Verifique a ligação a internet");
             }
             return false;
         }
@@ -596,10 +600,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
+            System.out.println("TESTE - result: " + success);
             if (success) {
                 callDrawerActivity();
             } else {
+                showDialogMessage("Erro");
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -649,7 +654,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
         } catch (Exception e) {
-            showDialogMessage("Erro na ligação a base de dados");
+            showDialogMessage("Erro na ligação a base de dados ");
             e.printStackTrace();
         }
         return false;
@@ -737,7 +742,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    private void callDrawerActivity(){
+    private void callDrawerActivity() {
+        System.out.println("TESTE - Call: ");
         Intent intent =new Intent(LoginActivity.this,DrawerActivity.class);
         Bundle b = new Bundle();
         b.putSerializable("User", user);
