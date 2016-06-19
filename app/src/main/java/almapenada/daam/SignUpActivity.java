@@ -25,7 +25,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -94,8 +93,6 @@ public class SignUpActivity extends AppCompatActivity {
                 if ( validateParams()) {
                     showProgress(true);
                     createUser();
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Erro", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -158,28 +155,23 @@ public class SignUpActivity extends AppCompatActivity {
         String error = "";
 
         if (!(isNetworkAvailable())){
-            showDialogMessage("Terá que ter connecção à Internet!", false);
+            showDialogMessage("É necessário connecção à Internet!", false);
             return false;
         }
 
-        if ( getName().isEmpty()) {
+        if (  putfirstname.getText().toString().isEmpty()) {
             error = "Nome tem que ser preenchido" + "\n";
             focusView = putfirstname;
         }
 
         if ((!(getEmail().contains("@"))) || (getEmail().isEmpty())) {
-            error += "Email tem que ser preenchido" + "\n";
+            error += "Email tem que ser bem preenchido" + "\n";
             focusView = putemail;
         }
 
         if ((!(getPassword().length() >= 5) ) || (getPassword().isEmpty())) {
-            error += "Password tem que ser bem preenchida (8 caracteres)" + "\n";
+            error += "Password tem que ser bem preenchida (5 caracteres)" + "\n";
             focusView = pass;
-        }
-
-        if ((!(getTelefone().length() >= 8) ) || (getTelefone().isEmpty())) {
-            error += "Telefone tem que ser bem preenchido" + "\n";
-            focusView = tlm;
         }
 
         if (focusView!=null){
@@ -188,10 +180,6 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    private void maketoast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     public void createUser() {
@@ -323,7 +311,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 showDialogMessage("Erro na ligação a base de dados", false);
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             return response;
         }
@@ -342,7 +330,8 @@ public class SignUpActivity extends AppCompatActivity {
                         showDialogMessage("Utilizador criado com sucesso!", true);
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+
                 }
             }
         }
