@@ -30,6 +30,7 @@ public class AboutFragment extends Fragment {
         TextSliderView textSliderView2 = new TextSliderView(rootView.getContext());
         textSliderView2.image(R.drawable.img_about2);
 
+
         sliderShow.addSlider(textSliderView);
         sliderShow.addSlider(textSliderView2);
 
