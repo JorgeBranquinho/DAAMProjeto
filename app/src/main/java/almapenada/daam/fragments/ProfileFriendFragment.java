@@ -3,10 +3,6 @@ package almapenada.daam.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,23 +22,17 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 import almapenada.daam.R;
-import almapenada.daam.utility.EnumDatabase;
 import almapenada.daam.utility.Event;
-import almapenada.daam.utility.EventAdapter;
 import almapenada.daam.utility.EventsDatabase;
 import almapenada.daam.utility.User;
 
@@ -73,12 +62,11 @@ public class ProfileFriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile_friend, container, false);
 
-        username = (TextView) rootView.findViewById(R.id.nomePerfil);
+        username = (TextView) rootView.findViewById(R.id.namePerfil);
         image = (Button) rootView.findViewById(R.id.imageFriend);
         event_list = (ListView) rootView.findViewById(R.id.eventos);
         mail = (TextView) rootView.findViewById(R.id.textView2);
         descrPerfil = (TextView) rootView.findViewById(R.id.descrPerfil);
-        numPerfil = (TextView) rootView.findViewById(R.id.numPerfil);
 
         Bundle b = this.getArguments();
         user = (User) b.getSerializable("friendUser");
@@ -94,9 +82,7 @@ public class ProfileFriendFragment extends Fragment {
             descrPerfil.setText(user.getDescricao());
             descrPerfil.setClickable(false);
             descrPerfil.setFocusable(false);
-            numPerfil.setText(user.getPhone());
-            numPerfil.setClickable(false);
-            numPerfil.setFocusable(false);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 if(user.getPictureDrawable()!=null)
                     image.setBackground(user.getPictureDrawable());
