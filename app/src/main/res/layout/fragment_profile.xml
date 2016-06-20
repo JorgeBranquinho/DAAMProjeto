@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="almapenada.daam.fragments.ProfileFragment"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="#fffaea">
 
     <!-- TODO: Update blank fragment layout -->
 

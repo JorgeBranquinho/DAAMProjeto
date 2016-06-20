@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="almapenada.daam.fragments.EventDetailsFragment"
-    android:id="@+id/relLay">
+    android:id="@+id/relLay"
+    android:background="#fffaea">
 
     <!-- TODO: Update blank fragment layout -->
 
