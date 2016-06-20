@@ -112,6 +112,8 @@ public class CustomRowAdapter extends ArrayAdapter<User> {
                                             database.close();//para escrever as mudanças nas DB
                                             database = new EventsDatabase(activity);//reabrir ligacao
                                             database.close();*/
+
+
                                         names[list_position] = "";
                                         //images[list_position] = null;
                                         self.notifyDataSetChanged();

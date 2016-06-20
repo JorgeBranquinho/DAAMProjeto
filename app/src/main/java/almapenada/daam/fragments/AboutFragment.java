@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 
 /**
@@ -22,7 +23,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_help, container, false);
 
-        getActivity().setTitle(getResources().getString(R.string.title_about));
+        ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_about));
         sliderShow = (SliderLayout) rootView.findViewById(R.id.slider);
 
         TextSliderView textSliderView = new TextSliderView(rootView.getContext());

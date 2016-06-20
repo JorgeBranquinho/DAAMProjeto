@@ -106,9 +106,9 @@ public class FeedFragment extends Fragment {
                         events_to_display_on_feed.add(new Event(Integer.parseInt(t_poi.getString("id")), t_poi.getString("eventName"), Integer.parseInt(t_poi.getString("isPublic")) == 1 ? true : false, t_poi.getString("weekDay"), dataevento, Integer.parseInt(t_poi.getString("isEndDate")) == 1 ? true : false, t_poi.getString("endDate"), Integer.parseInt(t_poi.getString("isPrice")) == 1 ? true : false, t_poi.getString("price"), t_poi.getString("hours"), Integer.parseInt(t_poi.getString("isLocation")) == 1 ? true : false, t_poi.getString("location_latlng"), Integer.parseInt(t_poi.getString("isFriendsInvitable")) == 1 ? true : false, false, false));
 
                         if ( t_poi.getString("type").toString().equals("create") ) {
-                            msg = "O " + t_poi.getString("name").toString() + " criou o evento " + t_poi.getString("eventName").toString();
+                            msg = t_poi.getString("name").toString() + " criou o evento " + t_poi.getString("eventName").toString();
                         } else {
-                            msg = "O " + t_poi.getString("name").toString() + " aderiu ao evento " + t_poi.getString("eventName").toString();
+                            msg = t_poi.getString("name").toString() + " aderiu ao evento " + t_poi.getString("eventName").toString();
                         }
                         messages_to_display.add(msg);
 

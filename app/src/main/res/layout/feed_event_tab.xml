@@ -9,7 +9,7 @@
         android:layout_height="100dp"
         android:id="@+id/feed_event_image"
         android:layout_margin="8dp"
-        android:src="@drawable/temp_fista" />
+        android:src="@drawable/header" />
 
     <View
         android:layout_width="match_parent"

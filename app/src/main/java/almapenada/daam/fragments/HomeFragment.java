@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.FragmentsAdapter;
 
@@ -25,7 +26,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
-
+        ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_home));
         viewPager = (ViewPager) rootView.findViewById(R.id.home_viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);

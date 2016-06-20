@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.User;
 
@@ -34,7 +35,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-
+        ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_settings));
         title=rootView.getResources().getString(R.string.notificacaoTitulo);
 
         Bundle b = getActivity().getIntent().getExtras();
