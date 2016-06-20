@@ -15,6 +15,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 import almapenada.daam.utility.User;
 
@@ -59,7 +61,7 @@ public class CreateNewGroup extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_create_new_group, container, false);
-
+        ((DrawerActivity)getActivity()).removeBar(false,false,false);
         Button event_people = (Button) v.findViewById(R.id.button2);
         imgView = (ImageView) v.findViewById(R.id.imageView3);
         Button image = (Button) v.findViewById(R.id.chooseImage);

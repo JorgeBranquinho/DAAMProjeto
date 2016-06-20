@@ -117,4 +117,5 @@
     <string name="createnevent">Criar novo evento</string>
     <string name="Createngroup">Criar novo grupo</string>
     <string name="usercreate">Criou</string>
+    <string name="editprofile">Editar Perfil</string>
 </resources>

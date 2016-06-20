@@ -150,4 +150,6 @@
     <string name="createnevent">Create New Event</string>
     <string name="Createngroup">Create New Group</string>
     <string name="usercreate">Created</string>
+    <string name="editprofile">Edit Profile</string>
+    <string name="actionsubmit">Submit</string>
 </resources>

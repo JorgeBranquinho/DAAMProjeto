@@ -27,6 +27,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_home));
+        ((DrawerActivity)getActivity()).removeBar(true, false,false);
         viewPager = (ViewPager) rootView.findViewById(R.id.home_viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);

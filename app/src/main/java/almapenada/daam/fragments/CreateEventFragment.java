@@ -27,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -103,6 +104,7 @@ public class CreateEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_event, container, false);
+        ((DrawerActivity)getActivity()).removeBar(false, false,false);
         event_img = (Button) v.findViewById(R.id.event_img);
         final TextView event_name = (TextView) v.findViewById(R.id.event_name);
         final RadioButton eventPrivate = (RadioButton) v.findViewById(R.id.eventPrivate);

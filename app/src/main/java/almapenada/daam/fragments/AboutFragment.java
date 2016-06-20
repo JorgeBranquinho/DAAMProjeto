@@ -24,6 +24,7 @@ public class AboutFragment extends Fragment {
         rootView = inflater.inflate(R.layout.activity_help, container, false);
 
         ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_about));
+        ((DrawerActivity) getActivity()).removeBar(false, false, false);
         sliderShow = (SliderLayout) rootView.findViewById(R.id.slider);
 
         TextSliderView textSliderView = new TextSliderView(rootView.getContext());

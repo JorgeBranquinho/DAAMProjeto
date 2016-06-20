@@ -19,6 +19,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
@@ -48,6 +51,10 @@ public class ProfileFragment extends Fragment {
     private EditText username;
     private EditText email;
     private EditText telele;
+    private EditText description;
+    private EditText site;
+    private EditText location;
+
     private String imei;
 
 
@@ -56,26 +63,30 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        ((DrawerActivity)getActivity()).removeBar(false, false,true);
         username = (EditText) rootView.findViewById(R.id.txtName);
         email = (EditText) rootView.findViewById(R.id.email);
         image = (Button) rootView.findViewById(R.id.image);
         telele = (EditText) rootView.findViewById(R.id.txtNumber);
+        location = (EditText) rootView.findViewById(R.id.txtLocal);
+        description = (EditText) rootView.findViewById(R.id.txtDesc);
+        site = (EditText) rootView.findViewById(R.id.txtSite);
 
         Bundle b = getActivity().getIntent().getExtras();
         user = (User) b.getSerializable("User");
+
         if (user != null) {
             username.setText(user.getFirstName() + " " + user.getLastName());
-            username.setClickable(false);
-            username.setFocusable(false);
             email.setText(user.getEmail());
-            email.setClickable(false);
-            email.setFocusable(false);
+            //description.setText(user.getDescricao());
+            //location.setText(user.getLocation());
+            //site.setText(user.getSite());
             //TelephonyManager tm = (TelephonyManager)getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
             //imei = tm.getDeviceId();
             telele.setText(user.getTelefone());
             if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL()); else defaultimg();
         }
+
 
 
         image.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +126,42 @@ public class ProfileFragment extends Fragment {
             ((DrawerActivity) getActivity()).setActionBarTitle("Perfil de " + user.getFirstName());
 
         return rootView;
+    }
+
+
+    public void editProfile(boolean editProfile) {
+
+        if (editProfile){
+            username.setClickable(true);
+            username.setFocusableInTouchMode(true);
+            username.setFocusable(true);
+            email.setClickable(true);
+            email.setFocusableInTouchMode(true);
+            email.setFocusable(true);
+            telele.setClickable(true);
+            telele.setFocusableInTouchMode(true);
+            telele.setFocusable(true);
+            //description.setClickable(true);
+            //description.setFocusableInTouchMode(true);
+            //site.setClickable(true);
+            //site.setFocusableInTouchMode(true);
+            //location.setFocusableInTouchMode(true);
+            //location.setClickable(true);
+
+        }else{
+            username.setClickable(false);
+            username.setFocusable(false);
+            email.setClickable(false);
+            email.setFocusable(false);
+            //description.setClickable(false);
+            //description.setFocusable(false);
+
+            //site.setClickable(false);
+            //site.setFocusable(false);
+
+            //location.setFocusable(false);
+            //location.setClickable(false);
+        }
     }
 
     private void defaultimg() {
@@ -318,6 +365,11 @@ public class ProfileFragment extends Fragment {
             }else
                 image.setBackgroundDrawable(new BitmapDrawable(getResources(), user.getPicture()));
         }
+    }
+
+    public User getUpdatedProfile(){
+
+        return user;
     }
 }
 

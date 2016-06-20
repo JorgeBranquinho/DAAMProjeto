@@ -10,7 +10,14 @@
         />
 
 
+    <!-- Settings, should always be in the overflow -->
+    <item android:id="@+id/action_settings"
+        android:title="@string/editprofile"
+        app:showAsAction="never"/>
 
-
+    <item android:id="@+id/action_submit"
+        android:title=""
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="always"/>
 
 </menu>

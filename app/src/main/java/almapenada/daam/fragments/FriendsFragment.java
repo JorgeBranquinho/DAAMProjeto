@@ -30,6 +30,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
         ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_friends));
+        ((DrawerActivity) getActivity()).removeBar(true, false, false);
         viewPager = (ViewPager) rootView.findViewById(R.id.friends_viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);

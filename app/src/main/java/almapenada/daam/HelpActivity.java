@@ -14,6 +14,7 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+
         sliderShow = (SliderLayout) findViewById(R.id.slider);
 
         TextSliderView textSliderView = new TextSliderView(this);

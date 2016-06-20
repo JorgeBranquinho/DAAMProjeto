@@ -83,6 +83,10 @@ public class DrawerActivity extends AppCompatActivity
     private Activity activity = this;
     private User user = null;
     private List<User> friends = new ArrayList<User>();
+    private boolean showSearch=true;
+    private boolean showSubmit=false;
+    private boolean showSettings=false;
+    private ProfileFragment pf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,10 +199,28 @@ public class DrawerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.drawer, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem action_submit = menu.findItem(R.id.action_submit);
+        MenuItem action_settings = menu.findItem(R.id.action_settings);
+        menu.findItem(R.id.action_submit).setVisible(false);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        if(!showSearch){
+            searchItem.setVisible(false);
+        }else{
+            searchItem.setVisible(true);
+        }
+        if(!showSubmit){
+            action_submit.setVisible(false);
+        }else{
+            action_submit.setVisible(true);
+        }
+        if(!showSettings){
+            action_settings.setVisible(false);
+        }else{
+            action_settings.setVisible(true);
+        }
         final SuggestionsDatabase database = new SuggestionsDatabase(this);
         database.removeAll();
         if (database.isEmpty()) {
@@ -260,26 +282,72 @@ public class DrawerActivity extends AppCompatActivity
         return true;
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                System.out.println("ADEUSSSSSSSSSS");
+                if(pf!=null){
+                    pf.editProfile(true);
+                    showSubmit=true;
+                    invalidateOptionsMenu();
+                }
+
+                /*if(!editProfile){
+                    editProfile=true;
+                }else{
+
+                    ((MenuItem) findViewById(R.id.action_submit)).setVisible(true);
+                }*/
+
+                return true;
+
+            case R.id.action_submit:
+                pf.getUpdatedProfile();
+                /*if(){
+                   update com sucesso
+                }else{
+                    update falhado
+                }*/
+                Toast.makeText(getBaseContext(), "Update com sucesso!", Toast.LENGTH_SHORT).show();
+                //fazer update na base de dados o q devera fazer update no utilizador na app
+                pf.editProfile(false);
+                showSubmit=false;
+                invalidateOptionsMenu();
+                return true;
+        }
+        return true;
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         id_menuItem = item.getItemId();
-
+        //showSearch=true;
         if (id_menuItem == R.id.nav_profile) {
-            if (user != null)
+            if (user != null) {
+                //search;submit;settings
                 viewMyProfile(user);
-            else
-                viewFragment(new ProfileFragment(), getResources().getString(R.string.MyProfile), false, -1);
+                pf= new ProfileFragment();
+                viewFragment(pf, getResources().getString(R.string.MyProfile), false, -1);
+            }
         } else if (id_menuItem == R.id.nav_home) {
+            //search;submit;settings
             viewFragment(new HomeFragment(), getResources().getString(R.string.title_home), true, -1);
         } else if (id_menuItem == R.id.nav_events) {
+            //search;submit;settings
             viewFragment(new EventsFragment(), getResources().getString(R.string.title_events), true, R.drawable.plus);
         } else if (id_menuItem == R.id.nav_friends) {
+            //search;submit;settings
             viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
         } else if (id_menuItem == R.id.nav_settings) {
+            //search;submit;settings
             viewSettings(user);
         } else if (id_menuItem == R.id.nav_about) {
+            //search;submit;settings
             viewFragment(new AboutFragment(), getResources().getString(R.string.title_about), false, -1);
         } else if (id_menuItem == R.id.log_out) {
             LoginManager.getInstance().logOut();
@@ -508,5 +576,11 @@ public class DrawerActivity extends AppCompatActivity
         }
     }
 
+    public void removeBar(boolean showSearch, boolean showSubmit, boolean showSettings){
+        this.showSearch = showSearch;
+        this.showSubmit = showSubmit;
+        this.showSettings= showSettings;
+        invalidateOptionsMenu();
+    }
 
 }

@@ -24,6 +24,10 @@ public class User implements Serializable{
 
     private String telefone;
 
+    private String site;
+
+    private String location;
+
     private String facebookID;
 
     private String gender;
@@ -49,6 +53,10 @@ public class User implements Serializable{
     private Boolean infpFlag = false;
 
     private Boolean userFromFB = false;
+
+    private Boolean submitFlag = false;
+
+    private Boolean editFlag =false;
 
     public int getIdUser() {
         return idUser;
@@ -200,5 +208,37 @@ public class User implements Serializable{
 
     public void setUserFromFB(Boolean userFromFB) {
         this.userFromFB = userFromFB;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Boolean getSubmitFlag() {
+        return submitFlag;
+    }
+
+    public void setSubmitFlag(Boolean submitFlag) {
+        this.submitFlag = submitFlag;
+    }
+
+    public Boolean getEditFlag() {
+        return editFlag;
+    }
+
+    public void setEditFlag(Boolean editFlag) {
+        this.editFlag = editFlag;
     }
 }

@@ -36,6 +36,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         ((DrawerActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.title_settings));
+        ((DrawerActivity) getActivity()).removeBar(false, false, false);
         title=rootView.getResources().getString(R.string.notificacaoTitulo);
 
         Bundle b = getActivity().getIntent().getExtras();
