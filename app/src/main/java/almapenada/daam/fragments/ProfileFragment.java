@@ -141,26 +141,26 @@ public class ProfileFragment extends Fragment {
             telele.setClickable(true);
             telele.setFocusableInTouchMode(true);
             telele.setFocusable(true);
-            //description.setClickable(true);
-            //description.setFocusableInTouchMode(true);
-            //site.setClickable(true);
-            //site.setFocusableInTouchMode(true);
-            //location.setFocusableInTouchMode(true);
-            //location.setClickable(true);
+            description.setClickable(true);
+            description.setFocusableInTouchMode(true);
+            site.setClickable(true);
+            site.setFocusableInTouchMode(true);
+            location.setFocusableInTouchMode(true);
+            location.setClickable(true);
 
         }else{
             username.setClickable(false);
             username.setFocusable(false);
             email.setClickable(false);
             email.setFocusable(false);
-            //description.setClickable(false);
-            //description.setFocusable(false);
+            description.setClickable(false);
+            description.setFocusable(false);
 
-            //site.setClickable(false);
-            //site.setFocusable(false);
+            site.setClickable(false);
+            site.setFocusable(false);
 
-            //location.setFocusable(false);
-            //location.setClickable(false);
+            location.setFocusable(false);
+            location.setClickable(false);
         }
     }
 

@@ -40,15 +40,20 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +91,10 @@ public class DrawerActivity extends AppCompatActivity
     private boolean showSearch=true;
     private boolean showSubmit=false;
     private boolean showSettings=false;
+    private String[] friendsarray;
     private ProfileFragment pf;
+    private List<String> notFriends = new ArrayList<String>();
+    private List<Integer> idnotFriends=new ArrayList<Integer>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +116,7 @@ public class DrawerActivity extends AppCompatActivity
             nav_user2.setText(user.getEmail());
             nav_img = (ImageView) hView.findViewById(R.id.imageView);
             if (user.getPictureURL() != null) new DownloadImageTask().execute(user.getPictureURL());
+            new DownloadNotFriendsTask().execute();
         }
 
         // Botao que flutoa na actividade
@@ -121,10 +130,28 @@ public class DrawerActivity extends AppCompatActivity
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setItems(opcoes, new DialogInterface.OnClickListener() {
+                        public android.app.AlertDialog d;
+
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(which==0){
-                                viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
+                                //viewFragment(new CreateEventFragment(), "Create New Event", false, -1);
+
+                                d = new android.app.AlertDialog.Builder(DrawerActivity.this)
+                                        .setSingleChoiceItems(notFriends.toArray(new String[notFriends.size()]), -1, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //TODO ASDASDS
+                                                UploadNewFriendTask upnF = new UploadNewFriendTask(idnotFriends.get(which));
+                                                upnF.execute();
+                                                notFriends.remove(which);
+                                                idnotFriends.remove(which);
+                                                Toast.makeText(getApplicationContext(), "Adcionado com sucesso!", Toast.LENGTH_SHORT).show();
+                                                viewFragment(new FriendsFragment(), getResources().getString(R.string.title_friends), true, -1);
+                                                d.dismiss();
+                                            }
+                                        }).show();
+
                             }else{
                                 viewFragment(new CreateNewGroup(), getString(R.string.Createngroup), false, -1);
                             }
@@ -581,6 +608,102 @@ public class DrawerActivity extends AppCompatActivity
         this.showSubmit = showSubmit;
         this.showSettings= showSettings;
         invalidateOptionsMenu();
+    }
+
+    private class DownloadNotFriendsTask extends AsyncTask<Void, String, String> {
+
+
+
+        @Override
+                protected String doInBackground(Void... params) {
+                    String response = "";
+                    //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
+                    try {
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpResponse httpResponse = httpclient.execute(new HttpGet("https://eventservice-daam.rhcloud.com/getAll/users/" + user.getIdUser()));
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                        response = reader.readLine();
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String res) {
+            super.onPostExecute(res);
+            JSONObject jobj = null;
+            try {
+                jobj = new JSONObject(res);
+                if (jobj.get("status").toString().compareTo("OK") == 0) {
+                    JSONArray poi = jobj.getJSONArray("teste");
+                    for (int i = 0; i < poi.length(); i++) {
+                        JSONObject t_poi = poi.getJSONObject(i);
+                        if(notFriends!=null) {
+                            notFriends.add(t_poi.getString("name"));
+                            idnotFriends.add(t_poi.getInt("id"));
+
+                        }
+
+                    }
+                }
+                //dummy_users = (User[]) friends.toArray();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class UploadNewFriendTask extends AsyncTask<Void, String, String> {
+
+        private int id;
+
+        public UploadNewFriendTask(int id){
+            this.id=id;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String response = "";
+            //Toast.makeText(getActivity().getApplicationContext(), "A procurar novos eventos...", Toast.LENGTH_LONG).show();
+            try {
+
+
+
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost post = new HttpPost("https://eventservice-daam.rhcloud.com/insert/friend/");
+
+                JSONObject json = new JSONObject();
+                json.put("userid1", user.getIdUser());
+                json.put("userid2", id);
+
+
+                String message = json.toString();
+
+                post.setEntity(new StringEntity(message, "UTF8"));
+                post.setHeader("Content-type", "application/json");
+
+                HttpResponse httpResponse = httpclient.execute(post);
+                if ( httpResponse != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+                    response = reader.readLine();
+                }
+                //e.printStackTrace()
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String res) {
+            super.onPostExecute(res);
+
+        }
     }
 
 }

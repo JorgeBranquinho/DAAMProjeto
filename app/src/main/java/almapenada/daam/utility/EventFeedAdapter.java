@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import almapenada.daam.DrawerActivity;
 import almapenada.daam.R;
 
 
@@ -47,7 +48,7 @@ public class EventFeedAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
 
         if(convertView==null)
@@ -56,7 +57,12 @@ public class EventFeedAdapter extends BaseAdapter{
         TextView desc = (TextView) v.findViewById(R.id.feed_event_desc);
 
         desc.setText(message.get(position));
-
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((DrawerActivity)activity).viewEventDetails((Event) getItem(position));
+            }
+        });
         return v;
     }
 }

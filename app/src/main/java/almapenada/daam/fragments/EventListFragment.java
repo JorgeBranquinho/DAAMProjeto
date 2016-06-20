@@ -48,7 +48,7 @@ public class EventListFragment extends Fragment {
     private ArrayList<Event> events_to_display = new ArrayList<Event>();
     private ArrayList<Event> full_event_list = new ArrayList<Event>();
     private ArrayList<Event> temp_events = new ArrayList<Event>();
-    private ArrayList<Integer> owned_events = new ArrayList<>();
+    private ArrayList<String> owned_events = new ArrayList<>();
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     private ListView event_list;
     private EventsDatabase database;
@@ -124,7 +124,7 @@ public class EventListFragment extends Fragment {
                     database = new EventsDatabase(getActivity());
                     for (int i = 0; i < poi.length(); i++) {
                         JSONObject t_poi = poi.getJSONObject(i);
-                        if (!owned_events.contains(Integer.parseInt(t_poi.getString("id")))) {
+                        if (!owned_events.contains((t_poi.getString("eventName")))) {
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                             SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
                             Date date = format.parse(t_poi.getString("date").substring(0, 10));
@@ -150,7 +150,7 @@ public class EventListFragment extends Fragment {
             while (cursor.isAfterLast() == false) {
                 Event e = (new EnumDatabase()).cursorToEvent(cursor);
                 full_event_list.add(e);
-                owned_events.add(e.getId());
+                owned_events.add(e.getEventName());
                 cursor.moveToNext();
             }
         }
